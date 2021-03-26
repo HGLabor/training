@@ -2,8 +2,9 @@ package de.hglabor.plugins.training.region;
 
 import org.bukkit.Location;
 import org.bukkit.World;
+import org.bukkit.entity.Player;
 
-public class Region {
+public class Region implements Area {
     private final World world;
     private final int minX, maxX;
     private final int minZ, maxZ;
@@ -14,11 +15,10 @@ public class Region {
 
     public Region(World world, int x1, int z1, int x2, int z2) {
         this.world = world;
-
-        minX = Math.min(x1, x2);
-        minZ = Math.min(z1, z2);
-        maxX = Math.max(x1, x2);
-        maxZ = Math.max(z1, z2);
+        this.minX = Math.min(x1, x2);
+        this.minZ = Math.min(z1, z2);
+        this.maxX = Math.max(x1, x2);
+        this.maxZ = Math.max(z1, z2);
     }
 
     public World getWorld() {
@@ -48,7 +48,7 @@ public class Region {
     }
 
     public boolean contains(Location location) {
-        return contains(location.getBlockX(), location.getBlockZ());
+        return location.getWorld().equals(world) && contains(location.getBlockX(), location.getBlockZ());
     }
 
     public boolean contains(int x, int z) {
@@ -85,5 +85,9 @@ public class Region {
                 ", minZ:" + minZ +
                 ", maxX:" + maxX +
                 ", maxZ:" + maxZ + "]";
+    }
+
+    @Override
+    public void onEnterArea(Player consumer) {
     }
 }

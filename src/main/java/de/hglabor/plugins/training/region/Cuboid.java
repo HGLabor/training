@@ -2,12 +2,16 @@ package de.hglabor.plugins.training.region;
 
 import org.bukkit.Location;
 import org.bukkit.World;
+import org.bukkit.entity.Player;
 
-public class Cuboid {
+import java.util.function.Consumer;
+
+public class Cuboid implements Area {
     private final World world;
     private final int minX, maxX;
     private final int minY, maxY;
     private final int minZ, maxZ;
+    private Consumer<Player> onEnterConsumer;
 
     public Cuboid(Location loc1, Location loc2) {
         this(loc1.getWorld(), loc1.getBlockX(), loc1.getBlockY(), loc1.getBlockZ(), loc2.getBlockX(), loc2.getBlockY(), loc2.getBlockZ());
@@ -15,13 +19,12 @@ public class Cuboid {
 
     public Cuboid(World world, int x1, int y1, int z1, int x2, int y2, int z2) {
         this.world = world;
-
-        minX = Math.min(x1, x2);
-        minY = Math.min(y1, y2);
-        minZ = Math.min(z1, z2);
-        maxX = Math.max(x1, x2);
-        maxY = Math.max(y1, y2);
-        maxZ = Math.max(z1, z2);
+        this.minX = Math.min(x1, x2);
+        this.minY = Math.min(y1, y2);
+        this.minZ = Math.min(z1, z2);
+        this.maxX = Math.max(x1, x2);
+        this.maxY = Math.max(y1, y2);
+        this.maxZ = Math.max(z1, z2);
     }
 
     public World getWorld() {
@@ -60,7 +63,7 @@ public class Cuboid {
     }
 
     public boolean contains(Location location) {
-        return contains(location.getBlockX(), location.getBlockY(), location.getBlockZ());
+        return location.getWorld().equals(world) && contains(location.getBlockX(), location.getBlockY(), location.getBlockZ());
     }
 
     public boolean contains(int x, int y, int z) {
@@ -73,6 +76,10 @@ public class Cuboid {
         return cuboid.getWorld().equals(world) &&
                 !(cuboid.getMinX() > maxX || cuboid.getMinY() > maxY || cuboid.getMinZ() > maxZ ||
                         minZ > cuboid.getMaxX() || minY > cuboid.getMaxY() || minZ > cuboid.getMaxZ());
+    }
+
+    public void setOnEnterConsumer(Consumer<Player> onEnterConsumer) {
+        this.onEnterConsumer = onEnterConsumer;
     }
 
     @Override
@@ -102,5 +109,10 @@ public class Cuboid {
                 ", maxX:" + maxX +
                 ", maxY:" + maxY +
                 ", maxZ:" + maxZ + "]";
+    }
+
+    @Override
+    public void onEnterArea(Player player) {
+        onEnterConsumer.accept(player);
     }
 }
