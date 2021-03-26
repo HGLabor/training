@@ -1,0 +1,4 @@
+name: Training
+version: @version@
+main: de.hglabor.plugins.training.Training
+api-version: 1.16
