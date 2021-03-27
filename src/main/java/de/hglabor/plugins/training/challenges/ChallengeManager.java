@@ -1,5 +1,7 @@
 package de.hglabor.plugins.training.challenges;
 
+import de.hglabor.plugins.training.Training;
+import org.bukkit.Bukkit;
 import org.bukkit.Location;
 
 import java.util.HashSet;
@@ -13,8 +15,16 @@ public final class ChallengeManager {
         this.challenges = new HashSet<>();
     }
 
-    public void addChallenge(Challenge challenge) {
+    public void register(Challenge challenge) {
         challenges.add(challenge);
+        Bukkit.getPluginManager().registerEvents(challenge, Training.getInstance());
+        challenge.initConfig();
+        challenge.loadFromConfig();
+        challenge.start();
+    }
+
+    public Set<Challenge> getChallenges() {
+        return challenges;
     }
 
     public Challenge byRegion(Location location) {

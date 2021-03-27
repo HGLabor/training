@@ -2,19 +2,18 @@ package de.hglabor.plugins.training.region;
 
 import org.bukkit.Location;
 import org.bukkit.World;
-import org.bukkit.entity.Player;
-
-import java.util.function.Consumer;
 
 public class Cuboid implements Area {
     private final World world;
     private final int minX, maxX;
     private final int minY, maxY;
     private final int minZ, maxZ;
-    private Consumer<Player> onEnterConsumer;
+    private Location first, second;
 
     public Cuboid(Location loc1, Location loc2) {
         this(loc1.getWorld(), loc1.getBlockX(), loc1.getBlockY(), loc1.getBlockZ(), loc2.getBlockX(), loc2.getBlockY(), loc2.getBlockZ());
+        this.first = loc1;
+        this.second = loc2;
     }
 
     public Cuboid(World world, int x1, int y1, int z1, int x2, int y2, int z2) {
@@ -55,6 +54,22 @@ public class Cuboid implements Area {
         return maxZ;
     }
 
+    public Location getFirst() {
+        return first;
+    }
+
+    public void setFirstLoc(Location first) {
+        this.first = first;
+    }
+
+    public Location getSecond() {
+        return second;
+    }
+
+    public void setSecondLoc(Location second) {
+        this.second = second;
+    }
+
     public boolean contains(Cuboid cuboid) {
         return cuboid.getWorld().equals(world) &&
                 cuboid.getMinX() >= minX && cuboid.getMaxX() <= maxX &&
@@ -76,10 +91,6 @@ public class Cuboid implements Area {
         return cuboid.getWorld().equals(world) &&
                 !(cuboid.getMinX() > maxX || cuboid.getMinY() > maxY || cuboid.getMinZ() > maxZ ||
                         minZ > cuboid.getMaxX() || minY > cuboid.getMaxY() || minZ > cuboid.getMaxZ());
-    }
-
-    public void setOnEnterConsumer(Consumer<Player> onEnterConsumer) {
-        this.onEnterConsumer = onEnterConsumer;
     }
 
     @Override
@@ -109,10 +120,5 @@ public class Cuboid implements Area {
                 ", maxX:" + maxX +
                 ", maxY:" + maxY +
                 ", maxZ:" + maxZ + "]";
-    }
-
-    @Override
-    public void onEnterArea(Player player) {
-        onEnterConsumer.accept(player);
     }
 }
