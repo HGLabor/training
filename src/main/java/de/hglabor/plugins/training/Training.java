@@ -17,6 +17,7 @@ import de.hglabor.plugins.training.warp.worlds.MlgWorld;
 import dev.jorel.commandapi.CommandAPI;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
+import org.bukkit.Material;
 import org.bukkit.WorldCreator;
 import org.bukkit.entity.EntityType;
 import org.bukkit.entity.IronGolem;
@@ -54,7 +55,8 @@ public final class Training extends JavaPlugin {
         ChallengeManager.INSTANCE.register(new ImpossibleDamager("Impossible", ChatColor.DARK_GRAY));
         ChallengeManager.INSTANCE.register(new InconsistencyDamager("Inconsistency", ChatColor.LIGHT_PURPLE));
 
-        ChallengeManager.INSTANCE.register(new Mlg("Water MLG", ChatColor.AQUA, IronGolem.class));
+        Mlg waterMlg = new Mlg("Water", ChatColor.AQUA, IronGolem.class).withPlatforms(Material.IRON_BLOCK, 10, 20, 50, 100, 200);
+        ChallengeManager.INSTANCE.register(waterMlg);
 
 
         CommandAPI.onEnable(this);
