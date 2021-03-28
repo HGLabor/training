@@ -70,7 +70,7 @@ public class Mlg implements IMlg {
             platform.setSpawn(spawn);
             platform.create();
         });
-        
+
         platforms.get(0).setUp(platforms.get(1));
         platforms.get(platforms.size() - 1).setDown(platforms.get(platforms.size() - 2));
 

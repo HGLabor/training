@@ -37,16 +37,21 @@ public class MlgPlatform implements Listener {
         World world = spawn.getWorld();
         WorldEditUtils.createCylinder(world, spawn, radius, true, 1, material);
         heightHologram = HologramUtils.spawnHologram(spawn.clone().add(0, 2, 0), ChatColor.BOLD.toString() + spawn.getY());
+        //Hhaha DRY goes brrrrrrrr
         if (upPlatform != null) {
             upVillager = (Villager) ((CraftWorld) world).createEntity(spawn.add(radius - (radius / 3D), 0, 1), Villager.class).getBukkitEntity();
             upVillager.setCustomName(ChatColor.BOLD + ChatColor.GREEN.toString() + "\u25B2");
             upVillager.setCustomNameVisible(true);
+            upVillager.setAI(false);
+            upVillager.setInvulnerable(true);
             ((CraftWorld) world).addEntity(((CraftVillager) upVillager).getHandle(), CreatureSpawnEvent.SpawnReason.CUSTOM);
         }
         if (downPlatform != null) {
             downVillager = (Villager) ((CraftWorld) world).createEntity(spawn.add(radius - (radius / 3D), 0, -1), Villager.class).getBukkitEntity();
             upVillager.setCustomName(ChatColor.BOLD + ChatColor.RED.toString() + "\u25BC");
             upVillager.setCustomNameVisible(true);
+            upVillager.setAI(false);
+            upVillager.setInvulnerable(true);
             ((CraftWorld) world).addEntity(((CraftVillager) downVillager).getHandle(), CreatureSpawnEvent.SpawnReason.CUSTOM);
         }
     }
