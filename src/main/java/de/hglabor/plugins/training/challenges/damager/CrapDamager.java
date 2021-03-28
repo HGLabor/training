@@ -3,7 +3,10 @@ package de.hglabor.plugins.training.challenges.damager;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.Material;
+import org.bukkit.entity.Item;
 import org.bukkit.entity.Player;
+import org.bukkit.event.EventHandler;
+import org.bukkit.event.entity.ItemSpawnEvent;
 import org.bukkit.inventory.ItemStack;
 
 import java.util.*;
@@ -59,7 +62,8 @@ public class CrapDamager extends Damager {
             if (task.isCancelled()) {
                 return;
             }
-            for (UUID uuid : players.keySet()) {
+            List<UUID> uuids = new ArrayList<>(players.keySet());
+            for (UUID uuid : uuids) {
                 if (players.get(uuid)) {
                     continue;
                 }
@@ -75,6 +79,14 @@ public class CrapDamager extends Damager {
                 }
             }
         };
+    }
+
+    @EventHandler
+    public void onItemSpawn(ItemSpawnEvent event) {
+        Item item = event.getEntity();
+        if (item.getOwner() != null && players.containsKey(item.getOwner())) {
+            droppedItems.add(item);
+        }
     }
 
     private ItemStack getRandomItemStack() {

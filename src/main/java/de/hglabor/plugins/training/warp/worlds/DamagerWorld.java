@@ -1,9 +1,10 @@
-package de.hglabor.plugins.training.world;
+package de.hglabor.plugins.training.warp.worlds;
 
 import de.hglabor.plugins.training.Training;
 import de.hglabor.plugins.training.user.User;
 import de.hglabor.plugins.training.user.UserList;
 import de.hglabor.plugins.training.util.LocationUtils;
+import de.hglabor.plugins.training.warp.WarpSelector;
 import de.hglabor.utils.noriskutils.BungeeUtils;
 import de.hglabor.utils.noriskutils.ItemBuilder;
 import org.bukkit.*;
@@ -15,45 +16,62 @@ import org.bukkit.event.block.Action;
 import org.bukkit.event.block.BlockBreakEvent;
 import org.bukkit.event.block.BlockPlaceEvent;
 import org.bukkit.event.entity.EntityDamageByEntityEvent;
+import org.bukkit.event.entity.FoodLevelChangeEvent;
 import org.bukkit.event.player.PlayerAttemptPickupItemEvent;
 import org.bukkit.event.player.PlayerDropItemEvent;
 import org.bukkit.event.player.PlayerInteractEvent;
 import org.bukkit.event.player.PlayerRespawnEvent;
 import org.bukkit.inventory.ItemStack;
 
-public class DefaultWorldSettings implements Listener {
+public class DamagerWorld implements Listener {
     private final static ItemStack RESPAWN_ANCHOR = new ItemBuilder(Material.RESPAWN_ANCHOR)
             .setName("Left click = new spawn | Right click = reset")
-            .build();
-    private final static ItemStack WARP_SELECTOR = new ItemBuilder(Material.NETHER_STAR)
-            .setName("Warp selector")
             .build();
     private final static ItemStack HUB = new ItemBuilder(Material.HEART_OF_THE_SEA)
             .setName("Hub")
             .build();
-    private final World world;
+    private final static ItemStack WARP_ITEM = new ItemBuilder(Material.STONE_SWORD)
+            .setName("Damager")
+            .build();
+    private static World world;
 
-    public DefaultWorldSettings(World world) {
-        this.world = world;
-        this.world.setTime(6000);
-        this.world.setGameRule(GameRule.ANNOUNCE_ADVANCEMENTS, false);
-        this.world.setGameRule(GameRule.DO_DAYLIGHT_CYCLE, false);
-        this.world.setGameRule(GameRule.DO_WEATHER_CYCLE, false);
-        this.world.setGameRule(GameRule.DO_MOB_SPAWNING, false);
-        this.world.setGameRule(GameRule.SHOW_DEATH_MESSAGES, false);
+    public DamagerWorld(World world) {
+        DamagerWorld.world = world;
+        DamagerWorld.world.setTime(6000);
+        DamagerWorld.world.setGameRule(GameRule.ANNOUNCE_ADVANCEMENTS, false);
+        DamagerWorld.world.setGameRule(GameRule.DO_DAYLIGHT_CYCLE, false);
+        DamagerWorld.world.setGameRule(GameRule.DO_WEATHER_CYCLE, false);
+        DamagerWorld.world.setGameRule(GameRule.DO_MOB_SPAWNING, false);
+        DamagerWorld.world.setGameRule(GameRule.SHOW_DEATH_MESSAGES, false);
+    }
+
+    public static ItemStack getWarpItem() {
+        return WARP_ITEM;
     }
 
     public static void setItems(Player player) {
         player.getInventory().clear();
-        player.getInventory().setItem(0, WARP_SELECTOR);
+        player.getInventory().setItem(0, WarpSelector.getItem());
         player.getInventory().setItem(7, HUB);
         player.getInventory().setItem(8, RESPAWN_ANCHOR);
+    }
+
+    public static World getWorld() {
+        return world;
     }
 
     @EventHandler
     public void onPlayerRespawn(PlayerRespawnEvent event) {
         User user = UserList.INSTANCE.getUser(event.getPlayer());
         event.setRespawnLocation(user.getRespawnLoc());
+    }
+
+    @EventHandler
+    public void onFoodLevelChange(FoodLevelChangeEvent event) {
+        if (isSpawn((Player) event.getEntity())) {
+            event.setFoodLevel(20);
+            event.setCancelled(true);
+        }
     }
 
     @EventHandler
@@ -73,13 +91,11 @@ public class DefaultWorldSettings implements Listener {
                     user.setRespawnLoc(player.getLocation());
                     player.sendMessage(ChatColor.GREEN + "You updated your respawn location.");
                 } else if (action.equals(Action.RIGHT_CLICK_BLOCK) || action.equals(Action.RIGHT_CLICK_AIR)) {
-                    user.setRespawnLoc(LocationUtils.SPAWN);
+                    user.setRespawnLoc(LocationUtils.DAMAGER_SPAWN);
                     player.sendMessage(ChatColor.GREEN + "Your respawn location is now default spawn.");
                 }
             } else if (item.isSimilar(HUB)) {
                 BungeeUtils.send(player, "lobby", Training.getInstance());
-            } else if (item.isSimilar(WARP_SELECTOR)) {
-                // player.openInventory();
             }
         }
     }

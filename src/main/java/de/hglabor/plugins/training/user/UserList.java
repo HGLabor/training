@@ -1,5 +1,6 @@
 package de.hglabor.plugins.training.user;
 
+import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
@@ -24,11 +25,20 @@ public final class UserList implements Listener {
 
     @EventHandler
     public void onPlayerJoin(PlayerJoinEvent event) {
+        event.setJoinMessage(null);
+        event.getPlayer().teleport(Bukkit.getWorld("mlg").getSpawnLocation());
         getUser(event.getPlayer());
     }
 
     @EventHandler
     public void onPlayerQuit(PlayerQuitEvent event) {
-        users.remove(event.getPlayer().getUniqueId());
+        event.setQuitMessage(null);
+        Player player = event.getPlayer();
+        UUID uniqueId = player.getUniqueId();
+        User user = users.get(uniqueId);
+        if (user.getChallenge() != null) {
+            user.getChallenge().onLeave(player);
+        }
+        users.remove(uniqueId);
     }
 }

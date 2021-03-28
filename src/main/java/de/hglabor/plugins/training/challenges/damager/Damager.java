@@ -29,13 +29,13 @@ import org.bukkit.scheduler.BukkitTask;
 import java.util.*;
 
 public class Damager implements Challenge {
-    private final Set<Item> droppedItems;
     protected final ChatColor color;
     protected final String name;
     protected final Map<UUID, Boolean> players;
     protected final SoupHealing soupHealing;
     protected final String configKey;
     protected final ArmorStand[] holograms;
+    protected final Set<Item> droppedItems;
     protected double damage;
     protected int soupsToEat;
     protected long tickSpeed;
@@ -82,7 +82,8 @@ public class Damager implements Challenge {
             if (task.isCancelled()) {
                 return;
             }
-            for (UUID uuid : players.keySet()) {
+            List<UUID> uuids = new ArrayList<>(players.keySet());
+            for (UUID uuid : uuids) {
                 if (players.get(uuid)) {
                     continue;
                 }

@@ -1,4 +1,4 @@
-package de.hglabor.plugins.training.user;
+package de.hglabor.plugins.training.user.stats;
 
 public class SoupStats {
     private int soupsEaten;

@@ -2,7 +2,6 @@ package de.hglabor.plugins.training.challenges;
 
 import de.hglabor.plugins.training.region.Area;
 import org.bukkit.ChatColor;
-import org.bukkit.Color;
 import org.bukkit.entity.Player;
 import org.bukkit.event.Listener;
 

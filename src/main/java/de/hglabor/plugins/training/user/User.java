@@ -2,6 +2,7 @@ package de.hglabor.plugins.training.user;
 
 import de.hglabor.plugins.training.challenges.Challenge;
 import de.hglabor.plugins.training.region.Area;
+import de.hglabor.plugins.training.user.stats.SoupStats;
 import de.hglabor.plugins.training.util.LocationUtils;
 import org.bukkit.Location;
 
@@ -17,7 +18,7 @@ public class User {
 
     public User(UUID uuid) {
         this.uuid = uuid;
-        this.respawnLoc = LocationUtils.SPAWN;
+        this.respawnLoc = LocationUtils.DAMAGER_SPAWN;
         this.soupStats = new SoupStats();
     }
 

@@ -5,5 +5,6 @@ import org.bukkit.Location;
 
 public class LocationUtils {
     public final static Location ZERO = new Location(Bukkit.getWorld("world"), 0, 0, 0);
-    public final static Location SPAWN = Bukkit.getWorld("world").getSpawnLocation();
+    public final static Location DAMAGER_SPAWN = Bukkit.getWorld("world").getSpawnLocation();
+    public final static Location MLG_SPAWN = Bukkit.getWorld("mlg").getSpawnLocation();
 }

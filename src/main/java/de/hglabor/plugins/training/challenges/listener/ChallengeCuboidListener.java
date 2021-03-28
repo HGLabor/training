@@ -4,13 +4,11 @@ import de.hglabor.plugins.training.challenges.Challenge;
 import de.hglabor.plugins.training.challenges.ChallengeManager;
 import de.hglabor.plugins.training.user.User;
 import de.hglabor.plugins.training.user.UserList;
-import de.hglabor.plugins.training.world.DefaultWorldSettings;
-import org.bukkit.Material;
+import de.hglabor.plugins.training.warp.worlds.DamagerWorld;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.player.PlayerMoveEvent;
-import org.bukkit.inventory.ItemStack;
 
 public class ChallengeCuboidListener implements Listener {
 
@@ -42,7 +40,7 @@ public class ChallengeCuboidListener implements Listener {
                 player.setHealth(player.getMaxHealth());
                 player.setWalkSpeed(0.5F);
                 //TODO mlg word etc
-                DefaultWorldSettings.setItems(player);
+                DamagerWorld.setItems(player);
             }
         }
     }
