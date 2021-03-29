@@ -3,6 +3,7 @@ package de.hglabor.plugins.training.challenges.damager;
 import de.hglabor.plugins.training.Training;
 import de.hglabor.plugins.training.challenges.Challenge;
 import de.hglabor.plugins.training.mechanics.SoupHealing;
+import de.hglabor.plugins.training.region.Area;
 import de.hglabor.plugins.training.region.Cuboid;
 import de.hglabor.plugins.training.user.User;
 import de.hglabor.plugins.training.user.UserList;
@@ -54,8 +55,8 @@ public class Damager implements Challenge {
         this.holograms = new ArmorStand[3];
         this.soupHealing = new SoupHealing();
         this.players = new HashMap<>();
-        this.hologramOrigin = LocationUtils.ZERO;
-        this.cuboid = new Cuboid(LocationUtils.ZERO, LocationUtils.ZERO);
+        this.hologramOrigin = LocationUtils.ZERO_DAMAGER;
+        this.cuboid = new Cuboid(LocationUtils.ZERO_DAMAGER, LocationUtils.ZERO_DAMAGER);
     }
 
     @Override
@@ -64,7 +65,7 @@ public class Damager implements Challenge {
     }
 
     @Override
-    public Cuboid getArea() {
+    public Area getArea() {
         return cuboid;
     }
 
@@ -109,6 +110,10 @@ public class Damager implements Challenge {
         holograms[0] = HologramUtils.spawnHologram(hologramOrigin, color + this.getName() + " Damager");
         holograms[1] = HologramUtils.spawnHologram(hologramOrigin.clone().subtract(0, 0.25, 0), ChatColor.WHITE + "Damage: " + ChatColor.GOLD + damage / 2 + ChatColor.RED.toString() + " \u2764");
         holograms[2] = HologramUtils.spawnHologram(hologramOrigin.clone().subtract(0, 0.5, 0), ChatColor.WHITE + "Tickrate: " + ChatColor.GOLD + tickSpeed);
+        for (ArmorStand hologram : holograms) {
+            hologram.getLocation().getChunk().setForceLoaded(true);
+            hologram.setPersistent(false);
+        }
     }
 
     @Override
@@ -117,13 +122,6 @@ public class Damager implements Challenge {
             hologram.remove();
         }
         task.cancel();
-    }
-
-    @Override
-    public void restart() {
-        stop();
-        loadFromConfig();
-        start();
     }
 
     @Override

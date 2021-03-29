@@ -1,34 +1,62 @@
 package de.hglabor.plugins.training.warp.worlds;
 
+import de.hglabor.plugins.training.warp.WarpItems;
 import de.hglabor.utils.noriskutils.ItemBuilder;
-import org.bukkit.GameRule;
 import org.bukkit.Material;
-import org.bukkit.World;
-import org.bukkit.event.Listener;
+import org.bukkit.entity.Player;
+import org.bukkit.event.EventHandler;
+import org.bukkit.event.block.BlockFromToEvent;
+import org.bukkit.event.inventory.InventoryClickEvent;
+import org.bukkit.event.player.PlayerDropItemEvent;
 import org.bukkit.inventory.ItemStack;
 
-public class MlgWorld implements Listener {
-    private final static ItemStack WARP_ITEM = new ItemBuilder(Material.WATER_BUCKET)
-            .setName("MLG")
-            .build();
-    private static World world;
+public class MlgWorld extends TrainingWorld {
+    public final static MlgWorld INSTANCE = new MlgWorld();
 
-    public MlgWorld(World world) {
-        MlgWorld.world = world;
-        MlgWorld.world.setTime(6000);
-        MlgWorld.world.setGameRule(GameRule.ANNOUNCE_ADVANCEMENTS, false);
-        MlgWorld.world.setGameRule(GameRule.DO_DAYLIGHT_CYCLE, false);
-        MlgWorld.world.setGameRule(GameRule.DO_WEATHER_CYCLE, false);
-        MlgWorld.world.setGameRule(GameRule.DO_MOB_SPAWNING, false);
-        MlgWorld.world.setGameRule(GameRule.SHOW_DEATH_MESSAGES, false);
+    private MlgWorld() {
+        super(new ItemBuilder(Material.WATER_BUCKET).setName("MLG").build());
     }
 
-    public static ItemStack getWarpItem() {
-        return WARP_ITEM;
+    @EventHandler
+    public void onBlockPhysics(BlockFromToEvent event) {
+        if (!event.getBlock().getWorld().equals(world)) {
+            return;
+        }
+        if (event.getBlock().isLiquid()) {
+            event.setCancelled(true);
+        }
     }
 
-    public static World getWorld() {
-        return world;
+    @EventHandler
+    public void onPlayerDropItem(PlayerDropItemEvent event) {
+        Player player = event.getPlayer();
+        if (!player.getWorld().equals(world)) {
+            return;
+        }
+        ItemStack currentItem = event.getItemDrop().getItemStack();
+        if (WarpItems.isWarpItem(currentItem)) {
+            event.setCancelled(true);
+        }
+    }
+
+    @EventHandler
+    public void onInventoryClick(InventoryClickEvent event) {
+        Player player = (Player) event.getWhoClicked();
+        if (!player.getWorld().equals(world)) {
+            return;
+        }
+        ItemStack currentItem = event.getCurrentItem();
+        if (currentItem == null) {
+            return;
+        }
+        if (WarpItems.isWarpItem(currentItem)) {
+            event.setCancelled(true);
+        }
+    }
+
+    @Override
+    public void setItems(Player player) {
+
     }
 }
 

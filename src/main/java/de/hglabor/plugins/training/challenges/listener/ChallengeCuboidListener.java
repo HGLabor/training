@@ -40,7 +40,7 @@ public class ChallengeCuboidListener implements Listener {
                 player.setHealth(player.getMaxHealth());
                 player.setWalkSpeed(0.5F);
                 //TODO mlg word etc
-                DamagerWorld.setItems(player);
+                DamagerWorld.INSTANCE.setItems(player);
             }
         }
     }

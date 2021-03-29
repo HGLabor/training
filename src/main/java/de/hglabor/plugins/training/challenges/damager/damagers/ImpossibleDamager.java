@@ -1,5 +1,6 @@
-package de.hglabor.plugins.training.challenges.damager;
+package de.hglabor.plugins.training.challenges.damager.damagers;
 
+import de.hglabor.plugins.training.challenges.damager.Damager;
 import org.bukkit.ChatColor;
 import org.bukkit.entity.Player;
 

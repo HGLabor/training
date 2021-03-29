@@ -18,16 +18,17 @@ public interface Challenge extends Listener {
 
     default void restart() {
         stop();
+        loadFromConfig();
         start();
     }
 
     void onEnter(Player player);
 
+    void onLeave(Player player);
+
     void onComplete(Player player);
 
     void onFailure(Player player);
-
-    void onLeave(Player player);
 
     boolean isInChallenge(Player player);
 

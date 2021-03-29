@@ -1,9 +1,12 @@
-package de.hglabor.plugins.training.challenges.damager;
+package de.hglabor.plugins.training.challenges.damager.damagers;
 
 import de.hglabor.plugins.training.Training;
+import de.hglabor.plugins.training.challenges.damager.Damager;
 import de.hglabor.utils.noriskutils.ChanceUtils;
 import de.hglabor.utils.noriskutils.HologramUtils;
 import org.bukkit.ChatColor;
+
+import java.util.Arrays;
 
 public class InconsistencyDamager extends Damager {
     private double minDamage;
@@ -17,6 +20,7 @@ public class InconsistencyDamager extends Damager {
         holograms[0] = HologramUtils.spawnHologram(hologramOrigin, color + this.getName() + " Damager");
         holograms[1] = HologramUtils.spawnHologram(hologramOrigin.clone().subtract(0, 0.25, 0), ChatColor.WHITE + "Damage: " + ChatColor.GOLD + minDamage / 2 + " - " + damage / 2 + ChatColor.RED.toString() + " \u2764");
         holograms[2] = HologramUtils.spawnHologram(hologramOrigin.clone().subtract(0, 0.5, 0), ChatColor.WHITE + "Tickrate: " + ChatColor.GOLD + tickSpeed);
+        Arrays.stream(holograms).forEach(hologram -> hologram.setPersistent(false));
     }
 
     @Override
