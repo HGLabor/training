@@ -13,6 +13,8 @@ import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.Location;
 import org.bukkit.Material;
+import org.bukkit.block.Block;
+import org.bukkit.block.BlockFace;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.craftbukkit.v1_16_R3.CraftWorld;
 import org.bukkit.craftbukkit.v1_16_R3.entity.CraftLivingEntity;
@@ -21,6 +23,7 @@ import org.bukkit.entity.LivingEntity;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.entity.CreatureSpawnEvent;
+import org.bukkit.event.entity.EntityDamageEvent;
 import org.bukkit.event.entity.PlayerDeathEvent;
 import org.bukkit.event.player.PlayerInteractEntityEvent;
 import org.bukkit.inventory.ItemStack;
@@ -184,6 +187,22 @@ public abstract class Mlg implements Challenge {
                 drop.setAmount(0);
             }
             event.setCancelled(true);
+        }
+    }
+
+    @EventHandler
+    public void onEntityDamage(EntityDamageEvent event) {
+        if (event.getEntity() instanceof Player){
+            Player player = (Player) event.getEntity();
+            if (!isInChallenge(player)) {
+                return;
+            }
+            if (event.getCause().equals(EntityDamageEvent.DamageCause.FALL)) {
+                Block landedBlock = player.getLocation().getBlock().getRelative(BlockFace.DOWN);
+                if (landedBlock.getType().equals(platformMaterial)) {
+                    event.setCancelled(true);
+                }
+            }
         }
     }
 }
