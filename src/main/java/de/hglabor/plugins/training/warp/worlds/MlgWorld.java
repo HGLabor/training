@@ -10,6 +10,7 @@ import org.bukkit.event.block.BlockFromToEvent;
 import org.bukkit.event.entity.FoodLevelChangeEvent;
 import org.bukkit.event.inventory.InventoryClickEvent;
 import org.bukkit.event.player.PlayerDropItemEvent;
+import org.bukkit.event.player.PlayerInteractAtEntityEvent;
 import org.bukkit.inventory.ItemStack;
 
 public class MlgWorld extends TrainingWorld {
@@ -25,6 +26,13 @@ public class MlgWorld extends TrainingWorld {
             return;
         }
         if (event.getBlock().isLiquid()) {
+            event.setCancelled(true);
+        }
+    }
+
+    @EventHandler
+    public void onPlayerInteractAtEntity(PlayerInteractAtEntityEvent event) {
+        if (event.getPlayer().getWorld().equals(world)) {
             event.setCancelled(true);
         }
     }

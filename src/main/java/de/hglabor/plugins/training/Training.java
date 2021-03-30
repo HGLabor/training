@@ -8,6 +8,7 @@ import de.hglabor.plugins.training.challenges.damager.damagers.ImpossibleDamager
 import de.hglabor.plugins.training.challenges.damager.damagers.InconsistencyDamager;
 import de.hglabor.plugins.training.challenges.listener.ChallengeCuboidListener;
 import de.hglabor.plugins.training.challenges.mlg.Mlg;
+import de.hglabor.plugins.training.challenges.mlg.mlgs.HorseMlg;
 import de.hglabor.plugins.training.challenges.mlg.mlgs.WaterMlg;
 import de.hglabor.plugins.training.command.ChallengeCommand;
 import de.hglabor.plugins.training.command.DamagerCommand;
@@ -21,6 +22,7 @@ import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.Material;
 import org.bukkit.WorldCreator;
+import org.bukkit.entity.Horse;
 import org.bukkit.entity.IronGolem;
 import org.bukkit.plugin.java.JavaPlugin;
 
@@ -58,7 +60,9 @@ public final class Training extends JavaPlugin {
         ChallengeManager.INSTANCE.register(new InconsistencyDamager("Inconsistency", ChatColor.LIGHT_PURPLE));
 
         Mlg waterMlg = new WaterMlg("Water", ChatColor.AQUA, IronGolem.class).withPlatforms(Material.IRON_BLOCK, 10, 25, 50, 100, 150, 200, 250);
+        Mlg horseMlg = new HorseMlg("Horse", ChatColor.GOLD, Horse.class).withPlatforms(Material.DARK_OAK_PLANKS, 10, 25, 50, 100, 150, 200, 250);
         ChallengeManager.INSTANCE.register(waterMlg);
+        ChallengeManager.INSTANCE.register(horseMlg);
 
 
         CommandAPI.onEnable(this);

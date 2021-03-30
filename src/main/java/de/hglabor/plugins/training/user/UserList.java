@@ -37,7 +37,7 @@ public final class UserList implements Listener {
         event.setQuitMessage(null);
         Player player = event.getPlayer();
         UUID uniqueId = player.getUniqueId();
-        User user = users.get(uniqueId);
+        User user = getUser(player);
         if (user.getChallenge() != null) {
             user.getChallenge().onLeave(player);
         }
