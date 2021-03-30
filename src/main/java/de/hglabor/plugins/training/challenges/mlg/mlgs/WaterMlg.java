@@ -5,7 +5,6 @@ import de.hglabor.plugins.training.challenges.mlg.Mlg;
 import de.hglabor.plugins.training.user.User;
 import de.hglabor.plugins.training.user.UserList;
 import de.hglabor.plugins.training.warp.WarpItems;
-import de.hglabor.plugins.training.warp.WarpSelector;
 import de.hglabor.utils.noriskutils.ItemBuilder;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
@@ -81,6 +80,7 @@ public class WaterMlg extends Mlg {
     public void onFailure(Player player) {
         Bukkit.getScheduler().runTaskLater(Training.getInstance(), () -> {
             teleportAndSetItems(player);
+            player.playSound(player.getLocation(), Sound.BLOCK_GLASS_BREAK, 1, 1);
         }, 0);
     }
 
