@@ -2,6 +2,7 @@ package de.hglabor.plugins.training.warp.worlds;
 
 import de.hglabor.plugins.training.warp.WarpItems;
 import de.hglabor.utils.noriskutils.ItemBuilder;
+import org.bukkit.ChatColor;
 import org.bukkit.Material;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
@@ -12,7 +13,7 @@ public class DamagerWorld extends TrainingWorld {
     public static final DamagerWorld INSTANCE = new DamagerWorld();
 
     private DamagerWorld() {
-        super(new ItemBuilder(Material.STONE_SWORD).setName("Damager").build());
+        super(new ItemBuilder(Material.STONE_SWORD).setName(ChatColor.RED + "Damager").build());
     }
 
     public void setItems(Player player) {

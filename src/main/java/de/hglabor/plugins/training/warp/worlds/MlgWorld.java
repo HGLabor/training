@@ -2,6 +2,7 @@ package de.hglabor.plugins.training.warp.worlds;
 
 import de.hglabor.plugins.training.warp.WarpItems;
 import de.hglabor.utils.noriskutils.ItemBuilder;
+import org.bukkit.ChatColor;
 import org.bukkit.Material;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
@@ -15,7 +16,7 @@ public class MlgWorld extends TrainingWorld {
     public final static MlgWorld INSTANCE = new MlgWorld();
 
     private MlgWorld() {
-        super(new ItemBuilder(Material.WATER_BUCKET).setName("MLG").build());
+        super(new ItemBuilder(Material.WATER_BUCKET).setName(ChatColor.AQUA + "MLG").build());
     }
 
     @EventHandler

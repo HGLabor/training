@@ -150,7 +150,7 @@ public class Damager implements Challenge {
         player.sendMessage(ChatColor.GREEN + "You completed " + this.getName()); //TODO Localization
         printAndResetSoupStats(player, user);
         player.teleport(user.getRespawnLoc());
-        player.playSound(player.getLocation(), Sound.ENTITY_FOX_TELEPORT, 1, 1);
+        player.playSound(player.getLocation(), Sound.ENTITY_VILLAGER_CELEBRATE, 1, 1);
     }
 
     @Override
@@ -159,7 +159,6 @@ public class Damager implements Challenge {
         players.remove(player.getUniqueId());
         player.sendMessage(ChatColor.RED + "You failed " + this.getName()); //TODO Localization
         printAndResetSoupStats(player, user);
-        player.playSound(player.getLocation(), Sound.BLOCK_GLASS_BREAK, 1, 1);
     }
 
     private void printAndResetSoupStats(Player player, User user) {
