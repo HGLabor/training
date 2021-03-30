@@ -1,5 +1,7 @@
 package de.hglabor.plugins.training.user;
 
+import de.hglabor.plugins.training.util.LocationUtils;
+import de.hglabor.plugins.training.warp.worlds.DamagerWorld;
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
@@ -26,7 +28,7 @@ public final class UserList implements Listener {
     @EventHandler
     public void onPlayerJoin(PlayerJoinEvent event) {
         event.setJoinMessage(null);
-        event.getPlayer().teleport(Bukkit.getWorld("mlg").getSpawnLocation());
+        event.getPlayer().teleport(LocationUtils.DAMAGER_SPAWN);
         getUser(event.getPlayer());
     }
 

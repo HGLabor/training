@@ -2,6 +2,7 @@ package de.hglabor.plugins.training.warp;
 
 import de.hglabor.plugins.training.warp.worlds.DamagerWorld;
 import de.hglabor.plugins.training.warp.worlds.MlgWorld;
+import de.hglabor.utils.noriskutils.SoundUtils;
 import org.bukkit.Bukkit;
 import org.bukkit.Material;
 import org.bukkit.Sound;
@@ -47,10 +48,10 @@ public class WarpSelector implements Listener {
             ItemStack item = event.getCurrentItem();
             if (DamagerWorld.INSTANCE.getWarpItem().isSimilar(item)) {
                 player.teleport(DamagerWorld.INSTANCE.getWorld().getSpawnLocation());
-                player.playSound(player.getLocation(), Sound.ENTITY_ENDERMAN_TELEPORT,1,10);
+                SoundUtils.playTeleportSound(player);
             } else if (MlgWorld.INSTANCE.getWarpItem().isSimilar(item)) {
                 player.teleport(MlgWorld.INSTANCE.getWorld().getSpawnLocation());
-                player.playSound(player.getLocation(), Sound.ENTITY_ENDERMAN_TELEPORT,1,10);
+                SoundUtils.playTeleportSound(player);
             }
         }
     }

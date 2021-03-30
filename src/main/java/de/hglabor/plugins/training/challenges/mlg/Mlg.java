@@ -8,6 +8,7 @@ import de.hglabor.plugins.training.user.User;
 import de.hglabor.plugins.training.user.UserList;
 import de.hglabor.plugins.training.util.LocationUtils;
 import de.hglabor.plugins.training.warp.worlds.MlgWorld;
+import de.hglabor.utils.noriskutils.SoundUtils;
 import de.hglabor.utils.noriskutils.WorldEditUtils;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
@@ -179,6 +180,7 @@ public abstract class Mlg implements Challenge {
         Entity rightClicked = event.getRightClicked();
         if (rightClicked.equals(warpEntity)) {
             player.teleport(getDefaultSpawn());
+            SoundUtils.playTeleportSound(player);
         }
     }
 
@@ -204,7 +206,7 @@ public abstract class Mlg implements Challenge {
             }
             if (event.getCause().equals(EntityDamageEvent.DamageCause.FALL)) {
                 Block landedBlock = player.getLocation().getBlock().getRelative(BlockFace.DOWN);
-                if (landedBlock.getType().equals(platformMaterial)) {
+                if (!landedBlock.getType().equals(bottomMaterial)) {
                     event.setCancelled(true);
                 }
             }

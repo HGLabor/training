@@ -133,8 +133,9 @@ public class MlgPlatform implements Listener {
             User user = UserList.INSTANCE.getUser(player);
             if (!user.hasCooldown(getClass())) {
                 mlg.setMlgReady(player);
+                player.playSound(player.getLocation(), Sound.ITEM_ARMOR_EQUIP_LEATHER, 1, 1);
                 player.sendMessage(ChatColor.AQUA + "You received " + mlg.getName() + " mlg equipment");
-                user.addCooldown(getClass(),System.currentTimeMillis() + 1500L);
+                user.addCooldown(getClass(), System.currentTimeMillis() + 1500L);
             } else {
                 player.sendMessage(ChatColor.RED + "You are on cooldown.");
             }
