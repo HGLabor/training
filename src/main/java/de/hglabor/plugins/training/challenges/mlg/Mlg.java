@@ -35,7 +35,7 @@ public abstract class Mlg implements Challenge {
     protected final String name;
     protected final ChatColor color;
     protected final LivingEntity warpEntity;
-    protected final Material borderMaterial, bottomMaterial;
+    protected final Material borderMaterial, bottomMaterial,topMaterial;
     protected Cuboid cuboid;
     protected Location spawn;
     protected Material platformMaterial;
@@ -47,6 +47,7 @@ public abstract class Mlg implements Challenge {
         this.color = color;
         this.borderMaterial = borderMaterial;
         this.bottomMaterial = bottomMaterial;
+        this.topMaterial = Material.BARRIER;
         this.spawn = LocationUtils.ZERO_MLG;
         this.platforms = new ArrayList<>();
         this.cuboid = new Cuboid(LocationUtils.ZERO_MLG, LocationUtils.ZERO_MLG);
@@ -56,6 +57,10 @@ public abstract class Mlg implements Challenge {
         this.warpEntity.setAI(false);
         this.warpEntity.setCustomName(color + name + " MLG");
         this.warpEntity.setCustomNameVisible(true);
+    }
+
+    public LivingEntity getWarpEntity() {
+        return warpEntity;
     }
 
     public Mlg withPlatforms(Material material, int radius, int... yPositions) {
@@ -95,7 +100,7 @@ public abstract class Mlg implements Challenge {
         int radius = platformRadius * 3;
         WorldEditUtils.createCylinder(spawn.getWorld(), spawn, radius, true, 1, bottomMaterial);
         WorldEditUtils.createCylinder(spawn.getWorld(), spawn, radius, false, 255, borderMaterial);
-        WorldEditUtils.createCylinder(spawn.getWorld(), spawn.clone().add(0, 255, 0), radius, true, 1, Material.BARRIER);
+        WorldEditUtils.createCylinder(spawn.getWorld(), spawn.clone().add(0, 255, 0), radius, true, 1, topMaterial);
 
         platforms.forEach(platform -> {
             Bukkit.getPluginManager().registerEvents(platform, Training.getInstance());
