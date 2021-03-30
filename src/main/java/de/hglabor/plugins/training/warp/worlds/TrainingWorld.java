@@ -14,6 +14,7 @@ import org.bukkit.event.Listener;
 import org.bukkit.event.block.Action;
 import org.bukkit.event.block.BlockBreakEvent;
 import org.bukkit.event.block.BlockPlaceEvent;
+import org.bukkit.event.entity.EntityDamageByEntityEvent;
 import org.bukkit.event.entity.FoodLevelChangeEvent;
 import org.bukkit.event.player.PlayerInteractEvent;
 import org.bukkit.event.player.PlayerRespawnEvent;
@@ -77,6 +78,17 @@ public abstract class TrainingWorld implements Listener {
         if (player.getWorld().equals(world)) {
             User user = UserList.INSTANCE.getUser(player);
             event.setRespawnLocation(user.getRespawnLoc());
+        }
+    }
+
+    @EventHandler
+    public void onEntityDamageByEntity(EntityDamageByEntityEvent event) {
+        if (!event.getEntity().getWorld().equals(world)) {
+            return;
+        }
+
+        if (event.getDamager().getWorld().equals(world) && event.getEntity().getWorld().equals(world)) {
+            event.setCancelled(true);
         }
     }
 

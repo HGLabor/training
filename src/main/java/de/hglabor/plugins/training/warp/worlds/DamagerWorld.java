@@ -32,13 +32,6 @@ public class DamagerWorld extends TrainingWorld {
     }
 
     @EventHandler
-    public void onEntityDamageByEntity(EntityDamageByEntityEvent event) {
-        if (event.getDamager().getWorld().equals(world) && event.getEntity().getWorld().equals(world)) {
-            event.setCancelled(true);
-        }
-    }
-
-    @EventHandler
     public void onPlayerAttemptPickupItem(PlayerAttemptPickupItemEvent event) {
         if (isSpawn(event.getPlayer())) {
             event.setCancelled(true);
