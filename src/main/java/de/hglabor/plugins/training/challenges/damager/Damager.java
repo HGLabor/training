@@ -9,10 +9,7 @@ import de.hglabor.plugins.training.user.User;
 import de.hglabor.plugins.training.user.UserList;
 import de.hglabor.plugins.training.util.LocationUtils;
 import de.hglabor.utils.noriskutils.HologramUtils;
-import org.bukkit.Bukkit;
-import org.bukkit.ChatColor;
-import org.bukkit.Location;
-import org.bukkit.Material;
+import org.bukkit.*;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.entity.ArmorStand;
 import org.bukkit.entity.Item;
@@ -49,8 +46,8 @@ public class Damager implements Challenge {
         this.configKey = "Damager" + name;
         this.color = color;
         this.tickSpeed = 20L;
-        this.damage = 1D;
-        this.soupsToEat = 64;
+        this.damage = 4D;
+        this.soupsToEat = 96;
         this.droppedItems = new HashSet<>();
         this.holograms = new ArmorStand[3];
         this.soupHealing = new SoupHealing();
@@ -153,6 +150,7 @@ public class Damager implements Challenge {
         player.sendMessage(ChatColor.GREEN + "You completed " + this.getName()); //TODO Localization
         printAndResetSoupStats(player, user);
         player.teleport(user.getRespawnLoc());
+        player.playSound(player.getLocation(), Sound.ENTITY_FOX_TELEPORT, 1, 1);
     }
 
     @Override
@@ -161,6 +159,7 @@ public class Damager implements Challenge {
         players.remove(player.getUniqueId());
         player.sendMessage(ChatColor.RED + "You failed " + this.getName()); //TODO Localization
         printAndResetSoupStats(player, user);
+        player.playSound(player.getLocation(), Sound.BLOCK_GLASS_BREAK, 1, 1);
     }
 
     private void printAndResetSoupStats(Player player, User user) {

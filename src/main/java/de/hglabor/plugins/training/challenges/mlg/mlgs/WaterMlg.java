@@ -34,23 +34,32 @@ public class WaterMlg extends Mlg {
         Player player = event.getPlayer();
         Block blockClicked = event.getBlockClicked();
         Block block = event.getBlock();
+        if (!isInChallenge(player)) {
+            return;
+        }
         if (blockClicked.getType().equals(platformMaterial) || blockClicked.getType().equals(borderMaterial)) {
             player.sendMessage(ChatColor.RED + "Here you can't mlg"); //TODO localization
             event.setCancelled(true);
             return;
         }
         if (blockClicked.getType().equals(bottomMaterial)) {
-            onComplete(player);
-            Bukkit.getScheduler().runTaskLater(Training.getInstance(), () -> {
-                block.setType(Material.AIR);
-            }, 10);
+            User user = UserList.INSTANCE.getUser(player);
+            if (!user.getChallengeInfoOrDefault(this, false)) {
+                onComplete(player);
+                Bukkit.getScheduler().runTaskLater(Training.getInstance(), () -> block.setType(Material.AIR), 5L);
+            } else {
+                event.setCancelled(true);
+            }
         }
     }
 
     @EventHandler
     public void onBucket(PlayerBucketFillEvent event) {
         Block blockClicked = event.getBlockClicked();
-        if (blockClicked.getType().equals(bottomMaterial)) {
+        if (!isInChallenge(event.getPlayer())) {
+            return;
+        }
+        if (blockClicked.getType().equals(Material.WATER)) {
             event.setCancelled(true);
         }
     }
@@ -58,7 +67,7 @@ public class WaterMlg extends Mlg {
     @Override
     public void onEnter(Player player) {
         player.sendMessage("You entered " + this.getName() + " MLG");
-        setItems(player);
+        setMlgReady(player);
     }
 
     @Override
@@ -68,16 +77,18 @@ public class WaterMlg extends Mlg {
 
     @Override
     public void onComplete(Player player) {
+        User user = UserList.INSTANCE.getUser(player);
+        user.addChallengeInfo(this, true);
         player.sendMessage(ChatColor.GREEN + ChatColor.BOLD.toString() + "Successful MLG");
         player.playSound(player.getLocation(), Sound.ENTITY_ARROW_HIT_PLAYER, 1, 1);
-        User user = UserList.INSTANCE.getUser(player);
         Bukkit.getScheduler().runTaskLater(Training.getInstance(), () -> {
             teleportAndSetItems(player);
-        }, 10L);
+        }, 5L);
     }
 
     @Override
     public void onFailure(Player player) {
+        player.sendMessage(ChatColor.RED + ChatColor.BOLD.toString() + "Failed MLG");
         Bukkit.getScheduler().runTaskLater(Training.getInstance(), () -> {
             teleportAndSetItems(player);
             player.playSound(player.getLocation(), Sound.BLOCK_GLASS_BREAK, 1, 1);
@@ -89,8 +100,11 @@ public class WaterMlg extends Mlg {
         return Collections.singletonList(mlgItem);
     }
 
-    @Override
-    public void setItems(Player player) {
+    public void setMlgReady(Player player) {
+        User user = UserList.INSTANCE.getUser(player);
+        user.addChallengeInfo(this, false);
+        player.setHealth(player.getMaxHealth());
+        player.setFoodLevel(100);
         player.getInventory().clear();
         player.getInventory().setItem(0, WarpItems.WARP_SELECTOR);
         player.getInventory().setItem(4, mlgItem);

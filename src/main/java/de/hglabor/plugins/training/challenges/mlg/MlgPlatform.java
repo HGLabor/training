@@ -1,5 +1,7 @@
 package de.hglabor.plugins.training.challenges.mlg;
 
+import de.hglabor.plugins.training.user.User;
+import de.hglabor.plugins.training.user.UserList;
 import de.hglabor.utils.noriskutils.HologramUtils;
 import de.hglabor.utils.noriskutils.WorldEditUtils;
 import net.minecraft.server.v1_16_R3.EntityPanda;
@@ -12,6 +14,7 @@ import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.entity.CreatureSpawnEvent;
 import org.bukkit.event.player.PlayerInteractAtEntityEvent;
+import org.bukkit.inventory.EquipmentSlot;
 
 import java.util.Random;
 
@@ -44,12 +47,12 @@ public class MlgPlatform implements Listener {
         if (upPlatform != null) {
             Location loc = spawn.clone().add(1, 1, radius - (radius / 3D));
             loc.setYaw(180);
-            upEntity = createLevitatorSheep(loc,ChatColor.BOLD + ChatColor.GREEN.toString() + "\u25B2",DyeColor.GREEN);
+            upEntity = createLevitatorSheep(loc, ChatColor.BOLD + ChatColor.GREEN.toString() + "\u25B2", DyeColor.GREEN);
         }
         if (downPlatform != null) {
             Location loc = spawn.clone().add(-1, 1, radius - (radius / 3D));
             loc.setYaw(180);
-            downEntity = createLevitatorSheep(loc,ChatColor.BOLD + ChatColor.RED.toString() + "\u25BC",DyeColor.RED);
+            downEntity = createLevitatorSheep(loc, ChatColor.BOLD + ChatColor.RED.toString() + "\u25BC", DyeColor.RED);
         }
         Location left = spawn.clone().add(radius - (radius / 3D), 1, 0);
         left.setYaw(90);
@@ -117,12 +120,24 @@ public class MlgPlatform implements Listener {
     public void onPlayerInteractAtEntity(PlayerInteractAtEntityEvent event) {
         Entity rightClicked = event.getRightClicked();
         Player player = event.getPlayer();
+        if (event.getHand().equals(EquipmentSlot.OFF_HAND)) {
+            return;
+        }
         if (upEntity != null && rightClicked.getUniqueId().equals(upEntity.getUniqueId())) {
             player.teleport(upPlatform.getSpawn().clone().add(0, 1, 0));
-            player.playSound(player.getLocation(),Sound.BLOCK_NOTE_BLOCK_PLING,1,0);
+            player.playSound(player.getLocation(), Sound.BLOCK_NOTE_BLOCK_PLING, 1, 0);
         } else if (downEntity != null && rightClicked.getUniqueId().equals(downEntity.getUniqueId())) {
             player.teleport(downPlatform.getSpawn().clone().add(0, 1, 0));
-            player.playSound(player.getLocation(),Sound.BLOCK_NOTE_BLOCK_PLING,1,1);
+            player.playSound(player.getLocation(), Sound.BLOCK_NOTE_BLOCK_PLING, 1, 1);
+        } else if (rightClicked.getUniqueId().equals(rightSupplyPanda.getUniqueId()) || rightClicked.getUniqueId().equals(leftSupplyPanda.getUniqueId())) {
+            User user = UserList.INSTANCE.getUser(player);
+            if (!user.hasCooldown(getClass())) {
+                mlg.setMlgReady(player);
+                player.sendMessage(ChatColor.AQUA + "You received " + mlg.getName() + " mlg equipment");
+                user.addCooldown(getClass(),System.currentTimeMillis() + 1500L);
+            } else {
+                player.sendMessage(ChatColor.RED + "You are on cooldown.");
+            }
         }
     }
 }

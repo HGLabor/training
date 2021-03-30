@@ -118,7 +118,7 @@ public abstract class TrainingWorld implements Listener {
             return;
         }
         if (isSpawn((Player) event.getEntity())) {
-            event.setFoodLevel(20);
+            event.setFoodLevel(40);
             event.setCancelled(true);
         }
     }

@@ -1,12 +1,10 @@
 package de.hglabor.plugins.training.warp.worlds;
 
 import de.hglabor.plugins.training.warp.WarpItems;
-import de.hglabor.plugins.training.warp.WarpSelector;
 import de.hglabor.utils.noriskutils.ItemBuilder;
 import org.bukkit.Material;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
-import org.bukkit.event.entity.EntityDamageByEntityEvent;
 import org.bukkit.event.player.PlayerAttemptPickupItemEvent;
 import org.bukkit.event.player.PlayerDropItemEvent;
 

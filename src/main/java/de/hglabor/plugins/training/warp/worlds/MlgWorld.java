@@ -6,6 +6,7 @@ import org.bukkit.Material;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.block.BlockFromToEvent;
+import org.bukkit.event.entity.FoodLevelChangeEvent;
 import org.bukkit.event.inventory.InventoryClickEvent;
 import org.bukkit.event.player.PlayerDropItemEvent;
 import org.bukkit.inventory.ItemStack;
@@ -52,6 +53,15 @@ public class MlgWorld extends TrainingWorld {
         if (WarpItems.isWarpItem(currentItem)) {
             event.setCancelled(true);
         }
+    }
+
+    @Override
+    public void onFoodLevelChange(FoodLevelChangeEvent event) {
+        if (!event.getEntity().getWorld().equals(world)) {
+            return;
+        }
+        event.setFoodLevel(40);
+        event.setCancelled(true);
     }
 
     @Override

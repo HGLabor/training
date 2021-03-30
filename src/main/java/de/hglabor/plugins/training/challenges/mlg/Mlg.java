@@ -69,7 +69,7 @@ public abstract class Mlg implements Challenge {
 
     public abstract List<ItemStack> getMlgItems();
 
-    public abstract void setItems(Player player);
+    public abstract void setMlgReady(Player player);
 
     public Location getDefaultSpawn() {
         return platforms.get((platforms.size() - 1) / 2).getSpawn().clone().add(0, 1, 0);
@@ -134,7 +134,7 @@ public abstract class Mlg implements Challenge {
         } else {
             player.teleport(getDefaultSpawn());
         }
-        setItems(player);
+        setMlgReady(player);
     }
 
     @Override
