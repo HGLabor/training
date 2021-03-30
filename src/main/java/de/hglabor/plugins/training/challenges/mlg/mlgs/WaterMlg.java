@@ -37,7 +37,7 @@ public class WaterMlg extends Mlg {
         if (!isInChallenge(player)) {
             return;
         }
-        if (blockClicked.getType().equals(platformMaterial) || blockClicked.getType().equals(borderMaterial)) {
+        if (blockClicked.getType().equals(platformMaterial) || blockClicked.getType().equals(borderMaterial) || blockClicked.getType().equals(topMaterial)) {
             player.sendMessage(ChatColor.RED + "Here you can't mlg"); //TODO localization
             event.setCancelled(true);
             return;

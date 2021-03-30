@@ -11,6 +11,7 @@ import de.hglabor.plugins.training.challenges.mlg.Mlg;
 import de.hglabor.plugins.training.challenges.mlg.mlgs.WaterMlg;
 import de.hglabor.plugins.training.command.ChallengeCommand;
 import de.hglabor.plugins.training.command.DamagerCommand;
+import de.hglabor.plugins.training.command.MlgCommand;
 import de.hglabor.plugins.training.user.UserList;
 import de.hglabor.plugins.training.warp.WarpSelector;
 import de.hglabor.plugins.training.warp.worlds.DamagerWorld;
@@ -63,6 +64,7 @@ public final class Training extends JavaPlugin {
         CommandAPI.onEnable(this);
         new DamagerCommand();
         new ChallengeCommand();
+        new MlgCommand();
     }
 
     @Override
