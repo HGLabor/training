@@ -1,11 +1,12 @@
 package de.hglabor.plugins.training.warp;
 
+import de.hglabor.plugins.training.user.User;
+import de.hglabor.plugins.training.user.UserList;
 import de.hglabor.plugins.training.warp.worlds.DamagerWorld;
 import de.hglabor.plugins.training.warp.worlds.MlgWorld;
 import de.hglabor.utils.noriskutils.SoundUtils;
 import org.bukkit.Bukkit;
 import org.bukkit.Material;
-import org.bukkit.Sound;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
@@ -47,10 +48,12 @@ public class WarpSelector implements Listener {
             event.setCancelled(true);
             ItemStack item = event.getCurrentItem();
             if (DamagerWorld.INSTANCE.getWarpItem().isSimilar(item)) {
-                player.teleport(DamagerWorld.INSTANCE.getWorld().getSpawnLocation());
+                User user = UserList.INSTANCE.getUser(player);
+                user.setRespawnLoc(DamagerWorld.INSTANCE.getSpawn());
+                player.teleport(DamagerWorld.INSTANCE.getSpawn());
                 SoundUtils.playTeleportSound(player);
             } else if (MlgWorld.INSTANCE.getWarpItem().isSimilar(item)) {
-                player.teleport(MlgWorld.INSTANCE.getWorld().getSpawnLocation());
+                player.teleport(MlgWorld.INSTANCE.getSpawn());
                 SoundUtils.playTeleportSound(player);
             }
         }

@@ -9,7 +9,6 @@ import de.hglabor.utils.noriskutils.ItemBuilder;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.Material;
-import org.bukkit.Sound;
 import org.bukkit.block.Block;
 import org.bukkit.entity.LivingEntity;
 import org.bukkit.entity.Player;
@@ -35,6 +34,7 @@ public class WaterMlg extends Mlg {
         Block blockClicked = event.getBlockClicked();
         Block block = event.getBlock();
         if (!isInChallenge(player)) {
+            event.setCancelled(true);
             return;
         }
         if (blockClicked.getType().equals(platformMaterial) || blockClicked.getType().equals(borderMaterial) || blockClicked.getType().equals(topMaterial)) {
@@ -62,37 +62,6 @@ public class WaterMlg extends Mlg {
         if (blockClicked.getType().equals(Material.WATER)) {
             event.setCancelled(true);
         }
-    }
-
-    @Override
-    public void onEnter(Player player) {
-        player.sendMessage("You entered " + this.getName() + " MLG");
-        setMlgReady(player);
-    }
-
-    @Override
-    public void onLeave(Player player) {
-        player.sendMessage("You left " + this.getName() + " MLG");
-    }
-
-    @Override
-    public void onComplete(Player player) {
-        User user = UserList.INSTANCE.getUser(player);
-        user.addChallengeInfo(this, true);
-        player.sendMessage(ChatColor.GREEN + ChatColor.BOLD.toString() + "Successful MLG");
-        player.playSound(player.getLocation(), Sound.ENTITY_ARROW_HIT_PLAYER, 1, 1);
-        Bukkit.getScheduler().runTaskLater(Training.getInstance(), () -> {
-            teleportAndSetItems(player);
-        }, 5L);
-    }
-
-    @Override
-    public void onFailure(Player player) {
-        player.sendMessage(ChatColor.RED + ChatColor.BOLD.toString() + "Failed MLG");
-        Bukkit.getScheduler().runTaskLater(Training.getInstance(), () -> {
-            teleportAndSetItems(player);
-            player.playSound(player.getLocation(), Sound.BLOCK_GLASS_BREAK, 1, 1);
-        }, 0);
     }
 
     @Override

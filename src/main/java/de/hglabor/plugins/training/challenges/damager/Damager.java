@@ -1,5 +1,6 @@
 package de.hglabor.plugins.training.challenges.damager;
 
+import com.destroystokyo.paper.event.entity.EntityAddToWorldEvent;
 import de.hglabor.plugins.training.Training;
 import de.hglabor.plugins.training.challenges.Challenge;
 import de.hglabor.plugins.training.mechanics.SoupHealing;
@@ -17,6 +18,7 @@ import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.entity.EntityDamageEvent;
 import org.bukkit.event.entity.PlayerDeathEvent;
+import org.bukkit.event.inventory.InventoryCloseEvent;
 import org.bukkit.event.player.PlayerAttemptPickupItemEvent;
 import org.bukkit.event.player.PlayerDropItemEvent;
 import org.bukkit.event.player.PlayerInteractEvent;
@@ -277,6 +279,8 @@ public class Damager implements Challenge {
     @EventHandler
     public void onPlayerDeath(PlayerDeathEvent event) {
         Player player = event.getEntity();
+        //closing inventory so recraft wont be dropped
+        player.closeInventory();
         if (isInChallenge(player)) {
             onFailure(player);
             for (ItemStack drop : event.getDrops()) {

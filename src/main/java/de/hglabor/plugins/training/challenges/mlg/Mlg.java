@@ -10,10 +10,7 @@ import de.hglabor.plugins.training.util.LocationUtils;
 import de.hglabor.plugins.training.warp.worlds.MlgWorld;
 import de.hglabor.utils.noriskutils.SoundUtils;
 import de.hglabor.utils.noriskutils.WorldEditUtils;
-import org.bukkit.Bukkit;
-import org.bukkit.ChatColor;
-import org.bukkit.Location;
-import org.bukkit.Material;
+import org.bukkit.*;
 import org.bukkit.block.Block;
 import org.bukkit.block.BlockFace;
 import org.bukkit.configuration.file.FileConfiguration;
@@ -36,7 +33,7 @@ public abstract class Mlg implements Challenge {
     protected final String name;
     protected final ChatColor color;
     protected final LivingEntity warpEntity;
-    protected final Material borderMaterial, bottomMaterial,topMaterial;
+    protected final Material borderMaterial, bottomMaterial, topMaterial;
     protected Cuboid cuboid;
     protected Location spawn;
     protected Material platformMaterial;
@@ -76,6 +73,39 @@ public abstract class Mlg implements Challenge {
     public abstract List<ItemStack> getMlgItems();
 
     public abstract void setMlgReady(Player player);
+
+    @Override
+    public void onEnter(Player player) {
+        player.sendMessage("You entered " + this.getName() + " MLG");
+        User user = UserList.INSTANCE.getUser(player);
+        user.setRespawnLoc(getDefaultSpawn());
+        setMlgReady(player);
+    }
+
+    @Override
+    public void onLeave(Player player) {
+        player.sendMessage("You left " + this.getName() + " MLG");
+    }
+
+    @Override
+    public void onComplete(Player player) {
+        User user = UserList.INSTANCE.getUser(player);
+        user.addChallengeInfo(this, true);
+        player.sendMessage(ChatColor.GREEN + ChatColor.BOLD.toString() + "Successful MLG");
+        player.playSound(player.getLocation(), Sound.ENTITY_ARROW_HIT_PLAYER, 1, 1);
+        Bukkit.getScheduler().runTaskLater(Training.getInstance(), () -> {
+            teleportAndSetItems(player);
+        }, 5L);
+    }
+
+    @Override
+    public void onFailure(Player player) {
+        player.sendMessage(ChatColor.RED + ChatColor.BOLD.toString() + "Failed MLG");
+        Bukkit.getScheduler().runTaskLater(Training.getInstance(), () -> {
+            teleportAndSetItems(player);
+            player.playSound(player.getLocation(), Sound.BLOCK_GLASS_BREAK, 1, 1);
+        }, 0);
+    }
 
     public Location getDefaultSpawn() {
         return platforms.get((platforms.size() - 1) / 2).getSpawn().clone().add(0, 1, 0);
@@ -199,7 +229,7 @@ public abstract class Mlg implements Challenge {
 
     @EventHandler
     public void onEntityDamage(EntityDamageEvent event) {
-        if (event.getEntity() instanceof Player){
+        if (event.getEntity() instanceof Player) {
             Player player = (Player) event.getEntity();
             if (!isInChallenge(player)) {
                 return;

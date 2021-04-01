@@ -129,6 +129,10 @@ public abstract class TrainingWorld implements Listener {
         return world;
     }
 
+    public Location getSpawn() {
+        return world.getSpawnLocation();
+    }
+
     public ItemStack getWarpItem() {
         return warpItem;
     }

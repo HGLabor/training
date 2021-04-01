@@ -1,28 +1,46 @@
 package de.hglabor.plugins.training.challenges.mlg.mlgs;
 
-import de.hglabor.plugins.training.Training;
 import de.hglabor.plugins.training.challenges.mlg.Mlg;
 import de.hglabor.plugins.training.user.User;
 import de.hglabor.plugins.training.user.UserList;
 import de.hglabor.plugins.training.warp.WarpItems;
-import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.Material;
-import org.bukkit.Sound;
 import org.bukkit.block.Block;
-import org.bukkit.entity.Horse;
-import org.bukkit.entity.LivingEntity;
-import org.bukkit.entity.Player;
+import org.bukkit.entity.*;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.player.PlayerBucketFillEvent;
 import org.bukkit.inventory.ItemStack;
 import org.spigotmc.event.entity.EntityMountEvent;
 
+import java.util.ArrayList;
 import java.util.List;
 
 public class HorseMlg extends Mlg {
+    private final List<Horse> horses;
+    private final int horseAmount;
+
     public HorseMlg(String name, ChatColor color, Class<? extends LivingEntity> type) {
         super(name, color, type, Material.QUARTZ_BLOCK, Material.GOLD_BLOCK);
+        this.horses = new ArrayList<>();
+        this.horseAmount = 100;
+    }
+
+    @Override
+    public void start() {
+        super.start();
+        for (int i = 0; i < horseAmount; i++) {
+            Horse horse = (Horse) spawn.getWorld().spawnEntity(spawn.clone().add(0, 1, 0), EntityType.HORSE);
+            horse.setPersistent(false);
+            horses.add(horse);
+        }
+    }
+
+    @Override
+    public void stop() {
+        super.stop();
+        horses.forEach(Entity::remove);
+        horses.clear();
     }
 
     @EventHandler
@@ -34,9 +52,7 @@ public class HorseMlg extends Mlg {
             return;
         }
         Player player = (Player) event.getEntity();
-        Horse horse = (Horse) event.getMount();
         if (!isInChallenge(player)) {
-            Bukkit.broadcastMessage("hi");
             event.setCancelled(true);
             return;
         }
@@ -57,37 +73,6 @@ public class HorseMlg extends Mlg {
         if (blockClicked.getType().equals(Material.WATER)) {
             event.setCancelled(true);
         }
-    }
-
-    @Override
-    public void onEnter(Player player) {
-        player.sendMessage("You entered " + this.getName() + " MLG");
-        setMlgReady(player);
-    }
-
-    @Override
-    public void onLeave(Player player) {
-        player.sendMessage("You left " + this.getName() + " MLG");
-    }
-
-    @Override
-    public void onComplete(Player player) {
-        User user = UserList.INSTANCE.getUser(player);
-        user.addChallengeInfo(this, true);
-        player.sendMessage(ChatColor.GREEN + ChatColor.BOLD.toString() + "Successful MLG");
-        player.playSound(player.getLocation(), Sound.ENTITY_ARROW_HIT_PLAYER, 1, 1);
-        Bukkit.getScheduler().runTaskLater(Training.getInstance(), () -> {
-            teleportAndSetItems(player);
-        }, 5L);
-    }
-
-    @Override
-    public void onFailure(Player player) {
-        player.sendMessage(ChatColor.RED + ChatColor.BOLD.toString() + "Failed MLG");
-        Bukkit.getScheduler().runTaskLater(Training.getInstance(), () -> {
-            teleportAndSetItems(player);
-            player.playSound(player.getLocation(), Sound.BLOCK_GLASS_BREAK, 1, 1);
-        }, 0);
     }
 
     @Override
