@@ -8,7 +8,6 @@ import de.hglabor.plugins.training.user.User;
 import de.hglabor.plugins.training.user.UserList;
 import de.hglabor.plugins.training.util.LocationUtils;
 import de.hglabor.plugins.training.warp.worlds.MlgWorld;
-import de.hglabor.utils.noriskutils.SoundUtils;
 import de.hglabor.utils.noriskutils.WorldEditUtils;
 import org.bukkit.*;
 import org.bukkit.block.Block;
@@ -210,7 +209,7 @@ public abstract class Mlg implements Challenge {
         Entity rightClicked = event.getRightClicked();
         if (rightClicked.equals(warpEntity)) {
             player.teleport(getDefaultSpawn());
-            SoundUtils.playTeleportSound(player);
+            //SoundUtils.playTeleportSound(player); //TODO revert
         }
     }
 

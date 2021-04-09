@@ -5,7 +5,6 @@ import de.hglabor.plugins.training.user.User;
 import de.hglabor.plugins.training.user.UserList;
 import de.hglabor.plugins.training.util.LocationUtils;
 import de.hglabor.plugins.training.warp.WarpItems;
-import de.hglabor.utils.noriskutils.BungeeUtils;
 import org.bukkit.*;
 import org.bukkit.block.BlockFace;
 import org.bukkit.entity.Player;
@@ -13,7 +12,6 @@ import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.block.Action;
 import org.bukkit.event.block.BlockBreakEvent;
-import org.bukkit.event.block.BlockPlaceEvent;
 import org.bukkit.event.entity.EntityDamageByEntityEvent;
 import org.bukkit.event.entity.FoodLevelChangeEvent;
 import org.bukkit.event.player.PlayerInteractEvent;
@@ -70,7 +68,7 @@ public abstract class TrainingWorld implements Listener {
                 player.playSound(player.getLocation(),Sound.BLOCK_METAL_PRESSURE_PLATE_CLICK_OFF,1,1);
             }
         } else if (item.isSimilar(WarpItems.HUB)) {
-            BungeeUtils.send(player, "lobby", Training.getInstance());
+            //BungeeUtils.send(player, "lobby", Training.getInstance());  //TODO revert
         }
     }
 
@@ -104,7 +102,7 @@ public abstract class TrainingWorld implements Listener {
         }
     }
 
-    @EventHandler
+    /*@EventHandler
     public void onBlockPlace(BlockPlaceEvent event) {
         if (!event.getPlayer().getWorld().equals(world)) {
             return;
@@ -112,7 +110,7 @@ public abstract class TrainingWorld implements Listener {
         if (!isAllowedToBuild(event.getPlayer())) {
             event.setCancelled(true);
         }
-    }
+    }*/ // must be done in the block mlg class i think lol
 
     @EventHandler
     public void onFoodLevelChange(FoodLevelChangeEvent event) {

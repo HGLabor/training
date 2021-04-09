@@ -9,6 +9,7 @@ import de.hglabor.utils.noriskutils.ItemBuilder;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.Material;
+import org.bukkit.attribute.Attribute;
 import org.bukkit.block.Block;
 import org.bukkit.entity.LivingEntity;
 import org.bukkit.entity.Player;
@@ -19,6 +20,7 @@ import org.bukkit.inventory.ItemStack;
 
 import java.util.Collections;
 import java.util.List;
+import java.util.Objects;
 
 public class WaterMlg extends Mlg {
     private final ItemStack mlgItem;
@@ -72,7 +74,7 @@ public class WaterMlg extends Mlg {
     public void setMlgReady(Player player) {
         User user = UserList.INSTANCE.getUser(player);
         user.addChallengeInfo(this, false);
-        player.setHealth(player.getMaxHealth());
+        player.setHealth(Objects.requireNonNull(player.getAttribute(Attribute.GENERIC_MAX_HEALTH)).getValue()); // player.getMaxHealth() is deprecated
         player.setFoodLevel(100);
         player.getInventory().clear();
         player.getInventory().setItem(0, WarpItems.WARP_SELECTOR);

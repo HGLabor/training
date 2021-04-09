@@ -23,6 +23,13 @@ public final class ChallengeManager {
         challenge.start();
     }
 
+    /** Register multiple challenges @ once */
+    public void registerAll(Challenge... challenges) {
+        for (Challenge challenge : challenges) {
+            this.register(challenge);
+        }
+    }
+
     public Set<Challenge> getChallenges() {
         return challenges;
     }
