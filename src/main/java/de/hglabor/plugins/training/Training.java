@@ -2,8 +2,8 @@ package de.hglabor.plugins.training;
 
 import de.hglabor.plugins.training.challenges.Challenge;
 import de.hglabor.plugins.training.challenges.ChallengeManager;
-import de.hglabor.plugins.training.challenges.damager.damagers.CrapDamager;
 import de.hglabor.plugins.training.challenges.damager.Damager;
+import de.hglabor.plugins.training.challenges.damager.damagers.CrapDamager;
 import de.hglabor.plugins.training.challenges.damager.damagers.ImpossibleDamager;
 import de.hglabor.plugins.training.challenges.damager.damagers.InconsistencyDamager;
 import de.hglabor.plugins.training.challenges.listener.ChallengeCuboidListener;
@@ -21,7 +21,6 @@ import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.Material;
 import org.bukkit.WorldCreator;
-import org.bukkit.block.ShulkerBox;
 import org.bukkit.entity.*;
 import org.bukkit.plugin.java.JavaPlugin;
 
