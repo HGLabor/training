@@ -11,6 +11,7 @@ import org.bukkit.ChatColor;
 import org.bukkit.Material;
 import org.bukkit.attribute.Attribute;
 import org.bukkit.block.Block;
+import org.bukkit.entity.Entity;
 import org.bukkit.entity.LivingEntity;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
@@ -25,7 +26,7 @@ import java.util.Objects;
 public class WaterMlg extends Mlg {
     private final ItemStack mlgItem;
 
-    public WaterMlg(String name, ChatColor color, Class<? extends LivingEntity> type) {
+    public WaterMlg(String name, ChatColor color, Class<? extends Entity> type) {
         super(name, color, type, Material.QUARTZ_BLOCK, Material.GOLD_BLOCK);
         this.mlgItem = new ItemBuilder(Material.WATER_BUCKET).setName(ChatColor.AQUA + this.getName() + " MLG").build();
     }

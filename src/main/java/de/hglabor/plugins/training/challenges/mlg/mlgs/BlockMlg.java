@@ -13,6 +13,7 @@ import org.bukkit.Material;
 import org.bukkit.attribute.Attribute;
 import org.bukkit.block.Block;
 import org.bukkit.block.BlockFace;
+import org.bukkit.entity.Entity;
 import org.bukkit.entity.LivingEntity;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
@@ -26,7 +27,7 @@ import java.util.Objects;
 public class BlockMlg extends Mlg {
     private final List<ItemStack> mlgItems = new ArrayList<>();
 
-    public BlockMlg(String name, ChatColor color, Class<? extends LivingEntity> type) {
+    public BlockMlg(String name, ChatColor color, Class<? extends Entity> type) {
         super(name, color, type, Material.QUARTZ_BLOCK, Material.GOLD_BLOCK);
         this.addMlgMaterials(Material.COBWEB, Material.SLIME_BLOCK, Material.SCAFFOLDING, Material.TWISTING_VINES);
     }

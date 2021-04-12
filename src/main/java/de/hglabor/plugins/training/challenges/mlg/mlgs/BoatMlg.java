@@ -11,6 +11,7 @@ import org.bukkit.ChatColor;
 import org.bukkit.Material;
 import org.bukkit.attribute.Attribute;
 import org.bukkit.entity.Boat;
+import org.bukkit.entity.Entity;
 import org.bukkit.entity.LivingEntity;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
@@ -25,7 +26,7 @@ import java.util.Objects;
 public class BoatMlg extends Mlg {
     private final List<ItemStack> mlgItems = new ArrayList<>();
 
-    public BoatMlg(String name, ChatColor color, Class<? extends LivingEntity> type) {
+    public BoatMlg(String name, ChatColor color, Class<? extends Entity> type) {
         super(name, color, type, Material.QUARTZ_BLOCK, Material.GOLD_BLOCK);
         this.addMlgMaterial(Material.OAK_BOAT);
     }

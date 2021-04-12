@@ -15,7 +15,7 @@ import org.bukkit.block.Block;
 import org.bukkit.block.BlockFace;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.craftbukkit.v1_16_R3.CraftWorld;
-import org.bukkit.craftbukkit.v1_16_R3.entity.CraftLivingEntity;
+import org.bukkit.craftbukkit.v1_16_R3.entity.CraftEntity;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.LivingEntity;
 import org.bukkit.entity.Player;
@@ -160,7 +160,7 @@ public abstract class Mlg implements Challenge {
 
         platforms.forEach(MlgPlatform::create);
         warpEntity.getLocation().getChunk().setForceLoaded(true);
-        ((CraftWorld) MlgWorld.INSTANCE.getWorld()).addEntity(((CraftLivingEntity) warpEntity).getHandle(), CreatureSpawnEvent.SpawnReason.CUSTOM);
+        ((CraftWorld) MlgWorld.INSTANCE.getWorld()).addEntity(((CraftEntity) warpEntity).getHandle(), CreatureSpawnEvent.SpawnReason.CUSTOM);
     }
 
     @Override

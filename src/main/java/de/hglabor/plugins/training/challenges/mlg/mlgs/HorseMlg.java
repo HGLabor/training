@@ -20,7 +20,7 @@ public class HorseMlg extends Mlg {
     private final List<Horse> horses;
     private final int horseAmount;
 
-    public HorseMlg(String name, ChatColor color, Class<? extends LivingEntity> type) {
+    public HorseMlg(String name, ChatColor color, Class<? extends Entity> type) {
         super(name, color, type, Material.QUARTZ_BLOCK, Material.GOLD_BLOCK);
         this.horses = new ArrayList<>();
         this.horseAmount = 100;

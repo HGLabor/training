@@ -27,7 +27,7 @@ public class StriderMlg extends Mlg {
     private final List<Strider> striders;
     private final int striderAmount;
 
-    public StriderMlg(String name, ChatColor color, Class<? extends LivingEntity> type) {
+    public StriderMlg(String name, ChatColor color, Class<? extends Entity> type) {
         super(name, color, type, Material.QUARTZ_BLOCK, new Material[] {Material.GOLD_BLOCK, Material.LAVA});
         this.striders = new ArrayList<>();
         this.striderAmount = 150;
