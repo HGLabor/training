@@ -33,7 +33,11 @@ public class BlockMlg extends Mlg {
     }
 
     private void addMlgMaterial(Material material) {
-        this.mlgItems.add(new ItemBuilder(material).setName(ChatColor.AQUA + this.getName() + " MLG - " + material.name()).build()); // e.g. Block Mlg - COBWEB
+        String name = ChatColor.AQUA + this.getName() + " MLG - " + material.name(); // e.g. Block Mlg - COBWEB
+        if (material.name().equalsIgnoreCase("scaffolding") || material.name().equalsIgnoreCase("twisting_vines")) {
+            name += " - ONLY Y <25";
+        }
+        this.mlgItems.add(new ItemBuilder(material).setName(name).build());
     }
 
     private void addMlgMaterials(Material... materials) {
