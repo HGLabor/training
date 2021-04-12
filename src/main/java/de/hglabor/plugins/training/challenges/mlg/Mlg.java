@@ -140,7 +140,6 @@ public abstract class Mlg implements Challenge {
         int radius = platformRadius * 3;
         for (int index=0; index<bottomMaterials.length; index++) {
             WorldEditUtils.createCylinder(spawn.getWorld(), spawn.clone().add(0, index, 0), radius, true, 1, bottomMaterials[index]);
-            Bukkit.broadcastMessage("Generated " + index);
         }
         WorldEditUtils.createCylinder(spawn.getWorld(), spawn, radius, false, 255, borderMaterial);
         WorldEditUtils.createCylinder(spawn.getWorld(), spawn.clone().add(0, 255, 0), radius, true, 1, topMaterial);
