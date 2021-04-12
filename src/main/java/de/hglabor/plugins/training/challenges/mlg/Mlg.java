@@ -34,7 +34,7 @@ import java.util.List;
 public abstract class Mlg implements Challenge {
     protected final String name;
     protected final ChatColor color;
-    protected final LivingEntity warpEntity;
+    protected final Entity warpEntity;
     protected final Material borderMaterial, topMaterial;
     protected final Material bottomMaterial;
     protected final Material[] bottomMaterials;
@@ -44,7 +44,7 @@ public abstract class Mlg implements Challenge {
     protected int platformRadius;
     protected List<MlgPlatform> platforms;
 
-    public Mlg(String name, ChatColor color, Class<? extends LivingEntity> type, Material borderMaterial, Material[] bottomMaterials) {
+    public Mlg(String name, ChatColor color, Class<? extends Entity> type, Material borderMaterial, Material[] bottomMaterials) {
         this.name = name;
         this.color = color;
         this.borderMaterial = borderMaterial;
@@ -54,19 +54,19 @@ public abstract class Mlg implements Challenge {
         this.spawn = LocationUtils.ZERO_MLG;
         this.platforms = new ArrayList<>();
         this.cuboid = new Cuboid(LocationUtils.ZERO_MLG, LocationUtils.ZERO_MLG);
-        this.warpEntity = (LivingEntity) ((CraftWorld) MlgWorld.INSTANCE.getWorld()).createEntity(LocationUtils.MLG_SPAWN, type).getBukkitEntity();
+        this.warpEntity = ((CraftWorld) MlgWorld.INSTANCE.getWorld()).createEntity(LocationUtils.MLG_SPAWN, type).getBukkitEntity();
         this.warpEntity.setInvulnerable(true);
         this.warpEntity.setPersistent(false);
-        this.warpEntity.setAI(false);
+        if (warpEntity instanceof LivingEntity) ((LivingEntity) this.warpEntity).setAI(false);
         this.warpEntity.setCustomName(color + name + " MLG");
         this.warpEntity.setCustomNameVisible(true);
     }
 
-    public Mlg(String name, ChatColor color, Class<? extends LivingEntity> type, Material borderMaterial, Material bottomMaterial) {
+    public Mlg(String name, ChatColor color, Class<? extends Entity> type, Material borderMaterial, Material bottomMaterial) {
         this(name, color, type, borderMaterial, new Material[] {bottomMaterial});
     }
 
-    public LivingEntity getWarpEntity() {
+    public Entity getWarpEntity() {
         return warpEntity;
     }
 
