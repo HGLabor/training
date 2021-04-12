@@ -40,7 +40,10 @@ public class BoatMlg extends Mlg {
         if (!(event.getEntity() instanceof Boat)) return;
         Player player = event.getPlayer();
         if (player == null) return;
-        if (!(isInChallenge(player))) return;
+        if (!(isInChallenge(player))) {
+            event.setCancelled(true);
+            return;
+        }
 
         User user = UserList.INSTANCE.getUser(player);
         if (!user.getChallengeInfoOrDefault(this, false)) {
@@ -58,7 +61,10 @@ public class BoatMlg extends Mlg {
         if (!(event.getEntered() instanceof Player)) return;
         if (!(event.getVehicle() instanceof Boat)) return;
         Player player = (Player) event.getEntered();
-        if (!(isInChallenge(player))) return;
+        if (!(isInChallenge(player))) {
+            event.setCancelled(true);
+            return;
+        }
         User user = UserList.INSTANCE.getUser(player);
         if (!user.getChallengeInfoOrDefault(this, false)) {
             onComplete(player);
