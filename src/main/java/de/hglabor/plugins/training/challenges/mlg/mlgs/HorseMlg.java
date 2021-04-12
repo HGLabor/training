@@ -44,7 +44,7 @@ public class HorseMlg extends Mlg {
     }
 
     @EventHandler
-    public void onBucket(EntityMountEvent event) {
+    public void onMountHorse(EntityMountEvent event) {
         if (!(event.getEntity() instanceof Player)) {
             return;
         }
@@ -60,17 +60,6 @@ public class HorseMlg extends Mlg {
         if (!user.getChallengeInfoOrDefault(this, false)) {
             onComplete(player);
         } else {
-            event.setCancelled(true);
-        }
-    }
-
-    @EventHandler
-    public void onBucket(PlayerBucketFillEvent event) {
-        Block blockClicked = event.getBlockClicked();
-        if (!isInChallenge(event.getPlayer())) {
-            return;
-        }
-        if (blockClicked.getType().equals(Material.WATER)) {
             event.setCancelled(true);
         }
     }

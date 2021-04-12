@@ -9,6 +9,7 @@ import de.hglabor.plugins.training.user.UserList;
 import de.hglabor.plugins.training.util.LocationUtils;
 import de.hglabor.plugins.training.warp.worlds.MlgWorld;
 import de.hglabor.utils.noriskutils.WorldEditUtils;
+import org.apache.commons.lang.ArrayUtils;
 import org.bukkit.*;
 import org.bukkit.block.Block;
 import org.bukkit.block.BlockFace;
@@ -26,24 +27,29 @@ import org.bukkit.event.player.PlayerInteractEntityEvent;
 import org.bukkit.inventory.ItemStack;
 
 import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Collections;
 import java.util.List;
 
 public abstract class Mlg implements Challenge {
     protected final String name;
     protected final ChatColor color;
     protected final LivingEntity warpEntity;
-    protected final Material borderMaterial, bottomMaterial, topMaterial;
+    protected final Material borderMaterial, topMaterial;
+    protected final Material bottomMaterial;
+    protected final Material[] bottomMaterials;
     protected Cuboid cuboid;
     protected Location spawn;
     protected Material platformMaterial;
     protected int platformRadius;
     protected List<MlgPlatform> platforms;
 
-    public Mlg(String name, ChatColor color, Class<? extends LivingEntity> type, Material borderMaterial, Material bottomMaterial) {
+    public Mlg(String name, ChatColor color, Class<? extends LivingEntity> type, Material borderMaterial, Material[] bottomMaterials) {
         this.name = name;
         this.color = color;
         this.borderMaterial = borderMaterial;
-        this.bottomMaterial = bottomMaterial;
+        this.bottomMaterials = bottomMaterials;
+        this.bottomMaterial = bottomMaterials[0];
         this.topMaterial = Material.BARRIER;
         this.spawn = LocationUtils.ZERO_MLG;
         this.platforms = new ArrayList<>();
@@ -54,6 +60,10 @@ public abstract class Mlg implements Challenge {
         this.warpEntity.setAI(false);
         this.warpEntity.setCustomName(color + name + " MLG");
         this.warpEntity.setCustomNameVisible(true);
+    }
+
+    public Mlg(String name, ChatColor color, Class<? extends LivingEntity> type, Material borderMaterial, Material bottomMaterial) {
+        this(name, color, type, borderMaterial, new Material[] {bottomMaterial});
     }
 
     public LivingEntity getWarpEntity() {
@@ -128,7 +138,10 @@ public abstract class Mlg implements Challenge {
     @Override
     public void start() {
         int radius = platformRadius * 3;
-        WorldEditUtils.createCylinder(spawn.getWorld(), spawn, radius, true, 1, bottomMaterial);
+        for (int index=0; index<bottomMaterials.length; index++) {
+            WorldEditUtils.createCylinder(spawn.getWorld(), spawn.clone().add(0, index, 0), radius, true, 1, bottomMaterials[index]);
+            Bukkit.broadcastMessage("Generated " + index);
+        }
         WorldEditUtils.createCylinder(spawn.getWorld(), spawn, radius, false, 255, borderMaterial);
         WorldEditUtils.createCylinder(spawn.getWorld(), spawn.clone().add(0, 255, 0), radius, true, 1, topMaterial);
 
@@ -235,7 +248,7 @@ public abstract class Mlg implements Challenge {
             }
             if (event.getCause().equals(EntityDamageEvent.DamageCause.FALL)) {
                 Block landedBlock = player.getLocation().getBlock().getRelative(BlockFace.DOWN);
-                if (!landedBlock.getType().equals(bottomMaterial)) {
+                if (Arrays.stream(bottomMaterials).noneMatch((b) -> b.equals(landedBlock.getType()))) {
                     event.setCancelled(true);
                 }
             }
