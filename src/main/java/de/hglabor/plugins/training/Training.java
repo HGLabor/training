@@ -58,7 +58,7 @@ public final class Training extends JavaPlugin {
         ChallengeManager.INSTANCE.register(new InconsistencyDamager("Inconsistency", ChatColor.LIGHT_PURPLE));
 
         Mlg waterMlg = new WaterMlg("Water", ChatColor.AQUA, IronGolem.class).withPlatforms(Material.IRON_BLOCK, 10, 25, 50, 100, 150, 200, 250);
-        Mlg blockMlg = new BlockMlg("Block", ChatColor.WHITE, Shulker.class).withPlatforms(Material.POLISHED_DIORITE, 10, 15, 50, 100, 150, 200, 250);
+        Mlg blockMlg = new BlockMlg("Block", ChatColor.WHITE, Shulker.class).withPlatforms(Material.POLISHED_DIORITE, 10, 10, 20, 50, 100, 150, 200, 250);
         Mlg horseMlg = new HorseMlg("Horse", ChatColor.GOLD, Horse.class).withPlatforms(Material.DARK_OAK_PLANKS, 10, 25, 50, 100, 150, 200, 250);
         Mlg boatMlg = new BoatMlg("Boat", ChatColor.YELLOW, Boat.class).withPlatforms(Material.OAK_PLANKS, 10, 25, 50, 100, 150, 200, 250);
         Mlg striderMlg = new StriderMlg("Strider", ChatColor.GOLD, Strider.class).withPlatforms(Material.CRIMSON_NYLIUM, 10, 5, 10, 15, 20, 25, 30, 35, 40, 45, 50, 55, 60, 65, 70, 75, 80, 90, 100, 200, 250);
