@@ -85,6 +85,7 @@ public class BlockMlg extends Mlg {
                 event.setCancelled(true);
             }
         }
+        else event.setCancelled(true);
     }
 
     /** Clears out the block and the two above it to avoid people abusing e.g. two cobwebs at once */
