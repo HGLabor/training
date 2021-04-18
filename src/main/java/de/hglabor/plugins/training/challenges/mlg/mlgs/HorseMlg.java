@@ -6,15 +6,18 @@ import de.hglabor.plugins.training.user.UserList;
 import de.hglabor.plugins.training.warp.WarpItems;
 import org.bukkit.ChatColor;
 import org.bukkit.Material;
-import org.bukkit.block.Block;
-import org.bukkit.entity.*;
+import org.bukkit.attribute.Attribute;
+import org.bukkit.entity.Entity;
+import org.bukkit.entity.EntityType;
+import org.bukkit.entity.Horse;
+import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
-import org.bukkit.event.player.PlayerBucketFillEvent;
 import org.bukkit.inventory.ItemStack;
 import org.spigotmc.event.entity.EntityMountEvent;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 
 public class HorseMlg extends Mlg {
     private final List<Horse> horses;
@@ -72,7 +75,7 @@ public class HorseMlg extends Mlg {
     public void setMlgReady(Player player) {
         User user = UserList.INSTANCE.getUser(player);
         user.addChallengeInfo(this, false);
-        player.setHealth(player.getMaxHealth());
+        player.setHealth(Objects.requireNonNull(player.getAttribute(Attribute.GENERIC_MAX_HEALTH)).getValue());
         player.setFoodLevel(100);
         player.getInventory().clear();
         player.getInventory().setItem(0, WarpItems.WARP_SELECTOR);
