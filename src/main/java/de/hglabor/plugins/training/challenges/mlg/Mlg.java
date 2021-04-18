@@ -250,7 +250,9 @@ public abstract class Mlg implements Challenge {
                 if (Arrays.stream(bottomMaterials).noneMatch((b) -> b.equals(landedBlock.getType()))) {
                     event.setCancelled(true);
                 }
-                else player.setHealth(0.0); // Kill player
+                else {
+                    if (player.getHealth()-event.getDamage() > 0) player.setHealth(0.0); // Kill player
+                }
             }
         }
     }
