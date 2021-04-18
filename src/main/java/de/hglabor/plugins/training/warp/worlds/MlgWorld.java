@@ -4,6 +4,7 @@ import de.hglabor.plugins.training.warp.WarpItems;
 import de.hglabor.utils.noriskutils.ItemBuilder;
 import org.bukkit.ChatColor;
 import org.bukkit.Material;
+import org.bukkit.World;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.block.BlockFromToEvent;
@@ -18,6 +19,12 @@ public class MlgWorld extends TrainingWorld {
 
     private MlgWorld() {
         super(new ItemBuilder(Material.WATER_BUCKET).setName(ChatColor.AQUA + "MLG").build());
+    }
+
+    @Override
+    public void init(World world) {
+        super.init(world);
+        world.getWorldBorder().setSize(2500 * 2);
     }
 
     @EventHandler
