@@ -14,7 +14,6 @@ import org.bukkit.attribute.Attribute;
 import org.bukkit.block.Block;
 import org.bukkit.block.BlockFace;
 import org.bukkit.entity.Entity;
-import org.bukkit.entity.LivingEntity;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.block.BlockPlaceEvent;
@@ -55,43 +54,55 @@ public class BlockMlg extends Mlg {
             event.setCancelled(true);
             return;
         }
-        if (blockAgainst.getType().equals(platformMaterial) || blockAgainst.getType().equals(borderMaterial) || blockAgainst.getType().equals(topMaterial)) {
+        if (!canMlgHere(blockAgainst)) {
             player.sendMessage(ChatColor.RED + "Here you can't mlg"); //TODO localization
             event.setCancelled(true);
             return;
         }
-        if (blockAgainst.getType().equals(bottomMaterial)) {
-            User user = UserList.INSTANCE.getUser(player);
-            if (!user.getChallengeInfoOrDefault(this, false)) {
-                // Check for special cases
-                if (block.getType().equals(Material.TWISTING_VINES)) {
-                    // Twisting vines mlg only works when the player is inside the block space
-                    Location blockLocation = block.getLocation();
-                    Location playerLocation = player.getLocation();
-                    if (!(playerLocation.getBlockX() == blockLocation.getBlockX() && playerLocation.getBlockZ() == blockLocation.getBlockZ())) {
-                        onFailure(player);
-                    }
-                    else onComplete(player);
-                } else if (block.getType().equals(Material.SCAFFOLDING)) {
-                    // If the player doesn't place the scaffholding when "inside" it (on the same y coordinate), he lands on top of it and dies
-                    if (!(player.getLocation().getBlockY() == block.getLocation().getBlockY())) {
-                        onFailure(player);
-                    }
-                    else onComplete(player);
-                }
-                else onComplete(player);
-                Bukkit.getScheduler().runTaskLater(Training.getInstance(), () -> this.clearOut(block), 5L);
-            } else {
-                event.setCancelled(true);
+        User user = UserList.INSTANCE.getUser(player);
+        if (!user.getChallengeInfoOrDefault(this, false)) {
+            switch (block.getType()) {
+                case TWISTING_VINES:
+                    handleTwistingVinesMlg(player, block);
+                    break;
+                case SCAFFOLDING:
+                    handleScaffoldingMlg(player, block);
+                    break;
+                default:
+                    onComplete(player);
+                    break;
             }
+            Bukkit.getScheduler().runTaskLater(Training.getInstance(), () -> this.clearOut(block), 5L);
+        } else {
+            event.setCancelled(true);
         }
-        else event.setCancelled(true);
     }
 
-    /** Clears out the block and the two above it to avoid people abusing e.g. two cobwebs at once */
+    private void handleScaffoldingMlg(Player player, Block block) {
+        // If the player doesn't place the scaffholding when "inside" it (on the same y coordinate), he lands on top of it and dies
+        if (!(player.getLocation().getBlockY() == block.getLocation().getBlockY())) {
+            onFailure(player);
+        } else {
+            onComplete(player);
+        }
+    }
+
+    private void handleTwistingVinesMlg(Player player, Block block) {
+        Location blockLocation = block.getLocation();
+        Location playerLocation = player.getLocation();
+        if (!(playerLocation.getBlockX() == blockLocation.getBlockX() && playerLocation.getBlockZ() == blockLocation.getBlockZ())) {
+            onFailure(player);
+        } else {
+            onComplete(player);
+        }
+    }
+
+    /**
+     * Clears out the block and the two above it to avoid people abusing e.g. two cobwebs at once
+     */
     private void clearOut(Block block) {
         block.setType(Material.AIR);
-        for (int x=0; x<=1; x++) {
+        for (int x = 0; x <= 1; x++) {
             block = block.getRelative(BlockFace.UP); // get above block
             block.setType(Material.AIR); // clear it
         }
@@ -115,8 +126,8 @@ public class BlockMlg extends Mlg {
         assert size <= 6;
 
         boolean plus1 = (size <= 4); // If there is enough space, move it 1 to the right because it looks nicer with 1 slot space
-        for (int slot=1; slot<=size; slot++) { // Start at slot 1 not 0 because of warp selector
-            player.getInventory().setItem((plus1 ? (slot+1) : slot), mlgItems.get(slot-1));
+        for (int slot = 1; slot <= size; slot++) { // Start at slot 1 not 0 because of warp selector
+            player.getInventory().setItem((plus1 ? (slot + 1) : slot), mlgItems.get(slot - 1));
         }
         player.getInventory().setItem(7, WarpItems.HUB);
         player.getInventory().setItem(8, WarpItems.RESPAWN_ANCHOR);

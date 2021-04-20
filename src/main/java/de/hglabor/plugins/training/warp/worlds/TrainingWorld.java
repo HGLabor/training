@@ -5,6 +5,7 @@ import de.hglabor.plugins.training.user.User;
 import de.hglabor.plugins.training.user.UserList;
 import de.hglabor.plugins.training.util.LocationUtils;
 import de.hglabor.plugins.training.warp.WarpItems;
+import de.hglabor.utils.noriskutils.BungeeUtils;
 import org.bukkit.*;
 import org.bukkit.block.BlockFace;
 import org.bukkit.entity.Player;
@@ -68,7 +69,7 @@ public abstract class TrainingWorld implements Listener {
                 player.playSound(player.getLocation(),Sound.BLOCK_METAL_PRESSURE_PLATE_CLICK_OFF,1,1);
             }
         } else if (item.isSimilar(WarpItems.HUB)) {
-            //BungeeUtils.send(player, "lobby", Training.getInstance());  //TODO revert
+            BungeeUtils.send(player, "lobby", Training.getInstance());
         }
     }
 

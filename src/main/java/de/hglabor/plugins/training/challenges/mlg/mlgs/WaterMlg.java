@@ -12,7 +12,6 @@ import org.bukkit.Material;
 import org.bukkit.attribute.Attribute;
 import org.bukkit.block.Block;
 import org.bukkit.entity.Entity;
-import org.bukkit.entity.LivingEntity;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.player.PlayerBucketEmptyEvent;
@@ -40,19 +39,17 @@ public class WaterMlg extends Mlg {
             event.setCancelled(true);
             return;
         }
-        if (blockClicked.getType().equals(platformMaterial) || blockClicked.getType().equals(borderMaterial) || blockClicked.getType().equals(topMaterial)) {
+        if (!canMlgHere(blockClicked)) {
             player.sendMessage(ChatColor.RED + "Here you can't mlg"); //TODO localization
             event.setCancelled(true);
             return;
         }
-        if (blockClicked.getType().equals(bottomMaterial)) {
-            User user = UserList.INSTANCE.getUser(player);
-            if (!user.getChallengeInfoOrDefault(this, false)) {
-                onComplete(player);
-                Bukkit.getScheduler().runTaskLater(Training.getInstance(), () -> block.setType(Material.AIR), 5L);
-            } else {
-                event.setCancelled(true);
-            }
+        User user = UserList.INSTANCE.getUser(player);
+        if (!user.getChallengeInfoOrDefault(this, false)) {
+            onComplete(player);
+            Bukkit.getScheduler().runTaskLater(Training.getInstance(), () -> block.setType(Material.AIR), 5L);
+        } else {
+            event.setCancelled(true);
         }
     }
 

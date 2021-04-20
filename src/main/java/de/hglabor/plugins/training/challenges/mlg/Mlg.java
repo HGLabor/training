@@ -8,8 +8,8 @@ import de.hglabor.plugins.training.user.User;
 import de.hglabor.plugins.training.user.UserList;
 import de.hglabor.plugins.training.util.LocationUtils;
 import de.hglabor.plugins.training.warp.worlds.MlgWorld;
+import de.hglabor.utils.noriskutils.SoundUtils;
 import de.hglabor.utils.noriskutils.WorldEditUtils;
-import org.apache.commons.lang.ArrayUtils;
 import org.bukkit.*;
 import org.bukkit.block.Block;
 import org.bukkit.block.BlockFace;
@@ -28,7 +28,6 @@ import org.bukkit.inventory.ItemStack;
 
 import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.Collections;
 import java.util.List;
 
 public abstract class Mlg implements Challenge {
@@ -82,6 +81,10 @@ public abstract class Mlg implements Challenge {
     public abstract List<ItemStack> getMlgItems();
 
     public abstract void setMlgReady(Player player);
+
+    protected boolean canMlgHere(Block blockAgainst) {
+        return blockAgainst.getType().equals(bottomMaterial);
+    }
 
     @Override
     public void onEnter(Player player) {
@@ -221,7 +224,7 @@ public abstract class Mlg implements Challenge {
         Entity rightClicked = event.getRightClicked();
         if (rightClicked.equals(warpEntity)) {
             player.teleport(getDefaultSpawn());
-            //SoundUtils.playTeleportSound(player); //TODO revert
+            SoundUtils.playTeleportSound(player);
         }
     }
 
