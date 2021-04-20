@@ -7,10 +7,7 @@ import de.hglabor.plugins.training.warp.WarpItems;
 import org.bukkit.ChatColor;
 import org.bukkit.Material;
 import org.bukkit.attribute.Attribute;
-import org.bukkit.entity.Entity;
-import org.bukkit.entity.EntityType;
-import org.bukkit.entity.Horse;
-import org.bukkit.entity.Player;
+import org.bukkit.entity.*;
 import org.bukkit.event.EventHandler;
 import org.bukkit.inventory.ItemStack;
 import org.spigotmc.event.entity.EntityMountEvent;
@@ -18,6 +15,7 @@ import org.spigotmc.event.entity.EntityMountEvent;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
+import java.util.Random;
 
 public class HorseMlg extends Mlg {
     private final List<Horse> horses;
@@ -32,8 +30,11 @@ public class HorseMlg extends Mlg {
     @Override
     public void start() {
         super.start();
+        Random random = new Random();
         for (int i = 0; i < horseAmount; i++) {
-            Horse horse = (Horse) spawn.getWorld().spawnEntity(spawn.clone().add(0, 1, 0), EntityType.HORSE);
+            int x = random.nextInt(getBorderRadius());
+            int z = random.nextInt(getBorderRadius());
+            Horse horse = (Horse) spawn.getWorld().spawnEntity(spawn.clone().add(random.nextBoolean() ? x : x * -1, 1, random.nextBoolean() ? z : z * -1), EntityType.HORSE);
             horse.setPersistent(false);
             horses.add(horse);
         }

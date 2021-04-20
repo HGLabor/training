@@ -28,7 +28,7 @@ public class MinecartMlg extends Mlg {
 
     public MinecartMlg(String name, ChatColor color, Class<? extends Entity> type) {
         super(name, color, type, Material.QUARTZ_BLOCK, new Material[]{Material.STONE, Material.RAIL});
-        this.minecartAmount = 50;
+        this.minecartAmount = 75;
         this.minecarts = new ArrayList<>();
         this.mlgItems = new ArrayList<>();
         this.mlgItems.add(new ItemBuilder(Material.MINECART).setName(ChatColor.AQUA + this.getName() + " MLG").build());
