@@ -24,24 +24,24 @@ import java.util.List;
 import java.util.Objects;
 
 public class BlockMlg extends Mlg {
-    private final List<ItemStack> mlgItems = new ArrayList<>();
+    private final List<ItemStack> mlgItems;
 
     public BlockMlg(String name, ChatColor color, Class<? extends Entity> type) {
         super(name, color, type, Material.QUARTZ_BLOCK, Material.GOLD_BLOCK);
+        this.mlgItems = new ArrayList<>();
         this.addMlgMaterials(Material.COBWEB, Material.SLIME_BLOCK, Material.SCAFFOLDING, Material.TWISTING_VINES);
-    }
-
-    private void addMlgMaterial(Material material) {
-        String name = ChatColor.AQUA + this.getName() + " MLG - " + material.name(); // e.g. Block Mlg - COBWEB
-        if (material.name().equalsIgnoreCase("scaffolding") || material.name().equalsIgnoreCase("twisting_vines")) {
-            name += " - ONLY Y <25";
-        }
-        this.mlgItems.add(new ItemBuilder(material).setName(name).build());
     }
 
     private void addMlgMaterials(Material... materials) {
         for (Material material : materials) {
-            this.addMlgMaterial(material);
+            String name = ChatColor.AQUA + this.getName() + " MLG - " + material.name(); // e.g. Block Mlg - COBWEB
+            switch (material) {
+                case SCAFFOLDING:
+                case TWISTING_VINES:
+                    name += " - ONLY Y <25";
+                default:
+                    this.mlgItems.add(new ItemBuilder(material).setName(name).build());
+            }
         }
     }
 
