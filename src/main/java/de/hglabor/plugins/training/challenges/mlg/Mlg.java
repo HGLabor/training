@@ -140,12 +140,11 @@ public abstract class Mlg implements Challenge {
 
     @Override
     public void start() {
-        int radius = platformRadius * 3;
         for (int index=0; index<bottomMaterials.length; index++) {
-            WorldEditUtils.createCylinder(spawn.getWorld(), spawn.clone().add(0, index, 0), radius, true, 1, bottomMaterials[index]);
+            WorldEditUtils.createCylinder(spawn.getWorld(), spawn.clone().add(0, index, 0), getBorderRadius(), true, 1, bottomMaterials[index]);
         }
-        WorldEditUtils.createCylinder(spawn.getWorld(), spawn, radius, false, 255, borderMaterial);
-        WorldEditUtils.createCylinder(spawn.getWorld(), spawn.clone().add(0, 255, 0), radius, true, 1, topMaterial);
+        WorldEditUtils.createCylinder(spawn.getWorld(), spawn, getBorderRadius(), false, 255, borderMaterial);
+        WorldEditUtils.createCylinder(spawn.getWorld(), spawn.clone().add(0, 255, 0), getBorderRadius(), true, 1, topMaterial);
 
         platforms.forEach(platform -> {
             Bukkit.getPluginManager().registerEvents(platform, Training.getInstance());
@@ -170,6 +169,10 @@ public abstract class Mlg implements Challenge {
     public void stop() {
         platforms.forEach(MlgPlatform::clear);
         warpEntity.remove();
+    }
+
+    protected int getBorderRadius() {
+        return platformRadius * 3;
     }
 
     @Override
