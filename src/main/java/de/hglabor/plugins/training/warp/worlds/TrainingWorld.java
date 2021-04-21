@@ -57,7 +57,7 @@ public abstract class TrainingWorld implements Listener {
             User user = UserList.INSTANCE.getUser(player);
             if (action.equals(Action.LEFT_CLICK_BLOCK) || action.equals(Action.LEFT_CLICK_AIR)) {
                 Location location = player.getLocation().getBlock().getRelative(BlockFace.DOWN).getLocation();
-                if (!location.getBlock().isSolid() || player.getLocation().getBlockY() < 15) {
+                if (!location.getBlock().isSolid() || player.getLocation().getBlockY() < 8) {
                     player.sendMessage(ChatColor.RED + "Here you can't set your respawn location.");      //TODO Localization
                     return;
                 }
