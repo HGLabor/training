@@ -289,7 +289,8 @@ public abstract class Mlg implements Challenge {
                     event.setCancelled(true);
                 }
                 else {
-                    if (player.getHealth()-event.getDamage() > 0) player.setHealth(0.0); // Kill player
+                    player.setHealth(0.0); // Kill player
+                    event.setCancelled(true); // Cancel the event so the player doesn't get killed twice
                 }
             }
         }
