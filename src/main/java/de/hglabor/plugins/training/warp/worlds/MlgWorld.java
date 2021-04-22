@@ -50,8 +50,10 @@ public class MlgWorld extends TrainingWorld {
     @EventHandler
     public void onVehicleColission(VehicleEntityCollisionEvent event) {
         if ((event.getVehicle() instanceof Minecart || event.getVehicle() instanceof Boat) && event.getEntity() instanceof Player) {
-            event.setCancelled(true);
-            event.setCollisionCancelled(true);
+            if (event.getEntity().getWorld().equals(world)) {
+                event.setCancelled(true);
+                event.setCollisionCancelled(true);
+            }
         }
     }
 
