@@ -1,5 +1,10 @@
 package de.hglabor.plugins.training.challenges.mlg;
 
+import com.sk89q.worldedit.EditSession;
+import com.sk89q.worldedit.WorldEdit;
+import com.sk89q.worldedit.bukkit.BukkitAdapter;
+import com.sk89q.worldedit.function.pattern.RandomPattern;
+import com.sk89q.worldedit.regions.CylinderRegion;
 import de.hglabor.plugins.training.Training;
 import de.hglabor.plugins.training.challenges.Challenge;
 import de.hglabor.plugins.training.region.Area;
@@ -26,9 +31,7 @@ import org.bukkit.event.entity.PlayerDeathEvent;
 import org.bukkit.event.player.PlayerInteractEntityEvent;
 import org.bukkit.inventory.ItemStack;
 
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
+import java.util.*;
 
 public abstract class Mlg implements Challenge {
     protected final String name;
@@ -42,6 +45,8 @@ public abstract class Mlg implements Challenge {
     protected Material platformMaterial;
     protected int platformRadius;
     protected List<MlgPlatform> platforms;
+    protected boolean randomizedBottomMaterials = false;
+    protected Double[] bottomMaterialPercentages = null;
 
     public Mlg(String name, ChatColor color, Class<? extends Entity> type, Material borderMaterial, Material[] bottomMaterials) {
         this.name = name;
@@ -65,6 +70,12 @@ public abstract class Mlg implements Challenge {
         this(name, color, type, borderMaterial, new Material[] {bottomMaterial});
     }
 
+    public Mlg(String name, ChatColor color, Class<? extends Entity> type, Material borderMaterial, Material[] bottomMaterials, Double[] bottomMaterialPercentages) {
+        this(name, color, type, borderMaterial, bottomMaterials);
+        randomizedBottomMaterials = true;
+        this.bottomMaterialPercentages = bottomMaterialPercentages;
+    }
+
     public Entity getWarpEntity() {
         return warpEntity;
     }
@@ -83,7 +94,7 @@ public abstract class Mlg implements Challenge {
     public abstract void setMlgReady(Player player);
 
     protected boolean canMlgHere(Block blockAgainst) {
-        return blockAgainst.getType().equals(bottomMaterial);
+        return Arrays.stream(bottomMaterials).anyMatch(m -> m.equals(blockAgainst.getType()));
     }
 
     @Override
@@ -138,14 +149,36 @@ public abstract class Mlg implements Challenge {
         return color;
     }
 
+    public static void createRandomCylinder(World world, Location startLocation, int radius, boolean filled, int height, Map<Material, Double> blockPercentages) {
+        try (EditSession editSession = WorldEdit.getInstance().getEditSessionFactory().getEditSession(BukkitAdapter.adapt(world), -1)) {
+            editSession.setFastMode(true);
+            RandomPattern randomPattern = new RandomPattern();
+            for (Map.Entry<Material, Double> blockPercentage : blockPercentages.entrySet()) {
+                // Add block with percentage
+                randomPattern.add(BukkitAdapter.asBlockState(new ItemStack(blockPercentage.getKey())), blockPercentage.getValue());
+            }
+            // Create cylinder
+            editSession.makeCylinder(BukkitAdapter.asBlockVector(startLocation), randomPattern, radius, height, filled);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
     @Override
     public void start() {
         int radius = platformRadius * 3;
         for (int index=0; index<bottomMaterials.length; index++) {
-            WorldEditUtils.createCylinder(spawn.getWorld(), spawn.clone().add(0, index, 0), radius, true, 1, bottomMaterials[index]);
+            if (randomizedBottomMaterials && bottomMaterialPercentages[index] != 100) {
+                Map<Material, Double> blockPercentages = new HashMap<>();
+                blockPercentages.put(bottomMaterials[index], bottomMaterialPercentages[index]);
+                blockPercentages.put(Material.AIR, 100-bottomMaterialPercentages[index]); // e.g. 10% STONE results in 10% stone and 90% air
+                createRandomCylinder(spawn.getWorld(), spawn.clone().add(0, index, 0), radius, true, 1, blockPercentages);
+            }
+            else WorldEditUtils.createCylinder(spawn.getWorld(), spawn.clone().add(0, index, 0), radius, true, 1, bottomMaterials[index]);
         }
         WorldEditUtils.createCylinder(spawn.getWorld(), spawn, radius, false, 255, borderMaterial);
         WorldEditUtils.createCylinder(spawn.getWorld(), spawn.clone().add(0, 255, 0), radius, true, 1, topMaterial);
+        new CylinderRegion();
 
         platforms.forEach(platform -> {
             Bukkit.getPluginManager().registerEvents(platform, Training.getInstance());

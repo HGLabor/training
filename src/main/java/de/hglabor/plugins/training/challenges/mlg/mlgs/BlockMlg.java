@@ -51,7 +51,6 @@ public class BlockMlg extends Mlg {
         Block blockAgainst = event.getBlockAgainst();
         Block block = event.getBlock();
         if (!isInChallenge(player)) {
-            event.setCancelled(true);
             return;
         }
         if (!canMlgHere(blockAgainst)) {
