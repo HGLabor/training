@@ -16,6 +16,7 @@ import org.bukkit.entity.Minecart;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.entity.EntityPlaceEvent;
+import org.bukkit.event.vehicle.VehicleDamageEvent;
 import org.bukkit.event.vehicle.VehicleEnterEvent;
 import org.bukkit.inventory.ItemStack;
 
@@ -52,6 +53,18 @@ public class MinecartMlg extends Mlg {
         super.stop();
         minecarts.forEach(Entity::remove);
         minecarts.clear();
+    }
+
+    // Stop players from "hitting" minecarts
+    @EventHandler
+    public void onDestroyMinecart(VehicleDamageEvent event) {
+        if (event.getAttacker() instanceof Player) {
+            Player player = ((Player) event.getAttacker());
+            if (!(isInChallenge(player))) {
+                return;
+            }
+            event.setCancelled(true);
+        }
     }
 
     @EventHandler
