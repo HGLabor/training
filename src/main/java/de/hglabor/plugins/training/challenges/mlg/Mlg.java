@@ -284,7 +284,8 @@ public abstract class Mlg implements Challenge {
             }
             if (event.getCause().equals(EntityDamageEvent.DamageCause.FALL)) {
                 Block landedBlock = player.getLocation().getBlock().getRelative(BlockFace.DOWN);
-                if (Arrays.stream(bottomMaterials).noneMatch((b) -> b.equals(landedBlock.getType())) && landedBlock.getType() != Material.AIR) {
+                if (Arrays.stream(bottomMaterials).noneMatch((b) -> b.equals(landedBlock.getType())) && landedBlock.getType()
+                        != Material.AIR && getMlgItems().stream().noneMatch(i -> i.getType().equals(landedBlock.getType()))) {
                     event.setCancelled(true);
                 }
                 else {
