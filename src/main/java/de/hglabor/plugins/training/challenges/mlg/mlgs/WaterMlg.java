@@ -44,13 +44,9 @@ public class WaterMlg extends Mlg {
             event.setCancelled(true);
             return;
         }
-        User user = UserList.INSTANCE.getUser(player);
-        if (!user.getChallengeInfoOrDefault(this, false)) {
-            onComplete(player);
-            Bukkit.getScheduler().runTaskLater(Training.getInstance(), () -> block.setType(Material.AIR), 5L);
-        } else {
-            event.setCancelled(true);
-        }
+
+        handleMlg(player);
+        removeBlockLater(block, 10L);
     }
 
     @EventHandler
@@ -70,9 +66,7 @@ public class WaterMlg extends Mlg {
     }
 
     public void setMlgReady(Player player) {
-        User user = UserList.INSTANCE.getUser(player);
-        user.addChallengeInfo(this, false);
-        player.setHealth(Objects.requireNonNull(player.getAttribute(Attribute.GENERIC_MAX_HEALTH)).getValue()); // player.getMaxHealth() is deprecated
+        setMaxHealth(player);
         player.setFoodLevel(100);
         player.getInventory().clear();
         player.getInventory().setItem(0, WarpItems.WARP_SELECTOR);

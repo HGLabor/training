@@ -65,13 +65,10 @@ public class StriderMlg extends Mlg {
             return;
         }
         if (!(evt.getRightClicked() instanceof Strider)) return;
-        //if (player.getActiveItem() == null) return;
-        //if (!(player.getActiveItem().getType().equals(Material.SADDLE))) return;
-        User user = UserList.INSTANCE.getUser(player);
-        if (!user.getChallengeInfoOrDefault(this, false)) {
-            // Remove saddle after 1 second (20 ticks)
-            Bukkit.getScheduler().runTaskLater(Training.getInstance(), () -> ((Strider)evt.getRightClicked()).setSaddle(false), 20L);
-        }
+
+        handleMlg(player);
+        // Remove saddle after 1 second (20 ticks)
+        Bukkit.getScheduler().runTaskLater(Training.getInstance(), () -> ((Strider)evt.getRightClicked()).setSaddle(false), 20L);
     }
 
     @EventHandler
@@ -82,35 +79,10 @@ public class StriderMlg extends Mlg {
             evt.setCancelled(true);
             return;
         }
-        if (!(evt.getCause().equals(EntityDamageEvent.DamageCause.LAVA))) return;
-        User user = UserList.INSTANCE.getUser(player);
-        if (!user.getChallengeInfoOrDefault(this, false)) {
+        if (evt.getCause().equals(EntityDamageEvent.DamageCause.LAVA)) {
             // Player got lava damage
             onFailure(player);
             player.setFireTicks(0);
-        }
-    }
-
-    @EventHandler
-    public void onMountStrider(EntityMountEvent event) {
-        if (!(event.getEntity() instanceof Player)) {
-            return;
-        }
-        if (!(event.getMount() instanceof Strider)) {
-            return;
-        }
-        Player player = (Player) event.getEntity();
-        if (!isInChallenge(player)) {
-            event.setCancelled(true);
-            return;
-        }
-        User user = UserList.INSTANCE.getUser(player);
-        if (!user.getChallengeInfoOrDefault(this, false)) {
-            onComplete(player);
-            // TODO remove above
-            Bukkit.getScheduler().runTaskLater(Training.getInstance(), () -> ((Strider)event.getMount()).setSaddle(false), 5L);
-        } else {
-            event.setCancelled(true);
         }
     }
 
@@ -120,9 +92,7 @@ public class StriderMlg extends Mlg {
     }
 
     public void setMlgReady(Player player) {
-        User user = UserList.INSTANCE.getUser(player);
-        user.addChallengeInfo(this, false);
-        player.setHealth(Objects.requireNonNull(player.getAttribute(Attribute.GENERIC_MAX_HEALTH)).getValue());
+        setMaxHealth(player);
         player.setFoodLevel(100);
         player.getInventory().clear();
         player.getInventory().setItem(0, WarpItems.WARP_SELECTOR);

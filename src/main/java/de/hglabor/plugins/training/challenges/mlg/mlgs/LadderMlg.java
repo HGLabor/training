@@ -22,18 +22,6 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 
-class LadderMlgInfo {
-    private boolean hasDied;
-
-    public boolean hasDied() {
-        return hasDied;
-    }
-
-    public void setHasDied(boolean hasDied) {
-        this.hasDied = hasDied;
-    }
-}
-
 public class LadderMlg extends Mlg {
     private final List<ItemStack> mlgItems = new ArrayList<>();
 
@@ -53,26 +41,6 @@ public class LadderMlg extends Mlg {
         }
     }
 
-    @Override
-    public void onComplete(Player player) {
-        User user = UserList.INSTANCE.getUser(player);
-        player.sendMessage(ChatColor.GREEN + ChatColor.BOLD.toString() + "Successful MLG");
-        player.playSound(player.getLocation(), Sound.ENTITY_ARROW_HIT_PLAYER, 1, 1);
-        Bukkit.getScheduler().runTaskLater(Training.getInstance(), () -> {
-            user.addChallengeInfo(this, new LadderMlgInfo());
-            teleportAndSetItems(player);
-        }, 5L);
-    }
-
-    @Override
-    public void onFailure(Player player) {
-        super.onFailure(player);
-        User user = UserList.INSTANCE.getUser(player);
-        LadderMlgInfo ladderMlgInfo = new LadderMlgInfo();
-        ladderMlgInfo.setHasDied(true);
-        user.addChallengeInfo(this, ladderMlgInfo);
-    }
-
     @EventHandler
     public void onBlockPlace(BlockPlaceEvent event) {
         Player player = event.getPlayer();
@@ -86,19 +54,9 @@ public class LadderMlg extends Mlg {
             event.setCancelled(true);
             return;
         }
-        User user = UserList.INSTANCE.getUser(player);
-        LadderMlgInfo ladderMlgInfo = user.getChallengeInfoOrDefault(this, new LadderMlgInfo());
-        ladderMlgInfo.setHasDied(false);
-        Bukkit.getScheduler().runTaskLater(Training.getInstance(), () -> {
-            LadderMlgInfo ladderMlgInfo1 = user.getChallengeInfoOrDefault(this, new LadderMlgInfo());
-            if (!ladderMlgInfo1.hasDied()) {
-                onComplete(player);
-            }
-        }, 10L);
+        handleMlg(player);
         // Remove ladder/vine after 10 ticks
-        Bukkit.getScheduler().runTaskLater(Training.getInstance(), () ->  {
-            block.setType(Material.AIR);
-        }, 10L);
+        removeBlockLater(block, 10L);
     }
 
     @Override
@@ -109,7 +67,6 @@ public class LadderMlg extends Mlg {
     @Override
     public void setMlgReady(Player player) {
         User user = UserList.INSTANCE.getUser(player);
-        if (user.getChallengeInfoOrDefault(this, null) == null) user.addChallengeInfo(this, new LadderMlgInfo());
         player.setFoodLevel(100);
         player.getInventory().clear();
         player.getInventory().setItem(0, WarpItems.WARP_SELECTOR);

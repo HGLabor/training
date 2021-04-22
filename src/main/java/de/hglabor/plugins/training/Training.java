@@ -17,8 +17,6 @@ import de.hglabor.plugins.training.warp.WarpSelector;
 import de.hglabor.plugins.training.warp.worlds.DamagerWorld;
 import de.hglabor.plugins.training.warp.worlds.MlgWorld;
 import dev.jorel.commandapi.CommandAPI;
-import net.kyori.adventure.translation.TranslationRegistry;
-import net.md_5.bungee.api.chat.TranslatableComponent;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.Material;

@@ -71,53 +71,9 @@ public class BoatMlg extends Mlg {
             return;
         }
 
-        User user = UserList.INSTANCE.getUser(player);
-        BoatMlgInfo boatMlgInfo = user.getChallengeInfoOrDefault(this, new BoatMlgInfo());
-        boatMlgInfo.setHasDied(false);
+        handleMlg(player, 20L);
         // Remove boat after 1 second (20 ticks)
-        Bukkit.getScheduler().runTaskLater(Training.getInstance(), () -> event.getEntity().remove(), 20L);
-    }
-
-    @EventHandler
-    public void onPlayerEnterBoat(VehicleEnterEvent event) {
-        if (!(event.getEntered() instanceof Player)) return;
-        if (!(event.getVehicle() instanceof Boat)) return;
-        Player player = (Player) event.getEntered();
-        if (!(isInChallenge(player))) {
-            event.setCancelled(true);
-            return;
-        }
-        User user = UserList.INSTANCE.getUser(player);
-        BoatMlgInfo boatMlgInfo = user.getChallengeInfoOrDefault(this, new BoatMlgInfo());
-        if (!boatMlgInfo.hasEnteredBoat()) {
-            boatMlgInfo.setHasEnteredBoat(true);
-            Bukkit.getScheduler().runTaskLater(Training.getInstance(), () -> {
-                if (!boatMlgInfo.hasDied()) {
-                    onComplete(player);
-                }
-            }, 10L);
-        }
-        // Boat already gets removed in onPlayerPlaceBoat
-    }
-
-    @Override
-    public void onComplete(Player player) {
-        User user = UserList.INSTANCE.getUser(player);
-        player.sendMessage(ChatColor.GREEN + ChatColor.BOLD.toString() + "Successful MLG");
-        player.playSound(player.getLocation(), Sound.ENTITY_ARROW_HIT_PLAYER, 1, 1);
-        Bukkit.getScheduler().runTaskLater(Training.getInstance(), () -> {
-            user.addChallengeInfo(this, new BoatMlgInfo());
-            teleportAndSetItems(player);
-        }, 5L);
-    }
-
-    @Override
-    public void onFailure(Player player) {
-        super.onFailure(player);
-        User user = UserList.INSTANCE.getUser(player);
-        BoatMlgInfo boatMlgInfo = new BoatMlgInfo();
-        boatMlgInfo.setHasDied(true);
-        user.addChallengeInfo(this, boatMlgInfo);
+        removeEntityLater(event.getEntity(), 20L);
     }
 
     @Override
@@ -126,9 +82,7 @@ public class BoatMlg extends Mlg {
     }
 
     public void setMlgReady(Player player) {
-        User user = UserList.INSTANCE.getUser(player);
-        user.addChallengeInfo(this, new BoatMlgInfo());
-        player.setHealth(Objects.requireNonNull(player.getAttribute(Attribute.GENERIC_MAX_HEALTH)).getValue());
+        setMaxHealth(player);
         player.setFoodLevel(100);
         player.getInventory().clear();
         player.getInventory().setItem(0, WarpItems.WARP_SELECTOR);

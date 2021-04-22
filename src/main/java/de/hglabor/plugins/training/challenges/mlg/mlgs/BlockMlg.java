@@ -58,42 +58,9 @@ public class BlockMlg extends Mlg {
             event.setCancelled(true);
             return;
         }
-        User user = UserList.INSTANCE.getUser(player);
-        if (!user.getChallengeInfoOrDefault(this, false)) {
-            switch (block.getType()) {
-                case TWISTING_VINES:
-                    handleTwistingVinesMlg(player, block);
-                    break;
-                case SCAFFOLDING:
-                    handleScaffoldingMlg(player, block);
-                    break;
-                default:
-                    onComplete(player);
-                    break;
-            }
-            Bukkit.getScheduler().runTaskLater(Training.getInstance(), () -> this.clearOut(block), 5L);
-        } else {
-            event.setCancelled(true);
-        }
-    }
+        handleMlg(player);
+        Bukkit.getScheduler().runTaskLater(Training.getInstance(), () -> this.clearOut(block), 5L);
 
-    private void handleScaffoldingMlg(Player player, Block block) {
-        // If the player doesn't place the scaffholding when "inside" it (on the same y coordinate), he lands on top of it and dies
-        if (!(player.getLocation().getBlockY() == block.getLocation().getBlockY())) {
-            onFailure(player);
-        } else {
-            onComplete(player);
-        }
-    }
-
-    private void handleTwistingVinesMlg(Player player, Block block) {
-        Location blockLocation = block.getLocation();
-        Location playerLocation = player.getLocation();
-        if (!(playerLocation.getBlockX() == blockLocation.getBlockX() && playerLocation.getBlockZ() == blockLocation.getBlockZ())) {
-            onFailure(player);
-        } else {
-            onComplete(player);
-        }
     }
 
     /**
@@ -113,9 +80,7 @@ public class BlockMlg extends Mlg {
     }
 
     public void setMlgReady(Player player) {
-        User user = UserList.INSTANCE.getUser(player);
-        user.addChallengeInfo(this, false);
-        player.setHealth(Objects.requireNonNull(player.getAttribute(Attribute.GENERIC_MAX_HEALTH)).getValue());
+        setMaxHealth(player);
         player.setFoodLevel(100);
         player.getInventory().clear();
         player.getInventory().setItem(0, WarpItems.WARP_SELECTOR);

@@ -15,6 +15,7 @@ import de.hglabor.plugins.training.warp.worlds.MlgWorld;
 import de.hglabor.utils.noriskutils.SoundUtils;
 import de.hglabor.utils.noriskutils.WorldEditUtils;
 import org.bukkit.*;
+import org.bukkit.attribute.Attribute;
 import org.bukkit.block.Block;
 import org.bukkit.block.BlockFace;
 import org.bukkit.configuration.file.FileConfiguration;
@@ -32,6 +33,18 @@ import org.bukkit.inventory.ItemStack;
 
 import java.util.*;
 
+
+class MlgInfo {
+    private boolean hasDied;
+
+    public boolean hasDied() {
+        return hasDied;
+    }
+
+    public void setHasDied(boolean hasDied) {
+        this.hasDied = hasDied;
+    }
+}
 public abstract class Mlg implements Challenge {
     protected final String name;
     protected final ChatColor color;
@@ -102,6 +115,7 @@ public abstract class Mlg implements Challenge {
         User user = UserList.INSTANCE.getUser(player);
         user.setRespawnLoc(getDefaultSpawn());
         setMlgReady(player);
+        handleMlgSetup(player);
     }
 
     @Override
@@ -111,8 +125,7 @@ public abstract class Mlg implements Challenge {
 
     @Override
     public void onComplete(Player player) {
-        User user = UserList.INSTANCE.getUser(player);
-        user.addChallengeInfo(this, true);
+        handleMlgSetup(player);
         player.sendMessage(ChatColor.GREEN + ChatColor.BOLD.toString() + "Successful MLG");
         player.playSound(player.getLocation(), Sound.ENTITY_ARROW_HIT_PLAYER, 1, 1);
         Bukkit.getScheduler().runTaskLater(Training.getInstance(), () -> {
@@ -123,6 +136,7 @@ public abstract class Mlg implements Challenge {
     @Override
     public void onFailure(Player player) {
         player.sendMessage(ChatColor.RED + ChatColor.BOLD.toString() + "Failed MLG");
+        handleMlgDeath(player);
         Bukkit.getScheduler().runTaskLater(Training.getInstance(), () -> {
             teleportAndSetItems(player);
             player.playSound(player.getLocation(), Sound.BLOCK_GLASS_BREAK, 1, 1);
@@ -292,5 +306,49 @@ public abstract class Mlg implements Challenge {
                 event.setCancelled(true);
             }
         }
+    }
+
+    /** Must be called when the player has placed the mlg item e.g. water bucket or block such as cobweb */
+    protected void handleMlg(Player player, long checkDelay) {
+        User user = getUser(player);
+        user.getChallengeInfoOrDefault(this, new MlgInfo()).setHasDied(false);
+        Bukkit.getScheduler().runTaskLater(Training.getInstance(), () -> {
+            if (!user.getChallengeInfoOrDefault(this, new MlgInfo()).hasDied()) {
+                onComplete(player);
+            }
+        }, checkDelay);
+    }
+
+    /** Must be called when the player has placed the mlg item e.g. water bucket or block such as cobweb */
+    protected void handleMlg(Player player) {
+        handleMlg(player, 10L);
+    }
+
+    /** is called in {@link Mlg#onFailure} by default */
+    protected void handleMlgDeath(Player player) {
+        User user = getUser(player);
+        MlgInfo mlgInfo = new MlgInfo();
+        mlgInfo.setHasDied(true);
+        user.addChallengeInfo(this, mlgInfo);
+    }
+
+    /** is called in {@link Mlg#onEnter} by default */
+    protected void handleMlgSetup(Player player) {
+        User user = getUser(player);
+        user.addChallengeInfo(this, new MlgInfo());
+    }
+    
+    /** remove a block after a given amount of time */
+    protected void removeBlockLater(Block block, long delay) {
+        Bukkit.getScheduler().runTaskLater(Training.getInstance(), () -> block.setType(Material.AIR), delay);
+    }
+
+    /** remove an entity after a given amount of time */
+    protected void removeEntityLater(Entity entity, long delay) {
+        Bukkit.getScheduler().runTaskLater(Training.getInstance(), entity::remove, delay);
+    }
+
+    protected void setMaxHealth(Player player) {
+        player.setHealth(Objects.requireNonNull(player.getAttribute(Attribute.GENERIC_MAX_HEALTH)).getValue());
     }
 }

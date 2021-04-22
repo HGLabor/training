@@ -76,16 +76,7 @@ public class MinecartMlg extends Mlg {
             event.setCancelled(true);
             return;
         }
-
-        User user = UserList.INSTANCE.getUser(player);
-        if (!user.getChallengeInfoOrDefault(this, false)) {
-            if (Arrays.stream(this.bottomMaterials).noneMatch((m -> m.equals(event.getBlock().getType())))) {
-                event.setCancelled(true);
-                return;
-            }
-            // Remove minecart after 1 second (20 ticks)
-            Bukkit.getScheduler().runTaskLater(Training.getInstance(), () -> event.getEntity().remove(), 20L);
-        }
+        removeEntityLater(event.getEntity(), 20L);
     }
 
     @EventHandler
@@ -97,14 +88,9 @@ public class MinecartMlg extends Mlg {
             event.setCancelled(true);
             return;
         }
-        User user = UserList.INSTANCE.getUser(player);
-        if (!user.getChallengeInfoOrDefault(this, false)) {
-            onComplete(player);
-            // Minecart already gets removed in onPlayerPlaceBoat
-        } else {
-            event.setCancelled(true);
-        }
+        handleMlg(player, 5L);
     }
+
 
     @Override
     public List<ItemStack> getMlgItems() {
@@ -112,9 +98,7 @@ public class MinecartMlg extends Mlg {
     }
 
     public void setMlgReady(Player player) {
-        User user = UserList.INSTANCE.getUser(player);
-        user.addChallengeInfo(this, false);
-        player.setHealth(Objects.requireNonNull(player.getAttribute(Attribute.GENERIC_MAX_HEALTH)).getValue());
+        setMaxHealth(player);
         player.setFoodLevel(100);
         player.getInventory().clear();
         player.getInventory().setItem(0, WarpItems.WARP_SELECTOR);
