@@ -4,7 +4,6 @@ import com.sk89q.worldedit.EditSession;
 import com.sk89q.worldedit.WorldEdit;
 import com.sk89q.worldedit.bukkit.BukkitAdapter;
 import com.sk89q.worldedit.function.pattern.RandomPattern;
-import com.sk89q.worldedit.regions.CylinderRegion;
 import de.hglabor.plugins.training.Training;
 import de.hglabor.plugins.training.challenges.Challenge;
 import de.hglabor.plugins.training.region.Area;
@@ -166,19 +165,17 @@ public abstract class Mlg implements Challenge {
 
     @Override
     public void start() {
-        int radius = platformRadius * 3;
         for (int index=0; index<bottomMaterials.length; index++) {
             if (randomizedBottomMaterials && bottomMaterialPercentages[index] != 100) {
                 Map<Material, Double> blockPercentages = new HashMap<>();
                 blockPercentages.put(bottomMaterials[index], bottomMaterialPercentages[index]);
                 blockPercentages.put(Material.AIR, 100-bottomMaterialPercentages[index]); // e.g. 10% STONE results in 10% stone and 90% air
-                createRandomCylinder(spawn.getWorld(), spawn.clone().add(0, index, 0), radius, true, 1, blockPercentages);
+                createRandomCylinder(spawn.getWorld(), spawn.clone().add(0, index, 0), getBorderRadius(), true, 1, blockPercentages);
             }
-            else WorldEditUtils.createCylinder(spawn.getWorld(), spawn.clone().add(0, index, 0), radius, true, 1, bottomMaterials[index]);
+            else WorldEditUtils.createCylinder(spawn.getWorld(), spawn.clone().add(0, index, 0), getBorderRadius(), true, 1, bottomMaterials[index]);
         }
-        WorldEditUtils.createCylinder(spawn.getWorld(), spawn, radius, false, 255, borderMaterial);
-        WorldEditUtils.createCylinder(spawn.getWorld(), spawn.clone().add(0, 255, 0), radius, true, 1, topMaterial);
-        new CylinderRegion();
+        WorldEditUtils.createCylinder(spawn.getWorld(), spawn, getBorderRadius(), false, 255, borderMaterial);
+        WorldEditUtils.createCylinder(spawn.getWorld(), spawn.clone().add(0, 255, 0), getBorderRadius(), true, 1, topMaterial);
 
         platforms.forEach(platform -> {
             Bukkit.getPluginManager().registerEvents(platform, Training.getInstance());
@@ -203,6 +200,10 @@ public abstract class Mlg implements Challenge {
     public void stop() {
         platforms.forEach(MlgPlatform::clear);
         warpEntity.remove();
+    }
+
+    protected int getBorderRadius() {
+        return platformRadius * 3;
     }
 
     @Override

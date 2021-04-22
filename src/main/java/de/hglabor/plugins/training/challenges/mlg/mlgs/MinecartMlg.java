@@ -10,8 +10,8 @@ import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.Material;
 import org.bukkit.attribute.Attribute;
-import org.bukkit.entity.Boat;
 import org.bukkit.entity.Entity;
+import org.bukkit.entity.EntityType;
 import org.bukkit.entity.Minecart;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
@@ -19,21 +19,39 @@ import org.bukkit.event.entity.EntityPlaceEvent;
 import org.bukkit.event.vehicle.VehicleEnterEvent;
 import org.bukkit.inventory.ItemStack;
 
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
-import java.util.Objects;
+import java.util.*;
 
 public class MinecartMlg extends Mlg {
-    private final List<ItemStack> mlgItems = new ArrayList<>();
+    private final List<ItemStack> mlgItems;
+    private final List<Minecart> minecarts;
+    private final int minecartAmount;
 
     public MinecartMlg(String name, ChatColor color, Class<? extends Entity> type) {
         super(name, color, type, Material.QUARTZ_BLOCK, new Material[]{Material.STONE, Material.RAIL});
-        this.addMlgMaterial(Material.MINECART);
+        this.minecartAmount = 75;
+        this.minecarts = new ArrayList<>();
+        this.mlgItems = new ArrayList<>();
+        this.mlgItems.add(new ItemBuilder(Material.MINECART).setName(ChatColor.AQUA + this.getName() + " MLG").build());
     }
 
-    private void addMlgMaterial(Material material) {
-        this.mlgItems.add(new ItemBuilder(material).setName(ChatColor.AQUA + this.getName() + " MLG").build());
+    @Override
+    public void start() {
+        super.start();
+        Random random = new Random();
+        for (int i = 0; i < minecartAmount; i++) {
+            int x = random.nextInt(getBorderRadius());
+            int z = random.nextInt(getBorderRadius());
+            Minecart minecart = (Minecart) spawn.getWorld().spawnEntity(spawn.clone().add(random.nextBoolean() ? x : x * -1, 1, random.nextBoolean() ? z : z * -1), EntityType.MINECART);
+            minecart.setPersistent(false);
+            minecarts.add(minecart);
+        }
+    }
+
+    @Override
+    public void stop() {
+        super.stop();
+        minecarts.forEach(Entity::remove);
+        minecarts.clear();
     }
 
     @EventHandler
