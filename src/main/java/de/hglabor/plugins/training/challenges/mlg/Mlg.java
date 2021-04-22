@@ -259,6 +259,7 @@ public abstract class Mlg implements Challenge {
         if (rightClicked.equals(warpEntity)) {
             player.teleport(getDefaultSpawn());
             SoundUtils.playTeleportSound(player);
+            event.setCancelled(true);
         }
     }
 
