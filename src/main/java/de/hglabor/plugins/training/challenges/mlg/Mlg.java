@@ -299,7 +299,7 @@ public abstract class Mlg implements Challenge {
             }
             if (event.getCause().equals(EntityDamageEvent.DamageCause.FALL)) {
                 Block landedBlock = player.getLocation().getBlock().getRelative(BlockFace.DOWN);
-                if ((Arrays.stream(bottomMaterials).anyMatch((b) -> b.equals(landedBlock.getType())) || getMlgItems().stream().anyMatch(i -> i.getType().equals(landedBlock.getType()))
+                if ((Arrays.stream(bottomMaterials).anyMatch((b) -> b.equals(landedBlock.getType())) || (getMlgItems() != null && getMlgItems().stream().anyMatch(i -> i.getType().equals(landedBlock.getType())))
                         || landedBlock.getType().equals(Material.AIR)) && !isBorderedBy(landedBlock, platformMaterial)) {
                     player.setHealth(0.0); // Kill player
                 }
