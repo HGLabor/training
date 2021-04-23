@@ -299,8 +299,8 @@ public abstract class Mlg implements Challenge {
             }
             if (event.getCause().equals(EntityDamageEvent.DamageCause.FALL)) {
                 Block landedBlock = player.getLocation().getBlock().getRelative(BlockFace.DOWN);
-                if (Arrays.stream(bottomMaterials).anyMatch((b) -> b.equals(landedBlock.getType())) || getMlgItems().stream().anyMatch(i -> i.getType().equals(landedBlock.getType()))
-                        || landedBlock.getType().equals(Material.AIR)) {
+                if ((Arrays.stream(bottomMaterials).anyMatch((b) -> b.equals(landedBlock.getType())) || getMlgItems().stream().anyMatch(i -> i.getType().equals(landedBlock.getType()))
+                        || landedBlock.getType().equals(Material.AIR)) && !isBorderedBy(landedBlock, platformMaterial)) {
                     player.setHealth(0.0); // Kill player
                 }
                 // Cancel the event so the player doesn't get killed twice
@@ -351,5 +351,16 @@ public abstract class Mlg implements Challenge {
 
     protected void setMaxHealth(Player player) {
         player.setHealth(Objects.requireNonNull(player.getAttribute(Attribute.GENERIC_MAX_HEALTH)).getValue());
+    }
+
+    /** check if a block is bordered by a material */
+    public boolean isBorderedBy(Block block, Material material) {
+        for (BlockFace blockFace : new BlockFace[] {BlockFace.NORTH, BlockFace.NORTH_EAST, BlockFace.EAST, BlockFace.SOUTH_EAST,
+                BlockFace.SOUTH, BlockFace.SOUTH_WEST, BlockFace.WEST, BlockFace.NORTH_WEST}) {
+            if (block.getRelative(blockFace).getType().equals(material)) {
+                return true;
+            }
+        }
+        return false;
     }
 }
