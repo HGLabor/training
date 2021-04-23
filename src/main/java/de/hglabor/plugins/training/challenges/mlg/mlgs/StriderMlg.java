@@ -66,9 +66,25 @@ public class StriderMlg extends Mlg {
         }
         if (!(evt.getRightClicked() instanceof Strider)) return;
 
-        handleMlg(player);
         // Remove saddle after 1 second (20 ticks)
         Bukkit.getScheduler().runTaskLater(Training.getInstance(), () -> ((Strider)evt.getRightClicked()).setSaddle(false), 20L);
+    }
+
+    @EventHandler
+    public void onMountStrider(EntityMountEvent event) {
+        if (!(event.getMount() instanceof Strider)) {
+            return;
+        }
+        if (!(event.getEntity() instanceof Player)) {
+            return;
+        }
+        Player player = ((Player) event.getEntity());
+        if (!isInChallenge(player)) {
+            event.setCancelled(true);
+            return;
+        }
+
+        handleMlg(player);
     }
 
     @EventHandler
