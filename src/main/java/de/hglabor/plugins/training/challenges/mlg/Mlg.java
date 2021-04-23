@@ -299,7 +299,7 @@ public abstract class Mlg implements Challenge {
             }
             if (event.getCause().equals(EntityDamageEvent.DamageCause.FALL)) {
                 Block landedBlock = player.getLocation().getBlock().getRelative(BlockFace.DOWN);
-                if (Arrays.stream(bottomMaterials).anyMatch((b) -> b.equals(landedBlock.getType())) || getMlgItems().stream().anyMatch(i -> i.getType().equals(landedBlock.getType()))) {
+                if (Arrays.stream(bottomMaterials).anyMatch((b) -> b.equals(landedBlock.getType())) || (getMlgItems() != null && getMlgItems().stream().anyMatch(i -> i.getType().equals(landedBlock.getType())))) {
                     player.setHealth(0.0); // Kill player
                 }
                 // Cancel the event so the player doesn't get killed twice
