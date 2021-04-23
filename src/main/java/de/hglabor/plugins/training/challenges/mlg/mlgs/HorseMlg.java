@@ -1,7 +1,6 @@
 package de.hglabor.plugins.training.challenges.mlg.mlgs;
 
 import de.hglabor.plugins.training.challenges.mlg.Mlg;
-import de.hglabor.plugins.training.warp.WarpItems;
 import org.bukkit.ChatColor;
 import org.bukkit.Material;
 import org.bukkit.entity.Entity;
@@ -67,12 +66,8 @@ public class HorseMlg extends Mlg {
         return null;
     }
 
-    public void setMlgReady(Player player) {
-        setMaxHealth(player);
-        player.setFoodLevel(100);
-        player.getInventory().clear();
-        player.getInventory().setItem(0, WarpItems.WARP_SELECTOR);
-        player.getInventory().setItem(7, WarpItems.HUB);
-        player.getInventory().setItem(8, WarpItems.RESPAWN_ANCHOR);
+    @Override
+    protected void inventorySetup(Player player) {
+        // Nothing because there is no mlg item
     }
 }

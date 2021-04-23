@@ -79,12 +79,8 @@ public class BlockMlg extends Mlg {
         return mlgItems;
     }
 
-    public void setMlgReady(Player player) {
-        setMaxHealth(player);
-        player.setFoodLevel(100);
-        player.getInventory().clear();
-        player.getInventory().setItem(0, WarpItems.WARP_SELECTOR);
-
+    @Override
+    protected void inventorySetup(Player player) {
         int size = mlgItems.size();
         // size must not be grater than 6, because there are a max of 6 items slots free in the inventory hotbar
         assert size <= 6;
@@ -93,7 +89,5 @@ public class BlockMlg extends Mlg {
         for (int slot = 1; slot <= size; slot++) { // Start at slot 1 not 0 because of warp selector
             player.getInventory().setItem((plus1 ? (slot + 1) : slot), mlgItems.get(slot - 1));
         }
-        player.getInventory().setItem(7, WarpItems.HUB);
-        player.getInventory().setItem(8, WarpItems.RESPAWN_ANCHOR);
     }
 }

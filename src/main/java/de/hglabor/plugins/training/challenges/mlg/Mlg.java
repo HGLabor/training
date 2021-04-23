@@ -11,6 +11,7 @@ import de.hglabor.plugins.training.region.Cuboid;
 import de.hglabor.plugins.training.user.User;
 import de.hglabor.plugins.training.user.UserList;
 import de.hglabor.plugins.training.util.LocationUtils;
+import de.hglabor.plugins.training.warp.WarpItems;
 import de.hglabor.plugins.training.warp.worlds.MlgWorld;
 import de.hglabor.utils.noriskutils.SoundUtils;
 import de.hglabor.utils.noriskutils.WorldEditUtils;
@@ -103,7 +104,9 @@ public abstract class Mlg implements Challenge {
 
     public abstract List<ItemStack> getMlgItems();
 
-    public abstract void setMlgReady(Player player);
+    public void setMlgReady(Player player) {
+        handlePlayerSetup(player);
+    }
 
     protected boolean canMlgHere(Block blockAgainst) {
         return Arrays.stream(bottomMaterials).anyMatch(m -> m.equals(blockAgainst.getType()));
@@ -362,5 +365,24 @@ public abstract class Mlg implements Challenge {
             }
         }
         return false;
+    }
+
+    protected void mainInventorySetup(Player player) {
+        player.getInventory().clear();
+        player.getInventory().setItem(0, WarpItems.WARP_SELECTOR);
+        player.getInventory().setItem(7, WarpItems.HUB);
+        player.getInventory().setItem(8, WarpItems.RESPAWN_ANCHOR);
+    }
+
+    protected void inventorySetup(Player player) {
+        // By default the first and only mlg item in the 4th slot. When not this must be overridden
+        player.getInventory().setItem(4, getMlgItems().get(0));
+    }
+
+    protected void handlePlayerSetup(Player player) {
+        setMaxHealth(player);
+        player.setFoodLevel(100);
+        mainInventorySetup(player);
+        inventorySetup(player);
     }
 }

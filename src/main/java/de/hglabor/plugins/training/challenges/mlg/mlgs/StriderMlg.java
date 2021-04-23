@@ -2,15 +2,14 @@ package de.hglabor.plugins.training.challenges.mlg.mlgs;
 
 import de.hglabor.plugins.training.Training;
 import de.hglabor.plugins.training.challenges.mlg.Mlg;
-import de.hglabor.plugins.training.user.User;
-import de.hglabor.plugins.training.user.UserList;
-import de.hglabor.plugins.training.warp.WarpItems;
 import de.hglabor.utils.noriskutils.ItemBuilder;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.Material;
-import org.bukkit.attribute.Attribute;
-import org.bukkit.entity.*;
+import org.bukkit.entity.Entity;
+import org.bukkit.entity.EntityType;
+import org.bukkit.entity.Player;
+import org.bukkit.entity.Strider;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.entity.EntityDamageByBlockEvent;
 import org.bukkit.event.entity.EntityDamageEvent;
@@ -20,7 +19,6 @@ import org.spigotmc.event.entity.EntityMountEvent;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Objects;
 
 public class StriderMlg extends Mlg {
     private final List<ItemStack> mlgItems = new ArrayList<>();
@@ -84,7 +82,7 @@ public class StriderMlg extends Mlg {
             return;
         }
 
-        handleMlg(player);
+        handleMlg(player, 0L);
     }
 
     @EventHandler
@@ -105,15 +103,5 @@ public class StriderMlg extends Mlg {
     @Override
     public List<ItemStack> getMlgItems() {
         return mlgItems;
-    }
-
-    public void setMlgReady(Player player) {
-        setMaxHealth(player);
-        player.setFoodLevel(100);
-        player.getInventory().clear();
-        player.getInventory().setItem(0, WarpItems.WARP_SELECTOR);
-        player.getInventory().setItem(4, mlgItems.get(0));
-        player.getInventory().setItem(7, WarpItems.HUB);
-        player.getInventory().setItem(8, WarpItems.RESPAWN_ANCHOR);
     }
 }
