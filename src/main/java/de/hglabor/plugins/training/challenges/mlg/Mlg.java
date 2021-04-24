@@ -27,7 +27,6 @@ import org.bukkit.event.player.PlayerInteractEntityEvent;
 import org.bukkit.inventory.ItemStack;
 
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 
 public abstract class Mlg implements Challenge {
@@ -62,7 +61,7 @@ public abstract class Mlg implements Challenge {
     }
 
     public Mlg(String name, ChatColor color, Class<? extends Entity> type, Material borderMaterial, Material bottomMaterial) {
-        this(name, color, type, borderMaterial, new Material[] {bottomMaterial});
+        this(name, color, type, borderMaterial, new Material[]{bottomMaterial});
     }
 
     public Entity getWarpEntity() {
@@ -140,7 +139,7 @@ public abstract class Mlg implements Challenge {
 
     @Override
     public void start() {
-        for (int index=0; index<bottomMaterials.length; index++) {
+        for (int index = 0; index < bottomMaterials.length; index++) {
             WorldEditUtils.createCylinder(spawn.getWorld(), spawn.clone().add(0, index, 0), getBorderRadius(), true, 1, bottomMaterials[index]);
         }
         WorldEditUtils.createCylinder(spawn.getWorld(), spawn, getBorderRadius(), false, 255, borderMaterial);
@@ -246,19 +245,17 @@ public abstract class Mlg implements Challenge {
 
     @EventHandler
     public void onEntityDamage(EntityDamageEvent event) {
-        if (event.getEntity() instanceof Player) {
-            Player player = (Player) event.getEntity();
-            if (!isInChallenge(player)) {
-                return;
-            }
-            if (event.getCause().equals(EntityDamageEvent.DamageCause.FALL)) {
-                Block landedBlock = player.getLocation().getBlock().getRelative(BlockFace.DOWN);
-                if (Arrays.stream(bottomMaterials).noneMatch((b) -> b.equals(landedBlock.getType())) && landedBlock.getType() != Material.AIR) {
-                    event.setCancelled(true);
-                }
-                else {
-                    if (player.getHealth()-event.getDamage() > 0) player.setHealth(0.0); // Kill player
-                }
+        if (!(event.getEntity() instanceof Player)) {
+            return;
+        }
+        Player player = (Player) event.getEntity();
+        if (!isInChallenge(player)) {
+            return;
+        }
+        if (event.getCause().equals(EntityDamageEvent.DamageCause.FALL)) {
+            Block landedBlock = player.getLocation().getBlock().getRelative(BlockFace.DOWN);
+            if (!canMlgHere(landedBlock)) {
+                event.setCancelled(true);
             }
         }
     }
