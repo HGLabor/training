@@ -17,8 +17,6 @@ import de.hglabor.plugins.training.warp.WarpSelector;
 import de.hglabor.plugins.training.warp.worlds.DamagerWorld;
 import de.hglabor.plugins.training.warp.worlds.MlgWorld;
 import dev.jorel.commandapi.CommandAPI;
-import net.kyori.adventure.translation.TranslationRegistry;
-import net.md_5.bungee.api.chat.TranslatableComponent;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.Material;
@@ -58,13 +56,13 @@ public final class Training extends JavaPlugin {
         ChallengeManager.INSTANCE.register(new ImpossibleDamager("Impossible", ChatColor.DARK_GRAY));
         ChallengeManager.INSTANCE.register(new InconsistencyDamager("Inconsistency", ChatColor.LIGHT_PURPLE));
 
-        Mlg waterMlg = new WaterMlg("Water", ChatColor.AQUA, IronGolem.class).withPlatforms(Material.IRON_BLOCK, 10, 25, 50, 100, 150, 200, 250);
-        Mlg blockMlg = new BlockMlg("Block", ChatColor.WHITE, Shulker.class).withPlatforms(Material.POLISHED_DIORITE, 10, 10, 20, 50, 100, 150, 200, 250);
+        Mlg blockMlg = new BlockMlg("Block", ChatColor.WHITE, IronGolem.class).withPlatforms(Material.POLISHED_DIORITE, 10, 10, 20, 50, 100, 150, 200, 250);
         Mlg horseMlg = new HorseMlg("Horse", ChatColor.GOLD, Horse.class).withPlatforms(Material.DARK_OAK_PLANKS, 10, 25, 50, 100, 150, 200, 250);
         Mlg boatMlg = new BoatMlg("Boat", ChatColor.YELLOW, Boat.class).withPlatforms(Material.OAK_PLANKS, 10, 25, 50, 100, 150, 200, 250);
-        Mlg minecartMlg = new MinecartMlg("Minecart", ChatColor.DARK_GRAY, Minecart.class).withPlatforms(Material.GRAY_GLAZED_TERRACOTTA, 10, 10, 15, 20, 25, 50, 100, 150, 200, 250);
-        Mlg striderMlg = new StriderMlg("Strider", ChatColor.GOLD, Strider.class).withPlatforms(Material.CRIMSON_NYLIUM, 10, 5, 10, 15, 20, 25, 30, 35, 40, 45, 50, 55, 60, 65, 70, 75, 80, 90, 100, 200, 250);
-        ChallengeManager.INSTANCE.registerAll(waterMlg, blockMlg, horseMlg, boatMlg, striderMlg, minecartMlg);
+        Mlg minecartMlg = new MinecartMlg("Minecart", ChatColor.GRAY, Minecart.class).withPlatforms(Material.GRAY_GLAZED_TERRACOTTA, 10, 10, 15, 20, 25, 50, 100, 150, 200, 250);
+        Mlg striderMlg = new StriderMlg("Strider", ChatColor.LIGHT_PURPLE, Strider.class).withPlatforms(Material.CRIMSON_NYLIUM, 10, 5, 10, 15, 20, 25, 30, 35, 40, 45, 50, 55, 60, 65, 70, 75, 80, 90, 100, 200, 250);
+        Mlg ladderMlg = new LadderMlg("Ladder", ChatColor.GOLD, WanderingTrader.class).withPlatforms(Material.STRIPPED_OAK_WOOD, 10, 10, 20, 50, 100, 150, 200, 250);
+        ChallengeManager.INSTANCE.registerAll(blockMlg, horseMlg, boatMlg, striderMlg, minecartMlg, ladderMlg);
 
 
         CommandAPI.onEnable(this);

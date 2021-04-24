@@ -1,5 +1,9 @@
 package de.hglabor.plugins.training.challenges.mlg;
 
+import com.sk89q.worldedit.EditSession;
+import com.sk89q.worldedit.WorldEdit;
+import com.sk89q.worldedit.bukkit.BukkitAdapter;
+import com.sk89q.worldedit.function.pattern.RandomPattern;
 import de.hglabor.plugins.training.Training;
 import de.hglabor.plugins.training.challenges.Challenge;
 import de.hglabor.plugins.training.region.Area;
@@ -7,10 +11,12 @@ import de.hglabor.plugins.training.region.Cuboid;
 import de.hglabor.plugins.training.user.User;
 import de.hglabor.plugins.training.user.UserList;
 import de.hglabor.plugins.training.util.LocationUtils;
+import de.hglabor.plugins.training.warp.WarpItems;
 import de.hglabor.plugins.training.warp.worlds.MlgWorld;
 import de.hglabor.utils.noriskutils.SoundUtils;
 import de.hglabor.utils.noriskutils.WorldEditUtils;
 import org.bukkit.*;
+import org.bukkit.attribute.Attribute;
 import org.bukkit.block.Block;
 import org.bukkit.block.BlockFace;
 import org.bukkit.configuration.file.FileConfiguration;
@@ -28,7 +34,20 @@ import org.bukkit.inventory.ItemStack;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.*;
 
+
+class MlgInfo {
+    private boolean hasDied;
+
+    public boolean hasDied() {
+        return hasDied;
+    }
+
+    public void setHasDied(boolean hasDied) {
+        this.hasDied = hasDied;
+    }
+}
 public abstract class Mlg implements Challenge {
     protected final String name;
     protected final ChatColor color;
@@ -41,6 +60,8 @@ public abstract class Mlg implements Challenge {
     protected Material platformMaterial;
     protected int platformRadius;
     protected List<MlgPlatform> platforms;
+    protected boolean randomizedBottomMaterials = false;
+    protected Double[] bottomMaterialPercentages = null;
 
     public Mlg(String name, ChatColor color, Class<? extends Entity> type, Material borderMaterial, Material[] bottomMaterials) {
         this.name = name;
@@ -64,6 +85,12 @@ public abstract class Mlg implements Challenge {
         this(name, color, type, borderMaterial, new Material[]{bottomMaterial});
     }
 
+    public Mlg(String name, ChatColor color, Class<? extends Entity> type, Material borderMaterial, Material[] bottomMaterials, Double[] bottomMaterialPercentages) {
+        this(name, color, type, borderMaterial, bottomMaterials);
+        randomizedBottomMaterials = true;
+        this.bottomMaterialPercentages = bottomMaterialPercentages;
+    }
+
     public Entity getWarpEntity() {
         return warpEntity;
     }
@@ -79,10 +106,12 @@ public abstract class Mlg implements Challenge {
 
     public abstract List<ItemStack> getMlgItems();
 
-    public abstract void setMlgReady(Player player);
+    public void setMlgReady(Player player) {
+        handlePlayerSetup(player);
+    }
 
     protected boolean canMlgHere(Block blockAgainst) {
-        return blockAgainst.getType().equals(bottomMaterial);
+        return Arrays.stream(bottomMaterials).anyMatch(m -> m.equals(blockAgainst.getType()));
     }
 
     @Override
@@ -91,6 +120,7 @@ public abstract class Mlg implements Challenge {
         User user = UserList.INSTANCE.getUser(player);
         user.setRespawnLoc(getDefaultSpawn());
         setMlgReady(player);
+        handleMlgSetup(player);
     }
 
     @Override
@@ -100,8 +130,7 @@ public abstract class Mlg implements Challenge {
 
     @Override
     public void onComplete(Player player) {
-        User user = UserList.INSTANCE.getUser(player);
-        user.addChallengeInfo(this, true);
+        handleMlgSetup(player);
         player.sendMessage(ChatColor.GREEN + ChatColor.BOLD.toString() + "Successful MLG");
         player.playSound(player.getLocation(), Sound.ENTITY_ARROW_HIT_PLAYER, 1, 1);
         Bukkit.getScheduler().runTaskLater(Training.getInstance(), () -> {
@@ -112,6 +141,7 @@ public abstract class Mlg implements Challenge {
     @Override
     public void onFailure(Player player) {
         player.sendMessage(ChatColor.RED + ChatColor.BOLD.toString() + "Failed MLG");
+        handleMlgDeath(player);
         Bukkit.getScheduler().runTaskLater(Training.getInstance(), () -> {
             teleportAndSetItems(player);
             player.playSound(player.getLocation(), Sound.BLOCK_GLASS_BREAK, 1, 1);
@@ -137,10 +167,31 @@ public abstract class Mlg implements Challenge {
         return color;
     }
 
+    public static void createRandomCylinder(World world, Location startLocation, int radius, boolean filled, int height, Map<Material, Double> blockPercentages) {
+        try (EditSession editSession = WorldEdit.getInstance().getEditSessionFactory().getEditSession(BukkitAdapter.adapt(world), -1)) {
+            editSession.setFastMode(true);
+            RandomPattern randomPattern = new RandomPattern();
+            for (Map.Entry<Material, Double> blockPercentage : blockPercentages.entrySet()) {
+                // Add block with percentage
+                randomPattern.add(BukkitAdapter.asBlockState(new ItemStack(blockPercentage.getKey())), blockPercentage.getValue());
+            }
+            // Create cylinder
+            editSession.makeCylinder(BukkitAdapter.asBlockVector(startLocation), randomPattern, radius, height, filled);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
     @Override
     public void start() {
-        for (int index = 0; index < bottomMaterials.length; index++) {
-            WorldEditUtils.createCylinder(spawn.getWorld(), spawn.clone().add(0, index, 0), getBorderRadius(), true, 1, bottomMaterials[index]);
+        for (int index=0; index<bottomMaterials.length; index++) {
+            if (randomizedBottomMaterials && bottomMaterialPercentages[index] != 100) {
+                Map<Material, Double> blockPercentages = new HashMap<>();
+                blockPercentages.put(bottomMaterials[index], bottomMaterialPercentages[index]);
+                blockPercentages.put(Material.AIR, 100-bottomMaterialPercentages[index]); // e.g. 10% STONE results in 10% stone and 90% air
+                createRandomCylinder(spawn.getWorld(), spawn.clone().add(0, index, 0), getBorderRadius(), true, 1, blockPercentages);
+            }
+            else WorldEditUtils.createCylinder(spawn.getWorld(), spawn.clone().add(0, index, 0), getBorderRadius(), true, 1, bottomMaterials[index]);
         }
         WorldEditUtils.createCylinder(spawn.getWorld(), spawn, getBorderRadius(), false, 255, borderMaterial);
         WorldEditUtils.createCylinder(spawn.getWorld(), spawn.clone().add(0, 255, 0), getBorderRadius(), true, 1, topMaterial);
@@ -227,6 +278,7 @@ public abstract class Mlg implements Challenge {
         if (rightClicked.equals(warpEntity)) {
             player.teleport(getDefaultSpawn());
             SoundUtils.playTeleportSound(player);
+            event.setCancelled(true);
         }
     }
 
@@ -245,18 +297,94 @@ public abstract class Mlg implements Challenge {
 
     @EventHandler
     public void onEntityDamage(EntityDamageEvent event) {
-        if (!(event.getEntity() instanceof Player)) {
-            return;
-        }
-        Player player = (Player) event.getEntity();
-        if (!isInChallenge(player)) {
-            return;
-        }
-        if (event.getCause().equals(EntityDamageEvent.DamageCause.FALL)) {
-            Block landedBlock = player.getLocation().getBlock().getRelative(BlockFace.DOWN);
-            if (!canMlgHere(landedBlock)) {
+        if (event.getEntity() instanceof Player) {
+            Player player = (Player) event.getEntity();
+            if (!isInChallenge(player)) {
+                return;
+            }
+            if (event.getCause().equals(EntityDamageEvent.DamageCause.FALL)) {
+                Block landedBlock = player.getLocation().getBlock().getRelative(BlockFace.DOWN);
+                if ((Arrays.stream(bottomMaterials).anyMatch((b) -> b.equals(landedBlock.getType())) || (getMlgItems() != null && getMlgItems().stream().anyMatch(i -> i.getType().equals(landedBlock.getType())))
+                        || landedBlock.getType().equals(Material.AIR)) && !isBorderedBy(landedBlock, platformMaterial)) {
+                    player.setHealth(0.0); // Kill player
+                }
+                // Cancel the event so the player doesn't get killed twice
                 event.setCancelled(true);
             }
         }
+    }
+
+    /** Must be called when the player has placed the mlg item e.g. water bucket or block such as cobweb */
+    protected void handleMlg(Player player, long checkDelay) {
+        User user = getUser(player);
+        user.getChallengeInfoOrDefault(this, new MlgInfo()).setHasDied(false);
+        Bukkit.getScheduler().runTaskLater(Training.getInstance(), () -> {
+            if (!user.getChallengeInfoOrDefault(this, new MlgInfo()).hasDied()) {
+                onComplete(player);
+            }
+        }, checkDelay);
+    }
+
+    /** Must be called when the player has placed the mlg item e.g. water bucket or block such as cobweb */
+    protected void handleMlg(Player player) {
+        handleMlg(player, 10L);
+    }
+
+    /** is called in {@link Mlg#onFailure} by default */
+    protected void handleMlgDeath(Player player) {
+        User user = getUser(player);
+        MlgInfo mlgInfo = new MlgInfo();
+        mlgInfo.setHasDied(true);
+        user.addChallengeInfo(this, mlgInfo);
+    }
+
+    /** is called in {@link Mlg#onEnter} by default */
+    protected void handleMlgSetup(Player player) {
+        User user = getUser(player);
+        user.addChallengeInfo(this, new MlgInfo());
+    }
+    
+    /** remove a block after a given amount of time */
+    protected void removeBlockLater(Block block, long delay) {
+        Bukkit.getScheduler().runTaskLater(Training.getInstance(), () -> block.setType(Material.AIR), delay);
+    }
+
+    /** remove an entity after a given amount of time */
+    protected void removeEntityLater(Entity entity, long delay) {
+        Bukkit.getScheduler().runTaskLater(Training.getInstance(), entity::remove, delay);
+    }
+
+    protected void setMaxHealth(Player player) {
+        player.setHealth(Objects.requireNonNull(player.getAttribute(Attribute.GENERIC_MAX_HEALTH)).getValue());
+    }
+
+    /** check if a block is bordered by a material */
+    public boolean isBorderedBy(Block block, Material material) {
+        for (BlockFace blockFace : new BlockFace[] {BlockFace.NORTH, BlockFace.NORTH_EAST, BlockFace.EAST, BlockFace.SOUTH_EAST,
+                BlockFace.SOUTH, BlockFace.SOUTH_WEST, BlockFace.WEST, BlockFace.NORTH_WEST}) {
+            if (block.getRelative(blockFace).getType().equals(material)) {
+                return true;
+            }
+        }
+        return false;
+    }
+
+    protected void mainInventorySetup(Player player) {
+        player.getInventory().clear();
+        player.getInventory().setItem(0, WarpItems.WARP_SELECTOR);
+        player.getInventory().setItem(7, WarpItems.HUB);
+        player.getInventory().setItem(8, WarpItems.RESPAWN_ANCHOR);
+    }
+
+    protected void inventorySetup(Player player) {
+        // By default the first and only mlg item in the 4th slot. When not this must be overridden
+        player.getInventory().setItem(4, getMlgItems().get(0));
+    }
+
+    protected void handlePlayerSetup(Player player) {
+        setMaxHealth(player);
+        player.setFoodLevel(100);
+        mainInventorySetup(player);
+        inventorySetup(player);
     }
 }

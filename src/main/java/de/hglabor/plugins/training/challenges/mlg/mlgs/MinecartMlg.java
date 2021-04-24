@@ -1,25 +1,22 @@
 package de.hglabor.plugins.training.challenges.mlg.mlgs;
 
-import de.hglabor.plugins.training.Training;
 import de.hglabor.plugins.training.challenges.mlg.Mlg;
-import de.hglabor.plugins.training.user.User;
-import de.hglabor.plugins.training.user.UserList;
-import de.hglabor.plugins.training.warp.WarpItems;
 import de.hglabor.utils.noriskutils.ItemBuilder;
-import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.Material;
-import org.bukkit.attribute.Attribute;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.EntityType;
 import org.bukkit.entity.Minecart;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.entity.EntityPlaceEvent;
+import org.bukkit.event.vehicle.VehicleDamageEvent;
 import org.bukkit.event.vehicle.VehicleEnterEvent;
 import org.bukkit.inventory.ItemStack;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Random;
 
 public class MinecartMlg extends Mlg {
     private final List<ItemStack> mlgItems;
@@ -54,6 +51,18 @@ public class MinecartMlg extends Mlg {
         minecarts.clear();
     }
 
+    // Stop players from "hitting" minecarts
+    @EventHandler
+    public void onDestroyMinecart(VehicleDamageEvent event) {
+        if (event.getAttacker() instanceof Player) {
+            Player player = ((Player) event.getAttacker());
+            if (!(isInChallenge(player))) {
+                return;
+            }
+            event.setCancelled(true);
+        }
+    }
+
     @EventHandler
     public void onPlayerPlaceMinecart(@SuppressWarnings("deprecation") /* api works for this usage */ EntityPlaceEvent event) {
         if (!(event.getEntity() instanceof Minecart)) return;
@@ -63,16 +72,7 @@ public class MinecartMlg extends Mlg {
             event.setCancelled(true);
             return;
         }
-
-        User user = UserList.INSTANCE.getUser(player);
-        if (!user.getChallengeInfoOrDefault(this, false)) {
-            if (Arrays.stream(this.bottomMaterials).noneMatch((m -> m.equals(event.getBlock().getType())))) {
-                event.setCancelled(true);
-                return;
-            }
-            // Remove minecart after 1 second (20 ticks)
-            Bukkit.getScheduler().runTaskLater(Training.getInstance(), () -> event.getEntity().remove(), 20L);
-        }
+        removeEntityLater(event.getEntity(), 20L);
     }
 
     @EventHandler
@@ -84,29 +84,12 @@ public class MinecartMlg extends Mlg {
             event.setCancelled(true);
             return;
         }
-        User user = UserList.INSTANCE.getUser(player);
-        if (!user.getChallengeInfoOrDefault(this, false)) {
-            onComplete(player);
-            // Minecart already gets removed in onPlayerPlaceBoat
-        } else {
-            event.setCancelled(true);
-        }
+        handleMlg(player, 5L);
     }
+
 
     @Override
     public List<ItemStack> getMlgItems() {
         return mlgItems;
-    }
-
-    public void setMlgReady(Player player) {
-        User user = UserList.INSTANCE.getUser(player);
-        user.addChallengeInfo(this, false);
-        player.setHealth(Objects.requireNonNull(player.getAttribute(Attribute.GENERIC_MAX_HEALTH)).getValue());
-        player.setFoodLevel(100);
-        player.getInventory().clear();
-        player.getInventory().setItem(0, WarpItems.WARP_SELECTOR);
-        player.getInventory().setItem(4, mlgItems.get(0));
-        player.getInventory().setItem(7, WarpItems.HUB);
-        player.getInventory().setItem(8, WarpItems.RESPAWN_ANCHOR);
     }
 }

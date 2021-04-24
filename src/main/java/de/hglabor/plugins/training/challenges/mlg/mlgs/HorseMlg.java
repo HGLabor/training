@@ -1,20 +1,18 @@
 package de.hglabor.plugins.training.challenges.mlg.mlgs;
 
 import de.hglabor.plugins.training.challenges.mlg.Mlg;
-import de.hglabor.plugins.training.user.User;
-import de.hglabor.plugins.training.user.UserList;
-import de.hglabor.plugins.training.warp.WarpItems;
 import org.bukkit.ChatColor;
 import org.bukkit.Material;
-import org.bukkit.attribute.Attribute;
-import org.bukkit.entity.*;
+import org.bukkit.entity.Entity;
+import org.bukkit.entity.EntityType;
+import org.bukkit.entity.Horse;
+import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.inventory.ItemStack;
 import org.spigotmc.event.entity.EntityMountEvent;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Objects;
 import java.util.Random;
 
 public class HorseMlg extends Mlg {
@@ -60,12 +58,7 @@ public class HorseMlg extends Mlg {
             event.setCancelled(true);
             return;
         }
-        User user = UserList.INSTANCE.getUser(player);
-        if (!user.getChallengeInfoOrDefault(this, false)) {
-            onComplete(player);
-        } else {
-            event.setCancelled(true);
-        }
+        handleMlg(player);
     }
 
     @Override
@@ -73,14 +66,8 @@ public class HorseMlg extends Mlg {
         return null;
     }
 
-    public void setMlgReady(Player player) {
-        User user = UserList.INSTANCE.getUser(player);
-        user.addChallengeInfo(this, false);
-        player.setHealth(Objects.requireNonNull(player.getAttribute(Attribute.GENERIC_MAX_HEALTH)).getValue());
-        player.setFoodLevel(100);
-        player.getInventory().clear();
-        player.getInventory().setItem(0, WarpItems.WARP_SELECTOR);
-        player.getInventory().setItem(7, WarpItems.HUB);
-        player.getInventory().setItem(8, WarpItems.RESPAWN_ANCHOR);
+    @Override
+    protected void inventorySetup(Player player) {
+        // Nothing because there is no mlg item
     }
 }
