@@ -34,7 +34,7 @@ public class BlockMlg extends Mlg {
             switch (material) {
                 case SCAFFOLDING:
                 case TWISTING_VINES:
-                    name += " - ONLY Y <25";
+                    name += " - ONLY Y = 25 OR Y = 250 LOL";
                 default:
                     this.mlgItems.add(new ItemBuilder(material).setName(name).build());
             }
