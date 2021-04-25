@@ -5,10 +5,13 @@ import de.hglabor.plugins.training.challenges.ChallengeManager;
 import de.hglabor.plugins.training.user.User;
 import de.hglabor.plugins.training.user.UserList;
 import de.hglabor.plugins.training.warp.worlds.DamagerWorld;
+import org.bukkit.attribute.Attribute;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.player.PlayerMoveEvent;
+
+import java.util.Objects;
 
 public class ChallengeCuboidListener implements Listener {
 
@@ -37,7 +40,7 @@ public class ChallengeCuboidListener implements Listener {
             leavePreviousChallenge(player, user);
             if (!user.isSpawn()) {
                 user.setSpawn(true);
-                player.setHealth(player.getMaxHealth());
+                player.setHealth(Objects.requireNonNull(player.getAttribute(Attribute.GENERIC_MAX_HEALTH)).getValue());
                 player.setWalkSpeed(0.5F);
                 //TODO mlg word etc
                 DamagerWorld.INSTANCE.setItems(player);
