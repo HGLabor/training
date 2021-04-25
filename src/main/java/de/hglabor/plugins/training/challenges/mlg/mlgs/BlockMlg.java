@@ -54,6 +54,7 @@ public class BlockMlg extends Mlg {
             event.setCancelled(true);
             return;
         }
+        event.setCancelled(false);
         handleMlg(player);
         Bukkit.getScheduler().runTaskLater(Training.getInstance(), () -> this.clearOut(block), 5L);
     }
