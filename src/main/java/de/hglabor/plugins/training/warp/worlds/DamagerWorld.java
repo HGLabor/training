@@ -6,6 +6,7 @@ import org.bukkit.ChatColor;
 import org.bukkit.Material;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
+import org.bukkit.event.block.BlockPlaceEvent;
 import org.bukkit.event.player.PlayerAttemptPickupItemEvent;
 import org.bukkit.event.player.PlayerDropItemEvent;
 
@@ -26,6 +27,13 @@ public class DamagerWorld extends TrainingWorld {
     @EventHandler
     public void onPlayerDropItem(PlayerDropItemEvent event) {
         if (isSpawn(event.getPlayer())) {
+            event.setCancelled(true);
+        }
+    }
+
+    @EventHandler
+    public void onBlockPlace(BlockPlaceEvent event) {
+        if (!isAllowedToBuild(event.getPlayer())) {
             event.setCancelled(true);
         }
     }

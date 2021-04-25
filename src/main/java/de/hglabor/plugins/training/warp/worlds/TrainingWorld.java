@@ -103,16 +103,6 @@ public abstract class TrainingWorld implements Listener {
         }
     }
 
-    /*@EventHandler
-    public void onBlockPlace(BlockPlaceEvent event) {
-        if (!event.getPlayer().getWorld().equals(world)) {
-            return;
-        }
-        if (!isAllowedToBuild(event.getPlayer())) {
-            event.setCancelled(true);
-        }
-    }*/ // must be done in the block mlg class i think lol
-
     @EventHandler
     public void onFoodLevelChange(FoodLevelChangeEvent event) {
         if (!event.getEntity().getWorld().equals(world)) {
