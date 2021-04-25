@@ -32,13 +32,6 @@ public class DamagerWorld extends TrainingWorld {
     }
 
     @EventHandler
-    public void onBlockPlace(BlockPlaceEvent event) {
-        if (!isAllowedToBuild(event.getPlayer())) {
-            event.setCancelled(true);
-        }
-    }
-
-    @EventHandler
     public void onPlayerAttemptPickupItem(PlayerAttemptPickupItemEvent event) {
         if (isSpawn(event.getPlayer())) {
             event.setCancelled(true);
