@@ -81,7 +81,7 @@ public abstract class Mlg implements Challenge {
     }
 
     public Mlg(String name, ChatColor color, Class<? extends Entity> type, Material borderMaterial, Material bottomMaterial) {
-        this(name, color, type, borderMaterial, new Material[] {bottomMaterial});
+        this(name, color, type, borderMaterial, new Material[]{bottomMaterial});
     }
 
     public Mlg(String name, ChatColor color, Class<? extends Entity> type, Material borderMaterial, Material[] bottomMaterials, Double[] bottomMaterialPercentages) {

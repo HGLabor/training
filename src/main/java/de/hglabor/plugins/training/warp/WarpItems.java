@@ -24,4 +24,8 @@ public interface WarpItems {
     static boolean isWarpItem(ItemStack itemStack) {
         return WARP_ITEMS.stream().anyMatch(warpItem -> warpItem.isSimilar(itemStack));
     }
+
+    static boolean isWarpItem(Material material) {
+        return WARP_ITEMS.stream().anyMatch(warpItem -> warpItem.getType().equals(material));
+    }
 }

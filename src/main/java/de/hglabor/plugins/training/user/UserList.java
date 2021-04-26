@@ -25,14 +25,14 @@ public final class UserList implements Listener {
 
     @EventHandler
     public void onPlayerJoin(PlayerJoinEvent event) {
-        event.setJoinMessage(null);
+        event.joinMessage(null);
         event.getPlayer().teleport(LocationUtils.DAMAGER_SPAWN);
         getUser(event.getPlayer());
     }
 
     @EventHandler
     public void onPlayerQuit(PlayerQuitEvent event) {
-        event.setQuitMessage(null);
+        event.quitMessage(null);
         Player player = event.getPlayer();
         UUID uniqueId = player.getUniqueId();
         User user = getUser(player);

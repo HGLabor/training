@@ -22,6 +22,7 @@ import org.bukkit.ChatColor;
 import org.bukkit.Material;
 import org.bukkit.WorldCreator;
 import org.bukkit.entity.*;
+import org.bukkit.event.Listener;
 import org.bukkit.plugin.java.JavaPlugin;
 
 public final class Training extends JavaPlugin {
@@ -43,9 +44,7 @@ public final class Training extends JavaPlugin {
 
         DamagerWorld.INSTANCE.init(Bukkit.getWorld("world"));
         MlgWorld.INSTANCE.init(Bukkit.getWorld("mlg"));
-        Bukkit.getPluginManager().registerEvents(UserList.INSTANCE, this);
-        Bukkit.getPluginManager().registerEvents(new ChallengeCuboidListener(), this);
-        Bukkit.getPluginManager().registerEvents(new WarpSelector(), this);
+        registerAllEventListeners(UserList.INSTANCE, new ChallengeCuboidListener(), new WarpSelector());
 
         Bukkit.getMessenger().registerOutgoingPluginChannel(this, "BungeeCord");
 
@@ -70,6 +69,12 @@ public final class Training extends JavaPlugin {
         new DamagerCommand();
         new ChallengeCommand();
         new MlgCommand();
+    }
+
+    public void registerAllEventListeners(Listener... eventListeners) {
+        for (Listener eventListener : eventListeners) {
+            Bukkit.getPluginManager().registerEvents(eventListener, this);
+        }
     }
 
     @Override

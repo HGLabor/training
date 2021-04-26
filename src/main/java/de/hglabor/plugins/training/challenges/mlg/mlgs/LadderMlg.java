@@ -46,6 +46,7 @@ public class LadderMlg extends Mlg {
             event.setCancelled(true);
             return;
         }
+        event.setCancelled(false);
         handleMlg(player);
         // Remove ladder/vine after 10 ticks
         removeBlockLater(block, 10L);

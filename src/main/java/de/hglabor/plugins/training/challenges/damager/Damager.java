@@ -10,6 +10,7 @@ import de.hglabor.plugins.training.user.UserList;
 import de.hglabor.plugins.training.util.LocationUtils;
 import de.hglabor.utils.noriskutils.HologramUtils;
 import org.bukkit.*;
+import org.bukkit.attribute.Attribute;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.entity.ArmorStand;
 import org.bukkit.entity.Item;
@@ -126,7 +127,7 @@ public class Damager implements Challenge {
         player.sendMessage("You entered " + this.getName());
         players.put(player.getUniqueId(), false);
         PlayerInventory inventory = player.getInventory();
-        player.setHealth(player.getMaxHealth());
+        player.setHealth(Objects.requireNonNull(player.getAttribute(Attribute.GENERIC_MAX_HEALTH)).getValue());
         inventory.clear();
         inventory.addItem(new ItemStack(Material.STONE_SWORD));
         int size = 32;
