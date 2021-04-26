@@ -4,7 +4,6 @@ import de.hglabor.plugins.training.Training;
 import de.hglabor.plugins.training.challenges.mlg.Mlg;
 import de.hglabor.plugins.training.user.User;
 import de.hglabor.plugins.training.user.UserList;
-import de.hglabor.plugins.training.warp.WarpItems;
 import de.hglabor.utils.noriskutils.ItemBuilder;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
@@ -24,7 +23,6 @@ import org.spigotmc.event.entity.EntityMountEvent;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Objects;
 import java.util.Random;
 
 public class StriderMlg extends Mlg {
@@ -37,6 +35,7 @@ public class StriderMlg extends Mlg {
         this.striders = new ArrayList<>();
         this.striderAmount = 125;
         this.addMlgMaterial(Material.SADDLE);
+        this.mlgItems.add(new ItemBuilder(Material.FISHING_ROD).setUnbreakable(true).build());
     }
 
     private void addMlgMaterial(Material material) {
@@ -90,10 +89,10 @@ public class StriderMlg extends Mlg {
         }
         Projectile projectile = event.getEntity();
         Entity hitEntity = event.getHitEntity();
-        if (!(projectile.getShooter() instanceof Player) || !(hitEntity instanceof Player)) {
+        if (!(projectile.getShooter() instanceof Player) || (hitEntity instanceof Strider)) {
             return;
         }
-        if (isInChallenge((Player) projectile.getShooter()) && isInChallenge((Player) hitEntity)) {
+        if (isInChallenge((Player) projectile.getShooter()) && (!(hitEntity instanceof Player) || isInChallenge((Player) hitEntity))) {
             event.setCancelled(true);
         }
     }
@@ -106,11 +105,8 @@ public class StriderMlg extends Mlg {
             return;
         }
         if (!(event.getRightClicked() instanceof Strider)) return;
-        User user = UserList.INSTANCE.getUser(player);
-        if (!user.getChallengeInfoOrDefault(this, false)) {
-            // Remove saddle after 1 second (20 ticks)
-            Bukkit.getScheduler().runTaskLater(Training.getInstance(), () -> ((Strider) event.getRightClicked()).setSaddle(false), 20L);
-        }
+        // Remove saddle after 1 second (20 ticks)
+        Bukkit.getScheduler().runTaskLater(Training.getInstance(), () -> ((Strider) event.getRightClicked()).setSaddle(false), 20L);
     }
 
     @EventHandler
@@ -142,13 +138,10 @@ public class StriderMlg extends Mlg {
             event.setCancelled(true);
             return;
         }
-        User user = UserList.INSTANCE.getUser(player);
-        if (!user.getChallengeInfoOrDefault(this, false)) {
-            if (event.getCause().equals(EntityDamageEvent.DamageCause.LAVA)) {
-                // Player got lava damage
-                onFailure(player);
-                player.setFireTicks(0);
-            }
+        if (event.getCause().equals(EntityDamageEvent.DamageCause.LAVA)) {
+            // Player got lava damage
+            onFailure(player);
+            player.setFireTicks(0);
         }
     }
 
@@ -164,16 +157,9 @@ public class StriderMlg extends Mlg {
         return mlgItems;
     }
 
-    public void setMlgReady(Player player) {
-        User user = UserList.INSTANCE.getUser(player);
-        user.addChallengeInfo(this, false);
-        player.setHealth(Objects.requireNonNull(player.getAttribute(Attribute.GENERIC_MAX_HEALTH)).getValue());
-        player.setFoodLevel(100);
-        player.getInventory().clear();
-        player.getInventory().setItem(0, WarpItems.WARP_SELECTOR);
-        player.getInventory().setItem(1, new ItemBuilder(Material.FISHING_ROD).setUnbreakable(true).build());
+    @Override
+    protected void inventorySetup(Player player) {
+        player.getInventory().setItem(1, mlgItems.get(1));
         player.getInventory().setItem(4, mlgItems.get(0));
-        player.getInventory().setItem(7, WarpItems.HUB);
-        player.getInventory().setItem(8, WarpItems.RESPAWN_ANCHOR);
     }
 }
