@@ -1,8 +1,6 @@
 package de.hglabor.plugins.training.user;
 
 import de.hglabor.plugins.training.util.LocationUtils;
-import de.hglabor.plugins.training.warp.worlds.DamagerWorld;
-import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;

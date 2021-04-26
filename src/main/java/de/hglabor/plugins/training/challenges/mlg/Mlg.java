@@ -31,6 +31,7 @@ import org.bukkit.event.entity.EntityDamageEvent;
 import org.bukkit.event.entity.PlayerDeathEvent;
 import org.bukkit.event.player.PlayerInteractEntityEvent;
 import org.bukkit.inventory.ItemStack;
+import org.bukkit.potion.PotionEffect;
 
 import java.util.*;
 
@@ -384,5 +385,8 @@ public abstract class Mlg implements Challenge {
         player.setFoodLevel(100);
         mainInventorySetup(player);
         inventorySetup(player);
+        for (PotionEffect effect : player.getActivePotionEffects()) {
+            player.removePotionEffect(effect.getType());
+        }
     }
 }
