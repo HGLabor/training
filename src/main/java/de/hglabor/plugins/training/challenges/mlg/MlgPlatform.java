@@ -7,7 +7,9 @@ import de.hglabor.utils.noriskutils.WorldEditUtils;
 import net.minecraft.server.v1_16_R3.EntityPanda;
 import org.bukkit.*;
 import org.bukkit.craftbukkit.v1_16_R3.CraftWorld;
+import org.bukkit.craftbukkit.v1_16_R3.entity.CraftFox;
 import org.bukkit.craftbukkit.v1_16_R3.entity.CraftPanda;
+import org.bukkit.craftbukkit.v1_16_R3.entity.CraftPhantom;
 import org.bukkit.craftbukkit.v1_16_R3.entity.CraftSheep;
 import org.bukkit.entity.*;
 import org.bukkit.event.EventHandler;
@@ -26,7 +28,9 @@ public class MlgPlatform implements Listener {
     private Location spawn;
     private ArmorStand heightHologram;
     private MlgPlatform upPlatform, downPlatform;
+    private MlgPlatform topPlatform, bottomPlatform;
     private Sheep upEntity, downEntity;
+    private Fox topEntity;
     private Panda leftSupplyPanda, rightSupplyPanda;
 
     public MlgPlatform(Mlg mlg, Location spawn, int radius, int yPos, Material material) {
@@ -44,13 +48,16 @@ public class MlgPlatform implements Listener {
         heightHologram = HologramUtils.spawnHologram(spawn.clone().add(0, 4, 4), ChatColor.GOLD + ChatColor.BOLD.toString() + (int) spawn.getY());
         heightHologram.setPersistent(false);
         //Hhaha DRY goes brrrrrrrr
+        double zCoordinate = radius - (radius / 3D);
         if (upPlatform != null) {
-            Location loc = spawn.clone().add(1, 1, radius - (radius / 3D));
+            Location loc = spawn.clone().add(1, 1, zCoordinate);
             loc.setYaw(180);
             upEntity = createLevitatorSheep(loc, ChatColor.BOLD + ChatColor.GREEN.toString() + "\u25B2", DyeColor.GREEN);
+            Location loc2 = spawn.clone().add(1, 2, zCoordinate);
+            topEntity = createTopPhantom(loc2, ChatColor.BOLD + ChatColor.GREEN.toString() + "\u25B2");
         }
         if (downPlatform != null) {
-            Location loc = spawn.clone().add(-1, 1, radius - (radius / 3D));
+            Location loc = spawn.clone().add(-1, 1, zCoordinate);
             loc.setYaw(180);
             downEntity = createLevitatorSheep(loc, ChatColor.BOLD + ChatColor.RED.toString() + "\u25BC", DyeColor.RED);
         }
@@ -74,6 +81,19 @@ public class MlgPlatform implements Listener {
         world.addEntity(((CraftSheep) sheep).getHandle(), CreatureSpawnEvent.SpawnReason.CUSTOM);
         sheep.setColor(color);
         return sheep;
+    }
+
+    private Fox createTopPhantom(Location location, String name) {
+        CraftWorld world = (CraftWorld) location.getWorld();
+        Fox phantom = (Fox) world.createEntity(location, Fox.class).getBukkitEntity();
+        phantom.setCustomName(name);
+        phantom.setCustomNameVisible(true);
+        phantom.setAI(false);
+        phantom.setSilent(true);
+        phantom.setPersistent(false);
+        phantom.setInvulnerable(true);
+        world.addEntity(((CraftFox) phantom).getHandle(), CreatureSpawnEvent.SpawnReason.CUSTOM);
+        return phantom;
     }
 
     private Panda createSupplyPanda(Location location) {
@@ -112,6 +132,10 @@ public class MlgPlatform implements Listener {
         this.upPlatform = up;
     }
 
+    public void setTop(MlgPlatform top) {
+        this.topPlatform = top;
+    }
+
     public void setDown(MlgPlatform down) {
         this.downPlatform = down;
     }
@@ -125,6 +149,9 @@ public class MlgPlatform implements Listener {
         }
         if (upEntity != null && rightClicked.getUniqueId().equals(upEntity.getUniqueId())) {
             player.teleport(upPlatform.getSpawn().clone().add(0, 1, 0));
+            player.playSound(player.getLocation(), Sound.BLOCK_NOTE_BLOCK_PLING, 1, 0);
+        } else if (topPlatform != null && topEntity != null && rightClicked.getUniqueId().equals(topEntity.getUniqueId())) {
+            player.teleport(topPlatform.getSpawn().clone().add(0, 1, 0));
             player.playSound(player.getLocation(), Sound.BLOCK_NOTE_BLOCK_PLING, 1, 0);
         } else if (downEntity != null && rightClicked.getUniqueId().equals(downEntity.getUniqueId())) {
             player.teleport(downPlatform.getSpawn().clone().add(0, 1, 0));

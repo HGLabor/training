@@ -201,11 +201,13 @@ public abstract class Mlg implements Challenge {
         });
 
         platforms.get(0).setUp(platforms.get(1));
+        platforms.get(0).setTop(platforms.get(platforms.size() - 2));
         platforms.get(platforms.size() - 1).setDown(platforms.get(platforms.size() - 2));
 
         for (int i = 1; i < platforms.size() - 1; i++) {
             MlgPlatform mlgPlatform = platforms.get(i);
             mlgPlatform.setUp(platforms.get(i + 1));
+            mlgPlatform.setTop(platforms.get(platforms.size() - 2));
             mlgPlatform.setDown(platforms.get(i - 1));
         }
 
