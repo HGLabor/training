@@ -389,4 +389,8 @@ public abstract class Mlg implements Challenge {
             player.removePotionEffect(effect.getType());
         }
     }
+
+    protected boolean isAllowedToBuild(Player player) {
+        return player.getGameMode().equals(GameMode.CREATIVE);
+    }
 }

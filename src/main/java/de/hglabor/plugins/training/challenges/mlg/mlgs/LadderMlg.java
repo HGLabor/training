@@ -41,6 +41,10 @@ public class LadderMlg extends Mlg {
         if (!isInChallenge(player)) {
             return;
         }
+        if (isAllowedToBuild(player) && getMlgItems().stream().noneMatch(mlgItem -> mlgItem.getType().equals(block.getType()))) {
+            event.setCancelled(false);
+            return;
+        }
         if (!canMlgHere(blockAgainst)) {
             player.sendMessage(ChatColor.RED + "Here you can't mlg"); //TODO localization
             event.setCancelled(true);
