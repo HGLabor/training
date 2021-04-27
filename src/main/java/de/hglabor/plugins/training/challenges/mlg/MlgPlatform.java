@@ -157,19 +157,19 @@ public class MlgPlatform implements Listener {
         if (upEntity != null && rightClicked.getUniqueId().equals(upEntity.getUniqueId())) {
             // Up
             player.teleport(upPlatform.getSpawn().clone().add(0, 1, 0));
-            player.playSound(player.getLocation(), Sound.BLOCK_NOTE_BLOCK_PLING, 1, 0);
+            playPlingSound(player, 0);
         } else if (topPlatform != null && topEntity != null && rightClicked.getUniqueId().equals(topEntity.getUniqueId())) {
             // Top
             player.teleport(topPlatform.getSpawn().clone().add(0, 1, 0));
-            player.playSound(player.getLocation(), Sound.BLOCK_NOTE_BLOCK_PLING, 1, 0);
+            playPlingSound(player, 0);
         } else if (downEntity != null && rightClicked.getUniqueId().equals(downEntity.getUniqueId())) {
             // Down
             player.teleport(downPlatform.getSpawn().clone().add(0, 1, 0));
-            player.playSound(player.getLocation(), Sound.BLOCK_NOTE_BLOCK_PLING, 1, 1);
+            playPlingSound(player, 1);
         } else if (bottomPlatform != null && bottomEntity != null && rightClicked.getUniqueId().equals(bottomEntity.getUniqueId())) {
             // Bottom
             player.teleport(bottomPlatform.getSpawn().clone().add(0, 1, 0));
-            player.playSound(player.getLocation(), Sound.BLOCK_NOTE_BLOCK_PLING, 1, 1);
+            playPlingSound(player, 1);
         } else if (rightClicked.getUniqueId().equals(rightSupplyPanda.getUniqueId()) || rightClicked.getUniqueId().equals(leftSupplyPanda.getUniqueId())) {
             User user = UserList.INSTANCE.getUser(player);
             if (!user.hasCooldown(getClass())) {
@@ -181,5 +181,9 @@ public class MlgPlatform implements Listener {
                 player.sendMessage(ChatColor.RED + "You are on cooldown.");
             }
         }
+    }
+
+    private void playPlingSound(Player player, float pitch) {
+        player.playSound(player.getLocation(), Sound.BLOCK_NOTE_BLOCK_PLING, 1, pitch);
     }
 }
