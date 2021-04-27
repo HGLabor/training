@@ -36,8 +36,6 @@ public class MlgPlatform implements Listener {
     private Sheep upEntity, downEntity;
     private LivingEntity topEntity, bottomEntity;
     private Panda leftSupplyPanda, rightSupplyPanda;
-    private List<String> jumpCooldownUUIDs = new ArrayList<>();
-    private static final long JUMP_COOLDOWN = 5; // 5 ticks
 
     public MlgPlatform(Mlg mlg, Location spawn, int radius, int yPos, Material material) {
         this.mlg = mlg;
@@ -224,8 +222,6 @@ public class MlgPlatform implements Listener {
         }
         teleportPlayerY(player, upPlatform.yPos+1);
         playPlingSound(player, 0);
-        setHasJumpCooldown(player, true);
-        Bukkit.broadcastMessage("teleport up to " + upPlatform.yPos+1);
     }
 
     @EventHandler
@@ -242,7 +238,6 @@ public class MlgPlatform implements Listener {
         }
         teleportPlayerY(player, downPlatform.yPos+1);
         playPlingSound(player, 1);
-        Bukkit.broadcastMessage("teleport down to " + downPlatform.yPos+1);
     }
 
     private boolean isPlayerNotOnSpawnBlocks(Player player) {
@@ -253,27 +248,5 @@ public class MlgPlatform implements Listener {
         Location playerLocation = player.getLocation().clone();
         playerLocation.setY(yCoordinate);
         player.teleport(playerLocation);
-    }
-
-    private boolean getHasJumpCooldown(Player player) {
-        return jumpCooldownUUIDs.contains(player.getUniqueId().toString());
-    }
-
-    private void setHasJumpCooldown(Player player, boolean value) {
-        String uuid = player.getUniqueId().toString();
-        if (value) {
-            jumpCooldownUUIDs.add(uuid);
-            Bukkit.broadcastMessage("set jumpcooldown for player to true");
-            Bukkit.broadcastMessage(Arrays.toString(jumpCooldownUUIDs.toArray()));
-            // Remove after cooldown
-            Bukkit.getScheduler().runTaskLater(Training.getInstance(), () -> {
-                jumpCooldownUUIDs.remove(uuid);
-                Bukkit.broadcastMessage("set jumpcooldown for player to false after 5 ticks");
-            }, JUMP_COOLDOWN);
-
-        }
-        else {
-            jumpCooldownUUIDs.remove(uuid);
-        }
     }
 }
