@@ -201,14 +201,16 @@ public abstract class Mlg implements Challenge {
         });
 
         platforms.get(0).setUp(platforms.get(1));
-        platforms.get(0).setTop(platforms.get(platforms.size() - 2));
+        platforms.get(0).setTop(platforms.get(platforms.size() - 1));
         platforms.get(platforms.size() - 1).setDown(platforms.get(platforms.size() - 2));
+        platforms.get(platforms.size() - 1).setBottom(platforms.get(0));
 
         for (int i = 1; i < platforms.size() - 1; i++) {
             MlgPlatform mlgPlatform = platforms.get(i);
             mlgPlatform.setUp(platforms.get(i + 1));
-            mlgPlatform.setTop(platforms.get(platforms.size() - 2));
+            mlgPlatform.setTop(platforms.get(platforms.size() - 1));
             mlgPlatform.setDown(platforms.get(i - 1));
+            mlgPlatform.setBottom(platforms.get(0));
         }
 
         platforms.forEach(MlgPlatform::create);
@@ -385,6 +387,7 @@ public abstract class Mlg implements Challenge {
     protected void handlePlayerSetup(Player player) {
         setMaxHealth(player);
         player.setFoodLevel(100);
+        player.setCollidable(false);
         mainInventorySetup(player);
         inventorySetup(player);
         for (PotionEffect effect : player.getActivePotionEffects()) {

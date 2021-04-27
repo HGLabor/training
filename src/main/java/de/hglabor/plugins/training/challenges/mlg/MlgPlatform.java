@@ -1,5 +1,6 @@
 package de.hglabor.plugins.training.challenges.mlg;
 
+import com.destroystokyo.paper.event.entity.EntityRemoveFromWorldEvent;
 import de.hglabor.plugins.training.user.User;
 import de.hglabor.plugins.training.user.UserList;
 import de.hglabor.utils.noriskutils.HologramUtils;
@@ -7,7 +8,8 @@ import de.hglabor.utils.noriskutils.WorldEditUtils;
 import net.minecraft.server.v1_16_R3.EntityPanda;
 import org.bukkit.*;
 import org.bukkit.craftbukkit.v1_16_R3.CraftWorld;
-import org.bukkit.craftbukkit.v1_16_R3.entity.CraftFox;
+import org.bukkit.craftbukkit.v1_16_R3.entity.CraftEntity;
+import org.bukkit.craftbukkit.v1_16_R3.entity.CraftLivingEntity;
 import org.bukkit.craftbukkit.v1_16_R3.entity.CraftPanda;
 import org.bukkit.craftbukkit.v1_16_R3.entity.CraftSheep;
 import org.bukkit.entity.*;
@@ -16,6 +18,7 @@ import org.bukkit.event.Listener;
 import org.bukkit.event.entity.CreatureSpawnEvent;
 import org.bukkit.event.player.PlayerInteractAtEntityEvent;
 import org.bukkit.inventory.EquipmentSlot;
+import org.bukkit.potion.PotionEffectType;
 
 import java.util.Random;
 
@@ -29,7 +32,7 @@ public class MlgPlatform implements Listener {
     private MlgPlatform upPlatform, downPlatform;
     private MlgPlatform topPlatform, bottomPlatform;
     private Sheep upEntity, downEntity;
-    private Fox topEntity;
+    private LivingEntity topEntity, bottomEntity;
     private Panda leftSupplyPanda, rightSupplyPanda;
 
     public MlgPlatform(Mlg mlg, Location spawn, int radius, int yPos, Material material) {
@@ -52,13 +55,16 @@ public class MlgPlatform implements Listener {
             Location loc = spawn.clone().add(1, 1, zCoordinate);
             loc.setYaw(180);
             upEntity = createLevitatorSheep(loc, ChatColor.BOLD + ChatColor.GREEN.toString() + "\u25B2", DyeColor.GREEN);
-            Location loc2 = spawn.clone().add(1, 2, zCoordinate);
-            topEntity = createTopPhantom(loc2, ChatColor.BOLD + ChatColor.GREEN.toString() + "\u25B2");
+            Location loc2 = spawn.clone().add(1, 3, zCoordinate);
+            topEntity = createTopBottomPhantom(loc2, ChatColor.BOLD + ChatColor.GREEN.toString() + "\u25B2");
         }
         if (downPlatform != null) {
             Location loc = spawn.clone().add(-1, 1, zCoordinate);
             loc.setYaw(180);
             downEntity = createLevitatorSheep(loc, ChatColor.BOLD + ChatColor.RED.toString() + "\u25BC", DyeColor.RED);
+            Location loc2 = spawn.clone().add(-1, 3, zCoordinate);
+            bottomEntity = createTopBottomPhantom(loc2, ChatColor.BOLD + ChatColor.RED.toString() + "\u25BC");
+
         }
         Location left = spawn.clone().add(radius - (radius / 3D), 1, 0);
         left.setYaw(90);
@@ -82,16 +88,17 @@ public class MlgPlatform implements Listener {
         return sheep;
     }
 
-    private Fox createTopPhantom(Location location, String name) {
+    private LivingEntity createTopBottomPhantom(Location location, String name) {
         CraftWorld world = (CraftWorld) location.getWorld();
-        Fox phantom = (Fox) world.createEntity(location, Fox.class).getBukkitEntity();
+        LivingEntity phantom = (LivingEntity) world.createEntity(location, Phantom.class).getBukkitEntity();
         phantom.setCustomName(name);
         phantom.setCustomNameVisible(true);
         phantom.setAI(false);
         phantom.setSilent(true);
         phantom.setPersistent(false);
         phantom.setInvulnerable(true);
-        world.addEntity(((CraftFox) phantom).getHandle(), CreatureSpawnEvent.SpawnReason.CUSTOM);
+        phantom.setRemoveWhenFarAway(false);
+        world.addEntity(((CraftLivingEntity) phantom).getHandle(), CreatureSpawnEvent.SpawnReason.CUSTOM);
         return phantom;
     }
 
@@ -135,6 +142,10 @@ public class MlgPlatform implements Listener {
         this.topPlatform = top;
     }
 
+    public void setBottom(MlgPlatform bottom) {
+        this.bottomPlatform = bottom;
+    }
+
     public void setDown(MlgPlatform down) {
         this.downPlatform = down;
     }
@@ -147,14 +158,21 @@ public class MlgPlatform implements Listener {
             return;
         }
         if (upEntity != null && rightClicked.getUniqueId().equals(upEntity.getUniqueId())) {
+            // Up
             player.teleport(upPlatform.getSpawn().clone().add(0, 1, 0));
             player.playSound(player.getLocation(), Sound.BLOCK_NOTE_BLOCK_PLING, 1, 0);
         } else if (topPlatform != null && topEntity != null && rightClicked.getUniqueId().equals(topEntity.getUniqueId())) {
+            // Top
             player.teleport(topPlatform.getSpawn().clone().add(0, 1, 0));
             player.playSound(player.getLocation(), Sound.BLOCK_NOTE_BLOCK_PLING, 1, 0);
         } else if (downEntity != null && rightClicked.getUniqueId().equals(downEntity.getUniqueId())) {
+            // Down
             player.teleport(downPlatform.getSpawn().clone().add(0, 1, 0));
             player.playSound(player.getLocation(), Sound.BLOCK_NOTE_BLOCK_PLING, 1, 1);
+        } else if (bottomPlatform != null && bottomEntity != null && rightClicked.getUniqueId().equals(bottomEntity.getUniqueId())) {
+            // Bottom
+            player.teleport(bottomPlatform.getSpawn().clone().add(0, 1, 0));
+            player.playSound(player.getLocation(), Sound.BLOCK_NOTE_BLOCK_PLING, 1, 0);
         } else if (rightClicked.getUniqueId().equals(rightSupplyPanda.getUniqueId()) || rightClicked.getUniqueId().equals(leftSupplyPanda.getUniqueId())) {
             User user = UserList.INSTANCE.getUser(player);
             if (!user.hasCooldown(getClass())) {
