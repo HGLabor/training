@@ -2,8 +2,6 @@ package de.hglabor.plugins.training.challenges.mlg.mlgs;
 
 import de.hglabor.plugins.training.Training;
 import de.hglabor.plugins.training.challenges.mlg.Mlg;
-import de.hglabor.plugins.training.user.User;
-import de.hglabor.plugins.training.user.UserList;
 import de.hglabor.utils.noriskutils.ItemBuilder;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;

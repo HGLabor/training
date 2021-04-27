@@ -9,7 +9,6 @@ import org.bukkit.*;
 import org.bukkit.craftbukkit.v1_16_R3.CraftWorld;
 import org.bukkit.craftbukkit.v1_16_R3.entity.CraftFox;
 import org.bukkit.craftbukkit.v1_16_R3.entity.CraftPanda;
-import org.bukkit.craftbukkit.v1_16_R3.entity.CraftPhantom;
 import org.bukkit.craftbukkit.v1_16_R3.entity.CraftSheep;
 import org.bukkit.entity.*;
 import org.bukkit.event.EventHandler;
