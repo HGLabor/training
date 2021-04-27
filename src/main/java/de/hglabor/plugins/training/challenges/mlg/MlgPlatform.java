@@ -1,6 +1,5 @@
 package de.hglabor.plugins.training.challenges.mlg;
 
-import com.destroystokyo.paper.event.entity.EntityRemoveFromWorldEvent;
 import de.hglabor.plugins.training.user.User;
 import de.hglabor.plugins.training.user.UserList;
 import de.hglabor.utils.noriskutils.HologramUtils;
@@ -8,7 +7,6 @@ import de.hglabor.utils.noriskutils.WorldEditUtils;
 import net.minecraft.server.v1_16_R3.EntityPanda;
 import org.bukkit.*;
 import org.bukkit.craftbukkit.v1_16_R3.CraftWorld;
-import org.bukkit.craftbukkit.v1_16_R3.entity.CraftEntity;
 import org.bukkit.craftbukkit.v1_16_R3.entity.CraftLivingEntity;
 import org.bukkit.craftbukkit.v1_16_R3.entity.CraftPanda;
 import org.bukkit.craftbukkit.v1_16_R3.entity.CraftSheep;
@@ -18,7 +16,6 @@ import org.bukkit.event.Listener;
 import org.bukkit.event.entity.CreatureSpawnEvent;
 import org.bukkit.event.player.PlayerInteractAtEntityEvent;
 import org.bukkit.inventory.EquipmentSlot;
-import org.bukkit.potion.PotionEffectType;
 
 import java.util.Random;
 
