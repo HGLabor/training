@@ -75,11 +75,7 @@ public class MlgPlatform implements Listener {
         CraftWorld world = (CraftWorld) location.getWorld();
         Sheep sheep = (Sheep) world.createEntity(location, Sheep.class).getBukkitEntity();
         sheep.setCustomName(name);
-        sheep.setCustomNameVisible(true);
-        sheep.setAI(false);
-        sheep.setSilent(true);
-        sheep.setPersistent(false);
-        sheep.setInvulnerable(true);
+        setStatueAttributes(sheep);
         world.addEntity(((CraftSheep) sheep).getHandle(), CreatureSpawnEvent.SpawnReason.CUSTOM);
         sheep.setColor(color);
         return sheep;
@@ -89,14 +85,18 @@ public class MlgPlatform implements Listener {
         CraftWorld world = (CraftWorld) location.getWorld();
         LivingEntity phantom = (LivingEntity) world.createEntity(location, Phantom.class).getBukkitEntity();
         phantom.setCustomName(name);
-        phantom.setCustomNameVisible(true);
-        phantom.setAI(false);
-        phantom.setSilent(true);
-        phantom.setPersistent(false);
-        phantom.setInvulnerable(true);
-        phantom.setRemoveWhenFarAway(false);
+        setStatueAttributes(phantom);
         world.addEntity(((CraftLivingEntity) phantom).getHandle(), CreatureSpawnEvent.SpawnReason.CUSTOM);
         return phantom;
+    }
+
+    private void setStatueAttributes(LivingEntity entity) {
+        entity.setCustomNameVisible(true);
+        entity.setAI(false);
+        entity.setSilent(true);
+        entity.setPersistent(false);
+        entity.setInvulnerable(true);
+        entity.setRemoveWhenFarAway(false);
     }
 
     private Panda createSupplyPanda(Location location) {
@@ -169,7 +169,7 @@ public class MlgPlatform implements Listener {
         } else if (bottomPlatform != null && bottomEntity != null && rightClicked.getUniqueId().equals(bottomEntity.getUniqueId())) {
             // Bottom
             player.teleport(bottomPlatform.getSpawn().clone().add(0, 1, 0));
-            player.playSound(player.getLocation(), Sound.BLOCK_NOTE_BLOCK_PLING, 1, 0);
+            player.playSound(player.getLocation(), Sound.BLOCK_NOTE_BLOCK_PLING, 1, 1);
         } else if (rightClicked.getUniqueId().equals(rightSupplyPanda.getUniqueId()) || rightClicked.getUniqueId().equals(leftSupplyPanda.getUniqueId())) {
             User user = UserList.INSTANCE.getUser(player);
             if (!user.hasCooldown(getClass())) {
