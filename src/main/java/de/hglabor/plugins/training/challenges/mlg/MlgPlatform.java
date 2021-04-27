@@ -1,11 +1,15 @@
 package de.hglabor.plugins.training.challenges.mlg;
 
+import com.destroystokyo.paper.event.player.PlayerJumpEvent;
+import de.hglabor.plugins.training.Training;
 import de.hglabor.plugins.training.user.User;
 import de.hglabor.plugins.training.user.UserList;
 import de.hglabor.utils.noriskutils.HologramUtils;
 import de.hglabor.utils.noriskutils.WorldEditUtils;
 import net.minecraft.server.v1_16_R3.EntityPanda;
 import org.bukkit.*;
+import org.bukkit.block.Block;
+import org.bukkit.block.BlockFace;
 import org.bukkit.craftbukkit.v1_16_R3.CraftWorld;
 import org.bukkit.craftbukkit.v1_16_R3.entity.CraftLivingEntity;
 import org.bukkit.craftbukkit.v1_16_R3.entity.CraftPanda;
@@ -15,9 +19,10 @@ import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.entity.CreatureSpawnEvent;
 import org.bukkit.event.player.PlayerInteractAtEntityEvent;
+import org.bukkit.event.player.PlayerToggleSneakEvent;
 import org.bukkit.inventory.EquipmentSlot;
 
-import java.util.Random;
+import java.util.*;
 
 public class MlgPlatform implements Listener {
     private final Mlg mlg;
@@ -31,6 +36,8 @@ public class MlgPlatform implements Listener {
     private Sheep upEntity, downEntity;
     private LivingEntity topEntity, bottomEntity;
     private Panda leftSupplyPanda, rightSupplyPanda;
+    private List<String> jumpCooldownUUIDs = new ArrayList<>();
+    private static final long JUMP_COOLDOWN = 5; // 5 ticks
 
     public MlgPlatform(Mlg mlg, Location spawn, int radius, int yPos, Material material) {
         this.mlg = mlg;
@@ -40,10 +47,25 @@ public class MlgPlatform implements Listener {
         this.material = material;
     }
 
+    private List<Block> getSpawnBlocks() {
+        List<Block> blocks = new ArrayList<>();
+        blocks.add(getSpawnRelativeBlock(0, 0, 0));
+        blocks.add(getSpawnRelativeBlock(-1, 0, 0));
+        blocks.add(getSpawnRelativeBlock(0, 0, -1));
+        blocks.add(getSpawnRelativeBlock(-1, 0, -1));
+        return blocks;
+    }
+
+    private Block getSpawnRelativeBlock(double x, double y, double z) {
+        return spawn.getWorld().getBlockAt(spawn.clone().add(x, y, z));
+    }
+
     public void create() {
         World world = spawn.getWorld();
         spawn.getChunk().setForceLoaded(true);
         WorldEditUtils.createCylinder(world, spawn, radius, true, 1, material);
+        // Create 2x2 glass space in the middle
+        getSpawnBlocks().forEach(block -> block.setType(Material.GLASS));
         heightHologram = HologramUtils.spawnHologram(spawn.clone().add(0, 4, 4), ChatColor.GOLD + ChatColor.BOLD.toString() + (int) spawn.getY());
         heightHologram.setPersistent(false);
         //Hhaha DRY goes brrrrrrrr
@@ -185,5 +207,73 @@ public class MlgPlatform implements Listener {
 
     private void playPlingSound(Player player, float pitch) {
         player.playSound(player.getLocation(), Sound.BLOCK_NOTE_BLOCK_PLING, 1, pitch);
+    }
+
+    // Sneak/Jump "elevator"
+    @EventHandler
+    public void onPlayerJump(PlayerJumpEvent event) {
+        Player player = event.getPlayer();
+        if (isPlayerNotOnSpawnBlocks(player)) {
+            return;
+        }
+        if (upPlatform == null) {
+            return;
+        }
+        if (event.getFrom().getY() != yPos+1) {
+            return;
+        }
+        teleportPlayerY(player, upPlatform.yPos+1);
+        playPlingSound(player, 0);
+        setHasJumpCooldown(player, true);
+        Bukkit.broadcastMessage("teleport up to " + upPlatform.yPos+1);
+    }
+
+    @EventHandler
+    public void onPlayerSneak(PlayerToggleSneakEvent event) {
+        Player player = event.getPlayer();
+        if (player.isSneaking()) {
+            return;
+        }
+        if (isPlayerNotOnSpawnBlocks(player)) {
+            return;
+        }
+        if (downPlatform == null) {
+            return;
+        }
+        teleportPlayerY(player, downPlatform.yPos+1);
+        playPlingSound(player, 1);
+        Bukkit.broadcastMessage("teleport down to " + downPlatform.yPos+1);
+    }
+
+    private boolean isPlayerNotOnSpawnBlocks(Player player) {
+        return spawn.getWorld() != player.getWorld() || getSpawnBlocks().stream().noneMatch(block -> block.getRelative(BlockFace.UP).getLocation().equals(player.getLocation().getBlock().getLocation()));
+    }
+
+    private void teleportPlayerY(Player player, double yCoordinate) {
+        Location playerLocation = player.getLocation().clone();
+        playerLocation.setY(yCoordinate);
+        player.teleport(playerLocation);
+    }
+
+    private boolean getHasJumpCooldown(Player player) {
+        return jumpCooldownUUIDs.contains(player.getUniqueId().toString());
+    }
+
+    private void setHasJumpCooldown(Player player, boolean value) {
+        String uuid = player.getUniqueId().toString();
+        if (value) {
+            jumpCooldownUUIDs.add(uuid);
+            Bukkit.broadcastMessage("set jumpcooldown for player to true");
+            Bukkit.broadcastMessage(Arrays.toString(jumpCooldownUUIDs.toArray()));
+            // Remove after cooldown
+            Bukkit.getScheduler().runTaskLater(Training.getInstance(), () -> {
+                jumpCooldownUUIDs.remove(uuid);
+                Bukkit.broadcastMessage("set jumpcooldown for player to false after 5 ticks");
+            }, JUMP_COOLDOWN);
+
+        }
+        else {
+            jumpCooldownUUIDs.remove(uuid);
+        }
     }
 }
