@@ -6,6 +6,11 @@ import com.sk89q.worldedit.bukkit.BukkitAdapter;
 import com.sk89q.worldedit.function.pattern.RandomPattern;
 import de.hglabor.plugins.training.Training;
 import de.hglabor.plugins.training.challenges.Challenge;
+import de.hglabor.plugins.training.challenges.mlg.scoreboard.MlgPlayer;
+import de.hglabor.plugins.training.challenges.mlg.scoreboard.MlgPlayerList;
+import de.hglabor.plugins.training.challenges.mlg.scoreboard.MlgScoreboard;
+import de.hglabor.plugins.training.challenges.mlg.streaks.StreakPlayer;
+import de.hglabor.plugins.training.challenges.mlg.streaks.StreakPlayers;
 import de.hglabor.plugins.training.region.Area;
 import de.hglabor.plugins.training.region.Cuboid;
 import de.hglabor.plugins.training.user.User;
@@ -120,16 +125,25 @@ public abstract class Mlg implements Challenge {
         user.setRespawnLoc(getDefaultSpawn());
         setMlgReady(player);
         handleMlgSetup(player);
+
+        // Scoreboard
+        StreakPlayers.addStreakPlayer(player.getUniqueId(), new StreakPlayer());
+        MlgScoreboard.create(MlgPlayer.get(player.getUniqueId(), getName()));
     }
 
     @Override
     public void onLeave(Player player) {
         player.sendMessage("You left " + this.getName() + " MLG");
+
+        // Remove scoreboard
+        player.setScoreboard(Bukkit.getScoreboardManager().getNewScoreboard());
     }
 
     @Override
     public void onComplete(Player player) {
         handleMlgSetup(player);
+        StreakPlayer.get(player).increaseStreak(MlgPlayerList.getMlgPlayer(player.getUniqueId()).getMlgName());
+        MlgScoreboard.update(MlgPlayerList.getMlgPlayer(player.getUniqueId()));
         player.sendMessage(ChatColor.GREEN + ChatColor.BOLD.toString() + "Successful MLG");
         player.playSound(player.getLocation(), Sound.ENTITY_ARROW_HIT_PLAYER, 1, 1);
         Bukkit.getScheduler().runTaskLater(Training.getInstance(), () -> {
@@ -141,6 +155,8 @@ public abstract class Mlg implements Challenge {
     public void onFailure(Player player) {
         player.sendMessage(ChatColor.RED + ChatColor.BOLD.toString() + "Failed MLG");
         handleMlgDeath(player);
+        StreakPlayer.get(player).resetStreak(MlgPlayerList.getMlgPlayer(player.getUniqueId()).getMlgName());
+        MlgScoreboard.update(MlgPlayerList.getMlgPlayer(player.getUniqueId()));
         Bukkit.getScheduler().runTaskLater(Training.getInstance(), () -> {
             teleportAndSetItems(player);
             player.playSound(player.getLocation(), Sound.BLOCK_GLASS_BREAK, 1, 1);
