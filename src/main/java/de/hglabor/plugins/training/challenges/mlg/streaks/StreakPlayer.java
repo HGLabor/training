@@ -3,12 +3,13 @@ package de.hglabor.plugins.training.challenges.mlg.streaks;
 import de.hglabor.plugins.training.challenges.mlg.scoreboard.MlgPlayer;
 import org.bukkit.entity.Player;
 
+import java.io.Serializable;
 import java.util.HashMap;
 import java.util.Map;
 
-public class StreakPlayer {
-    private Map<String, Long> streaks;
-    private Map<String, Long> highScores;
+public class StreakPlayer implements Serializable {
+    private final Map<String, Long> streaks;
+    private final Map<String, Long> highScores;
 
     public StreakPlayer() {
         this.streaks = new HashMap<>();

@@ -9,6 +9,7 @@ import de.hglabor.plugins.training.challenges.damager.damagers.InconsistencyDama
 import de.hglabor.plugins.training.challenges.listener.ChallengeCuboidListener;
 import de.hglabor.plugins.training.challenges.mlg.Mlg;
 import de.hglabor.plugins.training.challenges.mlg.mlgs.*;
+import de.hglabor.plugins.training.challenges.mlg.streaks.data.DataManager;
 import de.hglabor.plugins.training.command.ChallengeCommand;
 import de.hglabor.plugins.training.command.DamagerCommand;
 import de.hglabor.plugins.training.command.MlgCommand;
@@ -69,6 +70,8 @@ public final class Training extends JavaPlugin {
         new DamagerCommand();
         new ChallengeCommand();
         new MlgCommand();
+
+        DataManager.enable();
     }
 
     public void registerAllEventListeners(Listener... eventListeners) {
@@ -80,5 +83,7 @@ public final class Training extends JavaPlugin {
     @Override
     public void onDisable() {
         ChallengeManager.INSTANCE.getChallenges().forEach(Challenge::stop);
+
+        DataManager.disable();
     }
 }

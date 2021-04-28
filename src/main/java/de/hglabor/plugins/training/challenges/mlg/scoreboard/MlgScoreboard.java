@@ -26,7 +26,7 @@ public class MlgScoreboard {
             return;
         }
         StreakPlayer streakPlayer = StreakPlayer.get(player);
-        ScoreboardFactory.updateEntry(player, Names.MLG_NAME, player.getMlgName());
+        ScoreboardFactory.updateEntry(player, Names.MLG_NAME, player.getMlgName(), " MLG");
         ScoreboardFactory.updateEntry(player, Names.STREAK, "Streak: ", String.valueOf(streakPlayer.getStreak(player.getMlgName())));
         ScoreboardFactory.updateEntry(player, Names.HIGH_SCORE, "Streak High Score: ", String.valueOf(streakPlayer.getHighScore(player.getMlgName())));
     }
