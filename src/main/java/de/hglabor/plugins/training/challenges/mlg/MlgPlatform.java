@@ -48,15 +48,15 @@ public class MlgPlatform implements Listener {
 
     private List<Block> getSpawnBlocks() {
         List<Block> blocks = new ArrayList<>();
-        blocks.add(getSpawnRelativeBlock(0, 0, 0));
-        blocks.add(getSpawnRelativeBlock(-1, 0, 0));
-        blocks.add(getSpawnRelativeBlock(0, 0, -1));
-        blocks.add(getSpawnRelativeBlock(-1, 0, -1));
+        blocks.add(getSpawnRelativeBlock(0, 0));
+        blocks.add(getSpawnRelativeBlock(-1, 0));
+        blocks.add(getSpawnRelativeBlock(0, -1));
+        blocks.add(getSpawnRelativeBlock(-1, -1));
         return blocks;
     }
 
-    private Block getSpawnRelativeBlock(double x, double y, double z) {
-        return spawn.getWorld().getBlockAt(spawn.clone().add(x, y, z));
+    private Block getSpawnRelativeBlock(double x, double z) {
+        return spawn.getWorld().getBlockAt(spawn.clone().add(x, 0, z));
     }
 
     public void create() {

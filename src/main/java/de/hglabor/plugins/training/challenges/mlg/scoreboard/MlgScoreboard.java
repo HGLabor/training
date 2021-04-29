@@ -8,7 +8,7 @@ public class MlgScoreboard {
     private interface Names {
         String MLG_NAME = "mlgName";
         String STREAK = "streak";
-        String HIGH_SCORE = "highscore";
+        String HIGH_SCORE = "highScore";
     }
 
     public static void create(MlgPlayer player) {

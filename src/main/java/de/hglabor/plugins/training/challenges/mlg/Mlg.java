@@ -123,8 +123,8 @@ public abstract class Mlg implements Challenge {
         handlePlayerSetup(player);
     }
 
-    protected boolean canMlgHere(Block blockAgainst) {
-        return Arrays.stream(bottomMaterials).anyMatch(m -> m.equals(blockAgainst.getType()));
+    protected boolean cantMlgHere(Block blockAgainst) {
+        return Arrays.stream(bottomMaterials).noneMatch(m -> m.equals(blockAgainst.getType()));
     }
 
     @Override
@@ -155,9 +155,7 @@ public abstract class Mlg implements Challenge {
         MlgScoreboard.update(MlgPlayerList.getMlgPlayer(player.getUniqueId()));
         player.sendMessage(ChatColor.GREEN + ChatColor.BOLD.toString() + "Successful MLG");
         player.playSound(player.getLocation(), Sound.ENTITY_ARROW_HIT_PLAYER, 1, 1);
-        Bukkit.getScheduler().runTaskLater(Training.getInstance(), () -> {
-            teleportAndSetItems(player);
-        }, 5L);
+        Bukkit.getScheduler().runTaskLater(Training.getInstance(), () -> teleportAndSetItems(player), 5L);
     }
 
     @Override
@@ -293,10 +291,15 @@ public abstract class Mlg implements Challenge {
         Training.getInstance().reloadConfig();
         FileConfiguration config = Training.getInstance().getConfig();
         spawn = config.getLocation(String.format("%s.mlgPlatform.spawn", this.getName()), spawn);
-        warpEntity.teleport(config.getLocation(String.format("%s.warpEntity.location", this.getName()), warpEntity.getLocation()));
+        Location warpEntityLocation = config.getLocation(String.format("%s.warpEntity.location", this.getName()), warpEntity.getLocation());
+        if (warpEntityLocation != null) {
+            warpEntity.teleport(warpEntityLocation);
+        }
         Location firstLoc = config.getLocation(String.format("%s.location.first", this.getName()), cuboid.getFirst());
         Location secondLoc = config.getLocation(String.format("%s.location.second", this.getName()), cuboid.getSecond());
-        cuboid = new Cuboid(firstLoc, secondLoc);
+        if (firstLoc != null && secondLoc != null) {
+            cuboid = new Cuboid(firstLoc, secondLoc);
+        }
     }
 
     @EventHandler
@@ -330,6 +333,7 @@ public abstract class Mlg implements Challenge {
             if (!isInChallenge(player)) {
                 return;
             }
+            if (player.getWorld().equals(spawn.getWorld()))
             if (event.getCause().equals(EntityDamageEvent.DamageCause.FALL)) {
                 Block landedBlock = player.getLocation().getBlock().getRelative(BlockFace.DOWN);
                 if ((Arrays.stream(bottomMaterials).anyMatch((b) -> b.equals(landedBlock.getType())) || (getMlgItems() != null && getMlgItems().stream().anyMatch(i -> i.getType().equals(landedBlock.getType())))

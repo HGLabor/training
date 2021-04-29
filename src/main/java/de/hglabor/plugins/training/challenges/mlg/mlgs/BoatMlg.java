@@ -36,7 +36,7 @@ public class BoatMlg extends Mlg {
             event.setCancelled(true);
             return;
         }
-        if (!canMlgHere(event.getBlock())) {
+        if (cantMlgHere(event.getBlock())) {
             event.setCancelled(true);
             return;
         }

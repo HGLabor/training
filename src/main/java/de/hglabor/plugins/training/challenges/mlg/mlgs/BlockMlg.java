@@ -1,8 +1,6 @@
 package de.hglabor.plugins.training.challenges.mlg.mlgs;
 
 import de.hglabor.plugins.training.Training;
-import de.hglabor.plugins.training.challenges.mlg.Mlg;
-import de.hglabor.utils.noriskutils.ItemBuilder;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.Material;
@@ -11,56 +9,14 @@ import org.bukkit.block.BlockFace;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
-import org.bukkit.event.block.BlockPlaceEvent;
 import org.bukkit.event.player.PlayerBucketEmptyEvent;
 import org.bukkit.event.player.PlayerBucketFillEvent;
-import org.bukkit.inventory.ItemStack;
 
-import java.util.ArrayList;
-import java.util.List;
-
-public class BlockMlg extends Mlg {
-    private final List<ItemStack> mlgItems;
+public class BlockMlg extends AbstractBlockMlg {
 
     public BlockMlg(String name, ChatColor color, Class<? extends Entity> type) {
         super(name, color, type, Material.QUARTZ_BLOCK, Material.GOLD_BLOCK);
-        this.mlgItems = new ArrayList<>();
         this.addMlgMaterials(Material.WATER_BUCKET, Material.COBWEB, Material.SLIME_BLOCK, Material.SCAFFOLDING, Material.TWISTING_VINES, Material.HONEY_BLOCK);
-    }
-
-    private void addMlgMaterials(Material... materials) {
-        for (Material material : materials) {
-            String name = ChatColor.AQUA + this.getName() + " MLG - " + material.name(); // e.g. Block Mlg - COBWEB
-            switch (material) {
-                case SCAFFOLDING:
-                case TWISTING_VINES:
-                    name += " - ONLY Y = 25 OR Y = 250 LOL";
-                default:
-                    this.mlgItems.add(new ItemBuilder(material).setName(name).build());
-            }
-        }
-    }
-
-    @EventHandler
-    public void onBlockPlace(BlockPlaceEvent event) {
-        Player player = event.getPlayer();
-        Block blockAgainst = event.getBlockAgainst();
-        Block block = event.getBlock();
-        if (!isInChallenge(player)) {
-            return;
-        }
-        if (isAllowedToBuild(player) && getMlgItems().stream().noneMatch(mlgItem -> mlgItem.getType().equals(block.getType()))) {
-            event.setCancelled(false);
-            return;
-        }
-        if (!canMlgHere(blockAgainst)) {
-            player.sendMessage(ChatColor.RED + "Here you can't mlg"); //TODO localization
-            event.setCancelled(true);
-            return;
-        }
-        event.setCancelled(false);
-        handleMlg(player);
-        Bukkit.getScheduler().runTaskLater(Training.getInstance(), () -> this.clearOut(block), 5L);
     }
 
     @EventHandler
@@ -72,7 +28,7 @@ public class BlockMlg extends Mlg {
             event.setCancelled(true);
             return;
         }
-        if (!canMlgHere(blockClicked)) {
+        if (cantMlgHere(blockClicked)) {
             player.sendMessage(ChatColor.RED + "Here you can't mlg"); //TODO localization
             event.setCancelled(true);
             return;
@@ -93,6 +49,11 @@ public class BlockMlg extends Mlg {
         }
     }
 
+    @Override
+    protected void handleBlockRemoval(Block block) {
+        Bukkit.getScheduler().runTaskLater(Training.getInstance(), () -> clearOut(block), 5L);
+    }
+
     /**
      * Clears out the block and the two above it to avoid people abusing e.g. two cobwebs at once
      */
@@ -102,11 +63,6 @@ public class BlockMlg extends Mlg {
             block = block.getRelative(BlockFace.UP); // get above block
             block.setType(Material.AIR); // clear it
         }
-    }
-
-    @Override
-    public List<ItemStack> getMlgItems() {
-        return mlgItems;
     }
 
     @Override

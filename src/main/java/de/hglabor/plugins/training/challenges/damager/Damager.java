@@ -222,7 +222,9 @@ public class Damager implements Challenge {
         tickSpeed = config.getLong(String.format("%s.tickSpeed", configKey), tickSpeed);
         Location firstLoc = config.getLocation(String.format("%s.location.first", configKey), cuboid.getFirst());
         Location secondLoc = config.getLocation(String.format("%s.location.second", configKey), cuboid.getSecond());
-        cuboid = new Cuboid(firstLoc, secondLoc);
+        if (firstLoc != null && secondLoc != null) {
+            cuboid = new Cuboid(firstLoc, secondLoc);
+        }
         hologramOrigin = config.getLocation(String.format("%s.hologram.location", configKey), hologramOrigin);
     }
 
