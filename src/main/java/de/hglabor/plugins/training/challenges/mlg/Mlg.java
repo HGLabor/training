@@ -43,13 +43,22 @@ import java.util.*;
 
 class MlgInfo {
     private boolean hasDied;
+    private boolean hasDoneAction;
 
     public boolean hasDied() {
         return hasDied;
     }
 
+    public boolean hasDoneAction() {
+        return hasDoneAction;
+    }
+
     public void setHasDied(boolean hasDied) {
         this.hasDied = hasDied;
+    }
+
+    public void setHasDoneAction(boolean hasDoneAction) {
+        this.hasDoneAction = hasDoneAction;
     }
 }
 public abstract class Mlg implements Challenge {
@@ -336,11 +345,19 @@ public abstract class Mlg implements Challenge {
     /** Must be called when the player has placed the mlg item e.g. water bucket or block such as cobweb */
     protected void handleMlg(Player player, long checkDelay) {
         User user = getUser(player);
-        user.getChallengeInfoOrDefault(this, new MlgInfo()).setHasDied(false);
+        MlgInfo info = user.getChallengeInfoOrDefault(this, new MlgInfo());
+        if (info.hasDoneAction()) {
+            // Ignore more placements before player hasn't died so he can't spam multiple blocks for multiple "successful mlg"s
+            return;
+        }
+        info.setHasDied(false);
+        info.setHasDoneAction(true);
         Bukkit.getScheduler().runTaskLater(Training.getInstance(), () -> {
-            if (!user.getChallengeInfoOrDefault(this, new MlgInfo()).hasDied()) {
+            MlgInfo mlgInfo = user.getChallengeInfoOrDefault(this, new MlgInfo());
+            if (!mlgInfo.hasDied()) {
                 onComplete(player);
             }
+            Bukkit.getScheduler().runTaskLater(Training.getInstance(), () -> handleReset(player), 10L);
         }, checkDelay);
     }
 
@@ -352,7 +369,8 @@ public abstract class Mlg implements Challenge {
     /** is called in {@link Mlg#onFailure} by default */
     protected void handleMlgDeath(Player player) {
         User user = getUser(player);
-        MlgInfo mlgInfo = new MlgInfo();
+
+        MlgInfo mlgInfo = user.getChallengeInfoOrDefault(this, new MlgInfo());
         mlgInfo.setHasDied(true);
         user.addChallengeInfo(this, mlgInfo);
     }
@@ -360,7 +378,9 @@ public abstract class Mlg implements Challenge {
     /** is called in {@link Mlg#onEnter} by default */
     protected void handleMlgSetup(Player player) {
         User user = getUser(player);
-        user.addChallengeInfo(this, new MlgInfo());
+        MlgInfo mlgInfo = new MlgInfo();
+        mlgInfo.setHasDoneAction(user.getChallengeInfoOrDefault(this, new MlgInfo()).hasDoneAction());
+        user.addChallengeInfo(this, mlgInfo);
     }
     
     /** remove a block after a given amount of time */
@@ -409,6 +429,11 @@ public abstract class Mlg implements Challenge {
         for (PotionEffect effect : player.getActivePotionEffects()) {
             player.removePotionEffect(effect.getType());
         }
+    }
+
+    protected void handleReset(Player player) {
+        // By default set MlgInfo.hasDoneAction to false again
+        getUser(player).getChallengeInfoOrDefault(this, new MlgInfo()).setHasDoneAction(false);
     }
 
     protected boolean isAllowedToBuild(Player player) {
