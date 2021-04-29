@@ -89,7 +89,10 @@ public abstract class Mlg implements Challenge {
         this.warpEntity = ((CraftWorld) MlgWorld.INSTANCE.getWorld()).createEntity(LocationUtils.MLG_SPAWN, type).getBukkitEntity();
         this.warpEntity.setInvulnerable(true);
         this.warpEntity.setPersistent(false);
-        if (warpEntity instanceof LivingEntity) ((LivingEntity) this.warpEntity).setAI(false);
+        if (warpEntity instanceof LivingEntity) {
+            ((LivingEntity) this.warpEntity).setAI(false);
+            ((LivingEntity) this.warpEntity).setRemoveWhenFarAway(false);
+        }
         this.warpEntity.setCustomName(color + name + " MLG");
         this.warpEntity.setCustomNameVisible(true);
     }
