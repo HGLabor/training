@@ -94,6 +94,9 @@ public abstract class Mlg implements Challenge {
             ((LivingEntity) this.warpEntity).setAI(false);
             ((LivingEntity) this.warpEntity).setRemoveWhenFarAway(false);
         }
+        if (this.warpEntity instanceof Slime) {
+            ((Slime) this.warpEntity).setSize(3);
+        }
         this.warpEntity.setCustomName(color + name + " MLG");
         this.warpEntity.setCustomNameVisible(true);
     }
@@ -117,13 +120,6 @@ public abstract class Mlg implements Challenge {
         this.platformRadius = radius;
         for (int yPosition : yPositions) {
             platforms.add(new MlgPlatform(this, LocationUtils.ZERO_MLG, radius, yPosition, material));
-        }
-        return this;
-    }
-
-    public Mlg setWarpEntitySize(int size) {
-        if (this.warpEntity instanceof Slime) {
-            ((Slime) this.warpEntity).setSize(size);
         }
         return this;
     }
