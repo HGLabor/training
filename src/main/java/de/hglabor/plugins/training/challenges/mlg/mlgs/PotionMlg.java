@@ -7,8 +7,7 @@ import org.bukkit.Material;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
-import org.bukkit.event.block.Action;
-import org.bukkit.event.player.PlayerInteractEvent;
+import org.bukkit.event.entity.EntityPotionEffectEvent;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.PotionMeta;
 import org.bukkit.potion.PotionData;
@@ -16,6 +15,7 @@ import org.bukkit.potion.PotionEffectType;
 import org.bukkit.potion.PotionType;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 public class PotionMlg extends Mlg {
@@ -44,29 +44,27 @@ public class PotionMlg extends Mlg {
     }
 
     @EventHandler
-    public void onPotionThrow(PlayerInteractEvent event) {
-        if (!(event.getAction().equals(Action.RIGHT_CLICK_AIR) || event.getAction().equals(Action.RIGHT_CLICK_BLOCK))) {
+    public void onEntityPotionEffect(EntityPotionEffectEvent event) {
+        if (!event.getAction().equals(EntityPotionEffectEvent.Action.ADDED)) {
             return;
         }
-        if (event.getItem() == null) {
-            return;
-        }
-        if (!(event.getItem().getType().equals(Material.SPLASH_POTION))) {
-            return;
-        }
-        Player player = event.getPlayer();
-        if (player.getLocation().getBlockY() >= 9) {
+        if (!(event.getEntity() instanceof Player)) {
+            // Don't give the effect to the entities e.g. levitator sheep
             event.setCancelled(true);
-            player.sendMessage(ChatColor.RED + "Here you can't mlg");
             return;
         }
-
-        handleMlg(player, 15L);
-    }
-
-    @Override
-    protected void handleMlgSetup(Player player) {
-        super.handleMlgSetup(player);
+        Player player = ((Player) event.getEntity());
+        if (player.getLocation().getY() >= 19) {
+            event.setCancelled(true);
+            if (Arrays.stream(player.getInventory().getContents()).noneMatch(mlgItems::contains)) {
+                // Player has probably thrown the potion
+                player.sendMessage(ChatColor.RED + "Here you can't mlg");
+                // Add potion again
+                inventorySetup(player);
+            }
+            return;
+        }
+        handleMlg(player);
     }
 
     @Override

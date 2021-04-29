@@ -62,8 +62,8 @@ public final class Training extends JavaPlugin {
         Mlg minecartMlg = new MinecartMlg("Minecart", ChatColor.GRAY, Minecart.class).withPlatforms(Material.GRAY_GLAZED_TERRACOTTA, 10, 10, 15, 20, 25, 50, 100, 150, 200, 250);
         Mlg striderMlg = new StriderMlg("Strider", ChatColor.LIGHT_PURPLE, Strider.class).withPlatforms(Material.CRIMSON_NYLIUM, 10, 5, 10, 15, 20, 25, 30, 35, 40, 45, 50, 55, 60, 65, 70, 75, 80, 90, 100, 200, 250);
         Mlg ladderMlg = new LadderMlg("Ladder", ChatColor.GOLD, WanderingTrader.class).withPlatforms(Material.STRIPPED_OAK_WOOD, 10, 10, 20, 50, 100, 150, 200, 250);
-        Mlg potionMlg = new PotionMlg("Potion", ChatColor.GREEN, Fox.class).withPlatforms(Material.SMOOTH_SANDSTONE, 10, 10, 20, 50, 100, 150, 200, 250);
-        ChallengeManager.INSTANCE.registerAll(blockMlg, horseMlg, boatMlg, striderMlg, minecartMlg, ladderMlg/*, potionMlg*/);
+        Mlg potionMlg = new PotionMlg("Potion", ChatColor.GREEN, Witch.class).withPlatforms(Material.SMOOTH_SANDSTONE, 10, 20, 50, 100, 150, 200, 250);
+        ChallengeManager.INSTANCE.registerAll(blockMlg, horseMlg, boatMlg, striderMlg, minecartMlg, ladderMlg, potionMlg);
 
 
         CommandAPI.onEnable(this);
