@@ -56,7 +56,7 @@ public final class Training extends JavaPlugin {
         ChallengeManager.INSTANCE.register(new ImpossibleDamager("Impossible", ChatColor.DARK_GRAY));
         ChallengeManager.INSTANCE.register(new InconsistencyDamager("Inconsistency", ChatColor.LIGHT_PURPLE));
 
-        Mlg blockMlg = new BlockMlg("Block", ChatColor.WHITE, IronGolem.class).withPlatforms(Material.POLISHED_DIORITE, 10, 10, 20, 50, 100, 150, 200, 250);
+        Mlg blockMlg = new BlockMlg("Block", ChatColor.WHITE, Slime.class).setWarpEntitySize(2).withPlatforms(Material.POLISHED_DIORITE, 10, 10, 20, 50, 100, 150, 200, 250);
         Mlg horseMlg = new HorseMlg("Horse", ChatColor.GOLD, Horse.class).withPlatforms(Material.DARK_OAK_PLANKS, 10, 25, 50, 100, 150, 200, 250);
         Mlg boatMlg = new BoatMlg("Boat", ChatColor.YELLOW, Boat.class).withPlatforms(Material.OAK_PLANKS, 10, 25, 50, 100, 150, 200, 250);
         Mlg minecartMlg = new MinecartMlg("Minecart", ChatColor.GRAY, Minecart.class).withPlatforms(Material.GRAY_GLAZED_TERRACOTTA, 10, 10, 15, 20, 25, 50, 100, 150, 200, 250);

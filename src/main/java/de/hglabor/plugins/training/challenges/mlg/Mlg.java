@@ -30,6 +30,7 @@ import org.bukkit.craftbukkit.v1_16_R3.entity.CraftEntity;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.LivingEntity;
 import org.bukkit.entity.Player;
+import org.bukkit.entity.Slime;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.entity.CreatureSpawnEvent;
 import org.bukkit.event.entity.EntityDamageEvent;
@@ -116,6 +117,13 @@ public abstract class Mlg implements Challenge {
         this.platformRadius = radius;
         for (int yPosition : yPositions) {
             platforms.add(new MlgPlatform(this, LocationUtils.ZERO_MLG, radius, yPosition, material));
+        }
+        return this;
+    }
+
+    public Mlg setWarpEntitySize(int size) {
+        if (this.warpEntity instanceof Slime) {
+            ((Slime) this.warpEntity).setSize(size);
         }
         return this;
     }
