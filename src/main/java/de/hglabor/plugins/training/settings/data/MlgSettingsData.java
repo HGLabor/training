@@ -1,6 +1,6 @@
-package de.hglabor.plugins.training.challenges.mlg.streaks.data;
+package de.hglabor.plugins.training.settings.data;
 
-import de.hglabor.plugins.training.challenges.mlg.streaks.StreakPlayer;
+import de.hglabor.plugins.training.settings.MlgSettings;
 import org.bukkit.util.io.BukkitObjectInputStream;
 import org.bukkit.util.io.BukkitObjectOutputStream;
 
@@ -13,21 +13,22 @@ import java.util.UUID;
 import java.util.zip.GZIPInputStream;
 import java.util.zip.GZIPOutputStream;
 
-public class Data implements Serializable {
-    private static transient final long serialVersionUID = -1681012206529286330L;
-    public final HashMap<UUID, StreakPlayer> streakPlayers;
-    public Data(HashMap<UUID, StreakPlayer> streakPlayers) {
-        this.streakPlayers = streakPlayers;
+public class MlgSettingsData implements Serializable {
+    private static transient final long serialVersionUID = -1681012206529286331L;
+
+    public final HashMap<UUID, MlgSettings> mlgSettingsMap;
+
+    public MlgSettingsData(HashMap<UUID, MlgSettings> mlgSettingsMap) {
+        this.mlgSettingsMap = mlgSettingsMap;
     }
-    public Data(Data loadedData) {
-        this.streakPlayers = loadedData.streakPlayers;
+
+    public MlgSettingsData(MlgSettingsData loadedData) {
+        this.mlgSettingsMap = loadedData.mlgSettingsMap;
     }
 
     public boolean saveData(String filePath) {
         try {
-            FileOutputStream fileOut = new FileOutputStream(filePath);
-            GZIPOutputStream gzOut = new GZIPOutputStream(fileOut);
-            BukkitObjectOutputStream out = new BukkitObjectOutputStream(gzOut);
+            BukkitObjectOutputStream out = new BukkitObjectOutputStream(new GZIPOutputStream(new FileOutputStream(filePath)));
             out.writeObject(this);
             out.close();
             return true;
@@ -37,12 +38,12 @@ public class Data implements Serializable {
         }
     }
 
-    public static Data loadData(String filePath) {
+    public static MlgSettingsData loadData(String filePath) {
         try {
             BukkitObjectInputStream in = new BukkitObjectInputStream(new GZIPInputStream(new FileInputStream(filePath)));
-            Data data = (Data) in.readObject();
+            MlgSettingsData settings = (MlgSettingsData) in.readObject();
             in.close();
-            return data;
+            return settings;
         } catch (ClassNotFoundException | IOException e) {
             e.printStackTrace();
             return null;

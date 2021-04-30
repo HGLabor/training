@@ -9,10 +9,13 @@ import de.hglabor.plugins.training.challenges.damager.damagers.InconsistencyDama
 import de.hglabor.plugins.training.challenges.listener.ChallengeCuboidListener;
 import de.hglabor.plugins.training.challenges.mlg.Mlg;
 import de.hglabor.plugins.training.challenges.mlg.mlgs.*;
-import de.hglabor.plugins.training.challenges.mlg.streaks.data.DataManager;
+import de.hglabor.plugins.training.challenges.mlg.streaks.data.StreakDataManager;
+import de.hglabor.plugins.training.settings.MlgSettings;
+import de.hglabor.plugins.training.settings.data.MlgSettingsDataManager;
 import de.hglabor.plugins.training.command.ChallengeCommand;
 import de.hglabor.plugins.training.command.DamagerCommand;
 import de.hglabor.plugins.training.command.MlgCommand;
+import de.hglabor.plugins.training.command.MlgSettingsCommand;
 import de.hglabor.plugins.training.user.UserList;
 import de.hglabor.plugins.training.warp.WarpSelector;
 import de.hglabor.plugins.training.warp.worlds.DamagerWorld;
@@ -70,8 +73,10 @@ public final class Training extends JavaPlugin {
         new DamagerCommand();
         new ChallengeCommand();
         new MlgCommand();
+        new MlgSettingsCommand();
 
-        DataManager.enable();
+        StreakDataManager.enable();
+        MlgSettingsDataManager.enable();
     }
 
     public void registerAllEventListeners(Listener... eventListeners) {
@@ -84,6 +89,7 @@ public final class Training extends JavaPlugin {
     public void onDisable() {
         ChallengeManager.INSTANCE.getChallenges().forEach(Challenge::stop);
 
-        DataManager.disable();
+        StreakDataManager.disable();
+        MlgSettingsDataManager.disable();
     }
 }

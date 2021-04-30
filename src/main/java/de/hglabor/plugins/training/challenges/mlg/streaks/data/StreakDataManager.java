@@ -4,17 +4,17 @@ import de.hglabor.plugins.training.Training;
 import de.hglabor.plugins.training.challenges.mlg.streaks.StreakPlayers;
 import org.bukkit.Bukkit;
 
-public class DataManager {
+public class StreakDataManager {
     private static final String filePath = Training.getInstance().getDataFolder() + "\\streaks.data";
     public static void enable() {
-        Data loadedData = Data.loadData(filePath);
-        if (loadedData == null) {
+        StreakData loadedStreakData = StreakData.loadData(filePath);
+        if (loadedStreakData == null) {
             return;
         }
-        StreakPlayers.setStreakPlayers(new Data(loadedData).streakPlayers);
+        StreakPlayers.setStreakPlayers(new StreakData(loadedStreakData).streakPlayers);
     }
     public static void disable() {
-        if (!new Data(StreakPlayers.getStreakPlayers()).saveData(filePath)) {
+        if (!new StreakData(StreakPlayers.getStreakPlayers()).saveData(filePath)) {
             Bukkit.getLogger().warning("Couldn't save streak data to file.");
         }
     }

@@ -95,7 +95,7 @@ public abstract class Mlg implements Challenge {
             ((LivingEntity) this.warpEntity).setRemoveWhenFarAway(false);
         }
         if (this.warpEntity instanceof Slime) {
-            ((Slime) this.warpEntity).setSize(3);
+            ((Slime) this.warpEntity).setSize(10);
         }
         this.warpEntity.setCustomName(color + name + " MLG");
         this.warpEntity.setCustomNameVisible(true);
