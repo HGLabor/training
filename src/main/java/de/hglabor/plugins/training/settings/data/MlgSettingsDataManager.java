@@ -17,5 +17,6 @@ public class MlgSettingsDataManager {
         if (!new MlgSettingsData(MlgSettings.mlgSettingsMap).saveData(filePath)) {
             Bukkit.getLogger().warning("Couldn't save mlg settings data to file.");
         }
+        else Bukkit.getLogger().info("Saved mlg settings data to file.");
     }
 }

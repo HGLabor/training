@@ -29,6 +29,8 @@ import org.bukkit.entity.*;
 import org.bukkit.event.Listener;
 import org.bukkit.plugin.java.JavaPlugin;
 
+import java.util.List;
+
 public final class Training extends JavaPlugin {
     private static Training instance;
 

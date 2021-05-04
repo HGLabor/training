@@ -14,8 +14,6 @@ import java.util.zip.GZIPInputStream;
 import java.util.zip.GZIPOutputStream;
 
 public class MlgSettingsData implements Serializable {
-    private static transient final long serialVersionUID = -1681012206529286331L;
-
     public final HashMap<UUID, MlgSettings> mlgSettingsMap;
 
     public MlgSettingsData(HashMap<UUID, MlgSettings> mlgSettingsMap) {

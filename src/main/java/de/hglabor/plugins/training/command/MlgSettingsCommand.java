@@ -6,8 +6,6 @@ import dev.jorel.commandapi.CommandAPICommand;
 public class MlgSettingsCommand {
     public MlgSettingsCommand() {
         new CommandAPICommand("mlgsettings")
-                .executesPlayer((player, objects) -> {
-                    MlgSettings.get(player.getUniqueId()).openGui(player.getUniqueId());
-                }).register();
+                .executesPlayer((player, objects) -> { MlgSettings.get(player.getUniqueId()).openGui(); }).register();
     }
 }

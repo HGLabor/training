@@ -1,7 +1,7 @@
 package de.hglabor.plugins.training.gui;
 
 import de.hglabor.plugins.training.Training;
-import de.hglabor.plugins.training.gui.button.StateButton;
+import de.hglabor.plugins.training.gui.button.ToggleButton;
 import de.hglabor.utils.noriskutils.ItemBuilder;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
@@ -16,27 +16,25 @@ import org.bukkit.inventory.ItemStack;
 
 import java.util.stream.IntStream;
 
-import static de.hglabor.plugins.training.settings.MlgSettings.JumpSneakStates;
 
-public class MlgSettingsGui implements Listener {
+public class MlgSettingsGui implements Listener, AbstractGui {
     private static final String TITLE = "Mlg Settings";
     private static final ItemStack PLACE_HOLDER = new ItemBuilder(Material.LIME_STAINED_GLASS_PANE).setName(ChatColor.BOLD + "").build();
-    public StateButton jumpSneakElevator;
     private final Player player;
-    private Inventory gui;
+    public final ToggleButton jumpSneakElevator;
+    private final Inventory gui;
     private Runnable onClose;
 
     public MlgSettingsGui(Player player) {
         this.player = player;
+        gui = Bukkit.createInventory(player, 9 * 3, TITLE);
+        IntStream.range(0, gui.getSize()).forEach(i -> gui.setItem(i, PLACE_HOLDER));
+        this.jumpSneakElevator = new ToggleButton(this, 10, ChatColor.BOLD + "" + ChatColor.BLUE + "Jump/Sneak Elevator", Material.MAGENTA_GLAZED_TERRACOTTA);
+        Training.getInstance().registerAllEventListeners(this, jumpSneakElevator);
     }
 
     public void open(Runnable onClose) {
-        player.sendMessage("Opening settings gui");
-        gui = Bukkit.createInventory(player, 9 * 3, TITLE);
-        IntStream.range(0, gui.getSize()).forEach(i -> gui.setItem(i, PLACE_HOLDER));
-        jumpSneakElevator = new StateButton(gui, 10, ChatColor.BOLD + "" + ChatColor.BLUE + "Jump/Sneak Elevator", Material.MAGENTA_GLAZED_TERRACOTTA, new String[] { JumpSneakStates.ALWAYS_ACTIVE, JumpSneakStates.ONLY_GLASS, JumpSneakStates.DISABLED });
-
-        Training.getInstance().registerAllEventListeners(this, jumpSneakElevator);
+        Training.getInstance().registerAllEventListeners(this);
         player.openInventory(gui);
         this.onClose = onClose;
     }
@@ -54,5 +52,10 @@ public class MlgSettingsGui implements Listener {
         if (event.getCurrentItem() != null && event.getCurrentItem().isSimilar(PLACE_HOLDER)) {
             event.setCancelled(true);
         }
+    }
+
+    @Override
+    public Inventory getInventory() {
+        return gui;
     }
 }

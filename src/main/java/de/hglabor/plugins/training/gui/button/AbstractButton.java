@@ -1,13 +1,13 @@
 package de.hglabor.plugins.training.gui.button;
 
 import de.hglabor.plugins.training.Training;
+import de.hglabor.plugins.training.gui.AbstractGui;
 import de.hglabor.utils.noriskutils.ItemBuilder;
 import org.bukkit.Material;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.inventory.ClickType;
 import org.bukkit.event.inventory.InventoryClickEvent;
-import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
 
 public abstract class AbstractButton implements Listener {
@@ -15,13 +15,14 @@ public abstract class AbstractButton implements Listener {
     protected String description = "";
     protected Material material;
     public ItemStack itemStack;
-    protected Inventory gui;
+    protected AbstractGui context;
     protected int slot;
+    private boolean callled;
 
-    public AbstractButton(Inventory gui, int slot, String title, Material material) {
+    public AbstractButton(AbstractGui context, int slot, String title, Material material) {
         this.title = title;
         this.material = material;
-        this.gui = gui;
+        this.context = context;
         this.slot = slot;
         updateItemStack();
         Training.getInstance().registerAllEventListeners(this);
@@ -29,7 +30,7 @@ public abstract class AbstractButton implements Listener {
 
     protected void updateItemStack() {
         itemStack = new ItemBuilder(material).setName(title).setDescription(description).build();
-        gui.setItem(slot, itemStack);
+        context.getInventory().setItem(slot, itemStack);
     }
     
     @EventHandler
@@ -39,7 +40,13 @@ public abstract class AbstractButton implements Listener {
         }
         if (event.getCurrentItem().isSimilar(itemStack)) {
             event.setCancelled(true);
+            // Get's called twice somehow LOL so only call onClick() every 2 calls
+            if (this.callled) {
+                this.callled = false;
+                return;
+            }
             onClick(event.getClick());
+            this.callled = true;
         }
     }
 
