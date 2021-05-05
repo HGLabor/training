@@ -34,7 +34,6 @@ public class MlgSettingsGui implements Listener, AbstractGui {
     }
 
     public void open(Runnable onClose) {
-        Training.getInstance().registerAllEventListeners(this);
         player.openInventory(gui);
         this.onClose = onClose;
     }
