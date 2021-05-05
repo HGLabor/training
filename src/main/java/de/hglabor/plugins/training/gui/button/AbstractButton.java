@@ -10,7 +10,10 @@ import org.bukkit.event.inventory.ClickType;
 import org.bukkit.event.inventory.InventoryClickEvent;
 import org.bukkit.inventory.ItemStack;
 
+import java.util.UUID;
+
 public abstract class AbstractButton implements Listener {
+    private final UUID uuid;
     protected String title;
     protected String description = "";
     protected Material material;
@@ -19,11 +22,12 @@ public abstract class AbstractButton implements Listener {
     protected int slot;
     private boolean callled;
 
-    public AbstractButton(AbstractGui context, int slot, String title, Material material) {
+    public AbstractButton(UUID uuid, AbstractGui context, int slot, String title, Material material) {
         this.title = title;
         this.material = material;
         this.context = context;
         this.slot = slot;
+        this.uuid = uuid;
         updateItemStack();
         Training.getInstance().registerAllEventListeners(this);
     }
@@ -36,6 +40,9 @@ public abstract class AbstractButton implements Listener {
     @EventHandler
     public void onInventoryClick(InventoryClickEvent event) {
         if (event.getCurrentItem() == null) {
+            return;
+        }
+        if (!event.getWhoClicked().getUniqueId().equals(this.uuid)) {
             return;
         }
         if (event.getCurrentItem().isSimilar(itemStack)) {

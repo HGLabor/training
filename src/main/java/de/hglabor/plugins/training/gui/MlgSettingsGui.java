@@ -29,7 +29,7 @@ public class MlgSettingsGui implements Listener, AbstractGui {
         this.player = player;
         gui = Bukkit.createInventory(player, 9 * 3, TITLE);
         IntStream.range(0, gui.getSize()).forEach(i -> gui.setItem(i, PLACE_HOLDER));
-        this.jumpSneakElevator = new ToggleButton(this, 10, ChatColor.BOLD + "" + ChatColor.BLUE + "Jump/Sneak Elevator", Material.MAGENTA_GLAZED_TERRACOTTA);
+        this.jumpSneakElevator = new ToggleButton(player.getUniqueId(), this, 10, ChatColor.BOLD + "" + ChatColor.BLUE + "Jump/Sneak Elevator", Material.MAGENTA_GLAZED_TERRACOTTA);
         Training.getInstance().registerAllEventListeners(this, jumpSneakElevator);
     }
 
@@ -41,6 +41,9 @@ public class MlgSettingsGui implements Listener, AbstractGui {
 
     @EventHandler
     public void onPlayerCloseInventory(InventoryCloseEvent event) {
+        if (!event.getPlayer().getUniqueId().equals(player.getUniqueId())) {
+            return;
+        }
         if (event.getInventory().equals(gui)) {
             onClose.run();
         }
@@ -48,6 +51,9 @@ public class MlgSettingsGui implements Listener, AbstractGui {
 
     @EventHandler
     public void onInventoryClick(InventoryClickEvent event) {
+        if (!event.getWhoClicked().getUniqueId().equals(player.getUniqueId())) {
+            return;
+        }
         // Cancel clicks on placeholder
         if (event.getCurrentItem() != null && event.getCurrentItem().isSimilar(PLACE_HOLDER)) {
             event.setCancelled(true);
