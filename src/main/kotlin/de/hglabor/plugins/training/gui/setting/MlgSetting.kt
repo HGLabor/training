@@ -1,6 +1,7 @@
 package de.hglabor.plugins.training.gui.setting
 
 import org.bukkit.Material
+import org.bukkit.entity.Player
 import java.util.*
 import kotlin.collections.HashMap
 
@@ -15,8 +16,11 @@ enum class MlgSetting (val settingName: String, val icon: Material, var enabled:
     fun toggle(uuid: UUID) { enabled[uuid] = enabled[uuid]?.not() ?: false }
 
     // best fun name ever CHANGE MY MIND
-    fun setDefaultEnabledIfMissing(uuid: UUID) {
+    fun setDefaultEnabledIfMissing(uuid: UUID, default: Boolean = false) {
         if (enabled[uuid] != null) return
-        enabled[uuid] = false
+        enabled[uuid] = default
     }
+
+    fun getEnabled(uuid: UUID) = enabled[uuid]!!
+    fun getEnabled(player: Player) = enabled[player.uniqueId]!!
 }
