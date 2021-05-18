@@ -1,6 +1,6 @@
 package de.hglabor.plugins.training.challenges;
 
-import de.hglabor.plugins.training.Training;
+import de.hglabor.plugins.training.main.TrainingKt;
 import org.bukkit.Location;
 
 import java.util.HashSet;
@@ -16,7 +16,7 @@ public final class ChallengeManager {
 
     public void register(Challenge challenge) {
         challenges.add(challenge);
-        Training.getInstance().registerAllEventListeners(challenge);
+        TrainingKt.getPLUGIN().registerAllEventListeners(challenge);
         challenge.initConfig();
         challenge.loadFromConfig();
         challenge.start();

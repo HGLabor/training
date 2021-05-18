@@ -1,7 +1,7 @@
 package de.hglabor.plugins.training.challenges.damager;
 
-import de.hglabor.plugins.training.Training;
 import de.hglabor.plugins.training.challenges.Challenge;
+import de.hglabor.plugins.training.main.TrainingKt;
 import de.hglabor.plugins.training.mechanics.SoupHealing;
 import de.hglabor.plugins.training.region.Area;
 import de.hglabor.plugins.training.region.Cuboid;
@@ -101,7 +101,7 @@ public class Damager implements Challenge {
     @Override
     public void start() {
         setHolograms();
-        task = Bukkit.getScheduler().runTaskTimer(Training.getInstance(), getDamageRunnable(), 0, tickSpeed);
+        task = Bukkit.getScheduler().runTaskTimer(TrainingKt.getPLUGIN(), getDamageRunnable(), 0, tickSpeed);
     }
 
     public void setHolograms() {
@@ -190,7 +190,7 @@ public class Damager implements Challenge {
 
     @Override
     public void initConfig() {
-        FileConfiguration config = Training.getInstance().getConfig();
+        FileConfiguration config = TrainingKt.getPLUGIN().getConfig();
         config.addDefault(String.format("%s.damage", configKey), damage);
         config.addDefault(String.format("%s.soupsToEat", configKey), soupsToEat);
         config.addDefault(String.format("%s.tickSpeed", configKey), tickSpeed);
@@ -198,25 +198,25 @@ public class Damager implements Challenge {
         config.addDefault(String.format("%s.location.second", configKey), cuboid.getSecond());
         config.addDefault(String.format("%s.hologram.location", configKey), hologramOrigin);
         config.options().copyDefaults(true);
-        Training.getInstance().saveConfig();
+        TrainingKt.getPLUGIN().saveConfig();
     }
 
     @Override
     public void safeToConfig() {
-        FileConfiguration config = Training.getInstance().getConfig();
+        FileConfiguration config = TrainingKt.getPLUGIN().getConfig();
         config.set(String.format("%s.damage", configKey), damage);
         config.set(String.format("%s.soupsToEat", configKey), soupsToEat);
         config.set(String.format("%s.tickSpeed", configKey), tickSpeed);
         config.set(String.format("%s.location.first", configKey), cuboid.getFirst());
         config.set(String.format("%s.location.second", configKey), cuboid.getSecond());
         config.set(String.format("%s.hologram.location", configKey), hologramOrigin);
-        Training.getInstance().saveConfig();
+        TrainingKt.getPLUGIN().saveConfig();
     }
 
     @Override
     public void loadFromConfig() {
-        Training.getInstance().reloadConfig();
-        FileConfiguration config = Training.getInstance().getConfig();
+        TrainingKt.getPLUGIN().reloadConfig();
+        FileConfiguration config = TrainingKt.getPLUGIN().getConfig();
         damage = config.getDouble(String.format("%s.damage", configKey), damage);
         soupsToEat = config.getInt(String.format("%s.soupsToEat", configKey), soupsToEat);
         tickSpeed = config.getLong(String.format("%s.tickSpeed", configKey), tickSpeed);

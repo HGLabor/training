@@ -4,7 +4,7 @@ import com.sk89q.worldedit.EditSession;
 import com.sk89q.worldedit.WorldEdit;
 import com.sk89q.worldedit.bukkit.BukkitAdapter;
 import com.sk89q.worldedit.function.pattern.RandomPattern;
-import de.hglabor.plugins.training.Training;
+import de.hglabor.plugins.training.main.TrainingKt;
 import de.hglabor.plugins.training.challenges.Challenge;
 import de.hglabor.plugins.training.challenges.mlg.scoreboard.MlgPlayer;
 import de.hglabor.plugins.training.challenges.mlg.scoreboard.MlgPlayerList;
@@ -162,7 +162,7 @@ public abstract class Mlg implements Challenge {
         MlgScoreboard.update(MlgPlayerList.getMlgPlayer(player.getUniqueId()));
         player.sendMessage(ChatColor.GREEN + ChatColor.BOLD.toString() + "Successful MLG");
         player.playSound(player.getLocation(), Sound.ENTITY_ARROW_HIT_PLAYER, 1, 1);
-        Bukkit.getScheduler().runTaskLater(Training.getInstance(), () -> teleportAndSetItems(player), 5L);
+        Bukkit.getScheduler().runTaskLater(TrainingKt.getPLUGIN(), () -> teleportAndSetItems(player), 5L);
     }
 
     @Override
@@ -171,7 +171,7 @@ public abstract class Mlg implements Challenge {
         handleMlgDeath(player);
         StreakPlayer.get(player).resetStreak(MlgPlayerList.getMlgPlayer(player.getUniqueId()).getMlgName());
         MlgScoreboard.update(MlgPlayerList.getMlgPlayer(player.getUniqueId()));
-        Bukkit.getScheduler().runTaskLater(Training.getInstance(), () -> {
+        Bukkit.getScheduler().runTaskLater(TrainingKt.getPLUGIN(), () -> {
             teleportAndSetItems(player);
             player.playSound(player.getLocation(), Sound.BLOCK_GLASS_BREAK, 1, 1);
         }, 0);
@@ -226,7 +226,7 @@ public abstract class Mlg implements Challenge {
         WorldEditUtils.createCylinder(spawn.getWorld(), spawn.clone().add(0, 255, 0), getBorderRadius(), true, 1, topMaterial);
 
         platforms.forEach(platform -> {
-            Bukkit.getPluginManager().registerEvents(platform, Training.getInstance());
+            Bukkit.getPluginManager().registerEvents(platform, TrainingKt.getPLUGIN());
             platform.setSpawn(spawn.clone());
         });
 
@@ -275,33 +275,31 @@ public abstract class Mlg implements Challenge {
 
     @Override
     public void initConfig() {
-        FileConfiguration config = Training.getInstance().getConfig();
+        FileConfiguration config = TrainingKt.getPLUGIN().getConfig();
         config.addDefault(String.format("%s.warpEntity.location", this.getName()), warpEntity.getLocation());
         config.addDefault(String.format("%s.mlgPlatform.spawn", this.getName()), spawn);
         config.addDefault(String.format("%s.location.first", this.getName()), cuboid.getFirst());
         config.addDefault(String.format("%s.location.second", this.getName()), cuboid.getSecond());
         config.options().copyDefaults(true);
-        Training.getInstance().saveConfig();
+        TrainingKt.getPLUGIN().saveConfig();
     }
 
     @Override
     public void safeToConfig() {
-        FileConfiguration config = Training.getInstance().getConfig();
+        FileConfiguration config = TrainingKt.getPLUGIN().getConfig();
         config.set(String.format("%s.warpEntity.location", this.getName()), warpEntity.getLocation());
         config.set(String.format("%s.mlgPlatform.spawn", this.getName()), spawn);
         config.set(String.format("%s.location.first", this.getName()), cuboid.getFirst());
         config.set(String.format("%s.location.second", this.getName()), cuboid.getSecond());
-        Training.getInstance().saveConfig();
+        TrainingKt.getPLUGIN().saveConfig();
     }
 
     public void loadFromConfig() {
-        Training.getInstance().reloadConfig();
-        FileConfiguration config = Training.getInstance().getConfig();
+        TrainingKt.getPLUGIN().reloadConfig();
+        FileConfiguration config = TrainingKt.getPLUGIN().getConfig();
         spawn = config.getLocation(String.format("%s.mlgPlatform.spawn", this.getName()), spawn);
         Location warpEntityLocation = config.getLocation(String.format("%s.warpEntity.location", this.getName()), warpEntity.getLocation());
-        if (warpEntityLocation != null) {
-            warpEntity.teleport(warpEntityLocation);
-        }
+        warpEntity.teleport(warpEntityLocation);
         Location firstLoc = config.getLocation(String.format("%s.location.first", this.getName()), cuboid.getFirst());
         Location secondLoc = config.getLocation(String.format("%s.location.second", this.getName()), cuboid.getSecond());
         if (firstLoc != null && secondLoc != null) {
@@ -363,12 +361,12 @@ public abstract class Mlg implements Challenge {
         }
         info.setHasDied(false);
         info.setHasDoneAction(true);
-        Bukkit.getScheduler().runTaskLater(Training.getInstance(), () -> {
+        Bukkit.getScheduler().runTaskLater(TrainingKt.getPLUGIN(), () -> {
             MlgInfo mlgInfo = user.getChallengeInfoOrDefault(this, new MlgInfo());
             if (!mlgInfo.hasDied()) {
                 onComplete(player);
             }
-            Bukkit.getScheduler().runTaskLater(Training.getInstance(), () -> handleReset(player), 10L);
+            Bukkit.getScheduler().runTaskLater(TrainingKt.getPLUGIN(), () -> handleReset(player), 10L);
         }, checkDelay);
     }
 
@@ -396,12 +394,12 @@ public abstract class Mlg implements Challenge {
     
     /** remove a block after a given amount of time */
     protected void removeBlockLater(Block block, long delay) {
-        Bukkit.getScheduler().runTaskLater(Training.getInstance(), () -> block.setType(Material.AIR), delay);
+        Bukkit.getScheduler().runTaskLater(TrainingKt.getPLUGIN(), () -> block.setType(Material.AIR), delay);
     }
 
     /** remove an entity after a given amount of time */
     protected void removeEntityLater(Entity entity, long delay) {
-        Bukkit.getScheduler().runTaskLater(Training.getInstance(), entity::remove, delay);
+        Bukkit.getScheduler().runTaskLater(TrainingKt.getPLUGIN(), entity::remove, delay);
     }
 
     protected void setMaxHealth(Player player) {

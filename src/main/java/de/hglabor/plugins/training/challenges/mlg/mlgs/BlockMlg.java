@@ -1,6 +1,6 @@
 package de.hglabor.plugins.training.challenges.mlg.mlgs;
 
-import de.hglabor.plugins.training.Training;
+import de.hglabor.plugins.training.main.TrainingKt;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.Material;
@@ -51,7 +51,7 @@ public class BlockMlg extends AbstractBlockMlg {
 
     @Override
     protected void handleBlockRemoval(Block block) {
-        Bukkit.getScheduler().runTaskLater(Training.getInstance(), () -> clearOut(block), 5L);
+        Bukkit.getScheduler().runTaskLater(TrainingKt.getPLUGIN(), () -> clearOut(block), 5L);
     }
 
     /**

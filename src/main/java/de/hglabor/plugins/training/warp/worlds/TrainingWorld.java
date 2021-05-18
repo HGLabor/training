@@ -1,6 +1,6 @@
 package de.hglabor.plugins.training.warp.worlds;
 
-import de.hglabor.plugins.training.Training;
+import de.hglabor.plugins.training.main.TrainingKt;
 import de.hglabor.plugins.training.user.User;
 import de.hglabor.plugins.training.user.UserList;
 import de.hglabor.plugins.training.util.LocationUtils;
@@ -37,7 +37,7 @@ public abstract class TrainingWorld implements Listener {
         this.world.setGameRule(GameRule.DO_MOB_SPAWNING, false);
         this.world.setGameRule(GameRule.SHOW_DEATH_MESSAGES, false);
         this.world.setGameRule(GameRule.DO_IMMEDIATE_RESPAWN, true);
-        Bukkit.getPluginManager().registerEvents(this, Training.getInstance());
+        Bukkit.getPluginManager().registerEvents(this, TrainingKt.getPLUGIN());
     }
 
     public abstract void setItems(Player player);
@@ -70,7 +70,7 @@ public abstract class TrainingWorld implements Listener {
                 player.playSound(player.getLocation(), Sound.BLOCK_METAL_PRESSURE_PLATE_CLICK_OFF, 1, 1);
             }
         } else if (item.isSimilar(WarpItems.HUB)) {
-            BungeeUtils.send(player, "lobby", Training.getInstance());
+            BungeeUtils.send(player, "lobby", TrainingKt.getPLUGIN());
         }
     }
 

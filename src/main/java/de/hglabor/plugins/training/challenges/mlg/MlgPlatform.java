@@ -1,7 +1,6 @@
 package de.hglabor.plugins.training.challenges.mlg;
 
 import com.destroystokyo.paper.event.player.PlayerJumpEvent;
-import de.hglabor.plugins.training.settings.MlgSettings;
 import de.hglabor.plugins.training.user.User;
 import de.hglabor.plugins.training.user.UserList;
 import de.hglabor.utils.noriskutils.HologramUtils;
@@ -213,20 +212,11 @@ public class MlgPlatform implements Listener {
     @EventHandler
     public void onPlayerJump(PlayerJumpEvent event) {
         Player player = event.getPlayer();
-        if (isPlayerNotOnSpawnBlocks(player)) {
-            return;
-        }
-        if (upPlatform == null) {
-            return;
-        }
-        if (event.getFrom().getY() != yPos+1) {
-            return;
-        }
-        boolean state = MlgSettings.get(player.getUniqueId()).jumpSneakState;
-        if (!state || isPlayerNotOnSpawnBlocks(player)) {
-            return;
-        }
-        // Teleport player
+
+        if (isPlayerNotOnSpawnBlocks(player)) return;
+        if (upPlatform == null) return;
+        if (event.getFrom().getY() != yPos+1) return;
+
         teleportPlayerY(player, upPlatform.yPos+1);
         playPlingSound(player, 0);
     }
@@ -234,16 +224,11 @@ public class MlgPlatform implements Listener {
     @EventHandler
     public void onPlayerSneak(PlayerToggleSneakEvent event) {
         Player player = event.getPlayer();
-        if (player.isSneaking()) {
-            return;
-        }
-        if (downPlatform == null) {
-            return;
-        }
-        boolean state = MlgSettings.get(player.getUniqueId()).jumpSneakState;
-        if (!state || isPlayerNotOnSpawnBlocks(player)) {
-            return;
-        }
+
+        if (player.isSneaking()) return;
+        if (downPlatform == null) return;
+        if (isPlayerNotOnSpawnBlocks(player)) return;
+
         // Teleport player
         teleportPlayerY(player, downPlatform.yPos+1);
         playPlingSound(player, 1);

@@ -3,6 +3,7 @@ import org.apache.tools.ant.filters.ReplaceTokens
 plugins {
     id 'java'
     id("com.github.johnrengelman.shadow") version "6.1.0"
+    id 'org.jetbrains.kotlin.jvm' version '1.5.0'
 }
 
 group = 'de.hglabor.plugins'
@@ -11,6 +12,7 @@ version = '0.0.1'
 sourceCompatibility = targetCompatibility = JavaVersion.VERSION_11
 
 repositories {
+    jcenter()
     mavenLocal()
     mavenCentral()
     maven {
@@ -31,11 +33,20 @@ repositories {
 }
 
 dependencies {
+    // Paper
     compileOnly 'com.destroystokyo.paper:paper-api:1.16.5-R0.1-SNAPSHOT'
+    // Craftbukkit
     compileOnly 'org.bukkit:craftbukkit:1.16.5-R0.1-SNAPSHOT'
+    // World Edit
     compileOnly 'com.sk89q.worldedit:worldedit-bukkit:7.2.0'
+    // CommandAPI
     compile 'dev.jorel:commandapi-shade:5.8'
+    // HGLaborUtils
     compile 'de.hglabor:hglabor-utils:0.0.6'
+    // KSpigot
+    compile 'net.axay:kspigot:1.16.26'
+    // Kotlin
+    compile 'org.jetbrains.kotlin:kotlin-stdlib:1.5.0'
 }
 
 shadowJar {
