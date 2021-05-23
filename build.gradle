@@ -47,8 +47,9 @@ dependencies {
     compile 'net.axay:kspigot:1.16.26'
     // Kotlin
     compile 'org.jetbrains.kotlin:kotlin-stdlib:1.5.0'
-    // MongoDB Driver
-    compile 'org.mongodb:mongodb-driver-sync:4.3.0-beta1'
+    // KMongo
+    compileOnly 'org.litote.kmongo:kmongo-core:4.2.3'
+    compileOnly 'org.litote.kmongo:kmongo-serialization-mapping:4.2.3'
 }
 
 shadowJar {
