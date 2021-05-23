@@ -4,6 +4,7 @@ plugins {
     id 'java'
     id("com.github.johnrengelman.shadow") version "6.1.0"
     id 'org.jetbrains.kotlin.jvm' version '1.5.0'
+    id 'org.jetbrains.kotlin.plugin.serialization' version '1.5.0'
 }
 
 group = 'de.hglabor.plugins'
@@ -48,8 +49,7 @@ dependencies {
     // Kotlin
     compile 'org.jetbrains.kotlin:kotlin-stdlib:1.5.0'
     // KMongo
-    compileOnly 'org.litote.kmongo:kmongo-core:4.2.3'
-    compileOnly 'org.litote.kmongo:kmongo-serialization-mapping:4.2.3'
+    compileOnly 'org.litote.kmongo:kmongo:4.2.7'
 }
 
 shadowJar {

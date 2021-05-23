@@ -1,11 +1,14 @@
 package de.hglabor.plugins.training.gui.setting
 
+import de.hglabor.plugins.training.database.DatabaseManager
+import kotlinx.serialization.SerialName
 import org.bukkit.Material
 import org.bukkit.entity.Player
+import org.litote.kmongo.findOne
 import java.util.*
 import kotlin.collections.HashMap
 
-enum class MlgSetting (val settingName: String, val icon: Material, var enabled: HashMap<UUID, Boolean> = HashMap()) {
+enum class MlgSetting (@SerialName("_id") val settingName: String, val icon: Material, var enabled: HashMap<UUID, Boolean> = HashMap()) : java.io.Serializable {
 
     JUMP_SNEAK_ELEVATOR("Jump/Sneak Elevator", Material.MAGENTA_GLAZED_TERRACOTTA),
     LEVITATOR_SHEEP("Levitator Sheep", Material.SHEARS),
@@ -23,4 +26,19 @@ enum class MlgSetting (val settingName: String, val icon: Material, var enabled:
 
     fun getEnabled(uuid: UUID) = enabled[uuid]!!
     fun getEnabled(player: Player) = enabled[player.uniqueId]!!
+
+    fun getValuesFrom(mlgSetting: MlgSetting) {
+        this.enabled = mlgSetting.enabled
+    }
+
+    companion object {
+        fun getValuesFromDB() {
+            values().forEach { mySetting ->
+                val mlgSetting: MlgSetting? = DatabaseManager.mlgSettings.findOne(mySetting.settingName)
+                mlgSetting?.let { dbSetting ->
+                    mySetting.getValuesFrom(dbSetting)
+                }
+            }
+        }
+    }
 }

@@ -1,6 +1,5 @@
 package de.hglabor.plugins.training.main
 
-import de.hglabor.plugins.training.challenges.Challenge
 import de.hglabor.plugins.training.challenges.ChallengeManager
 import de.hglabor.plugins.training.challenges.damager.Damager
 import de.hglabor.plugins.training.challenges.damager.damagers.CrapDamager
@@ -13,6 +12,7 @@ import de.hglabor.plugins.training.command.ChallengeCommand
 import de.hglabor.plugins.training.command.DamagerCommand
 import de.hglabor.plugins.training.command.MlgCommand
 import de.hglabor.plugins.training.command.MlgSettingsCommand
+import de.hglabor.plugins.training.database.DatabaseManager
 import de.hglabor.plugins.training.user.UserList
 import de.hglabor.plugins.training.warp.WarpSelector
 import de.hglabor.plugins.training.warp.worlds.DamagerWorld
@@ -25,7 +25,6 @@ import org.bukkit.Material
 import org.bukkit.WorldCreator
 import org.bukkit.entity.*
 import org.bukkit.event.Listener
-import java.util.function.Consumer
 
 class Training : KSpigot() {
     companion object {
@@ -70,6 +69,8 @@ class Training : KSpigot() {
         MlgSettingsCommand()
 
         StreakDataManager.enable()
+
+        DatabaseManager.startup()
     }
 
     fun registerAllEventListeners(vararg eventListeners: Listener) {
@@ -80,6 +81,8 @@ class Training : KSpigot() {
         ChallengeManager.INSTANCE.challenges.forEach { it.stop() }
 
         StreakDataManager.disable()
+
+        DatabaseManager.shutdown()
     }
 }
 
