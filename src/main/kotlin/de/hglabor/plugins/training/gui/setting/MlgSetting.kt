@@ -2,8 +2,10 @@ package de.hglabor.plugins.training.gui.setting
 
 import de.hglabor.plugins.training.database.DatabaseManager
 import kotlinx.serialization.SerialName
+import org.bukkit.Bukkit
 import org.bukkit.Material
 import org.bukkit.entity.Player
+import org.litote.kmongo.find
 import org.litote.kmongo.findOne
 import java.util.*
 import kotlin.collections.HashMap
@@ -38,6 +40,14 @@ enum class MlgSetting (@SerialName("_id") val settingName: String, val icon: Mat
                 mlgSetting?.let { dbSetting ->
                     mySetting.getValuesFrom(dbSetting)
                 }
+            }
+        }
+
+        fun saveValuesToDB() {
+            values().forEach {
+                Bukkit.getLogger().info("Size (settingName) before: " + DatabaseManager.mlgSettings.find(it.settingName).spliterator().estimateSize())
+                DatabaseManager.mlgSettings.insertOne(it)
+                Bukkit.getLogger().info("Size (settingName) after: " + DatabaseManager.mlgSettings.find(it.settingName).spliterator().estimateSize())
             }
         }
     }

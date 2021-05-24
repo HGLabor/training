@@ -1,21 +1,20 @@
 package de.hglabor.plugins.training.database
 
-import com.mongodb.client.MongoCollection
-import com.mongodb.client.MongoDatabase
 import de.hglabor.plugins.training.gui.setting.MlgSetting
-import org.litote.kmongo.KMongo
-import org.litote.kmongo.getCollection
+import net.axay.blueutils.database.mongodb.SyncMongoDB
 
 object DatabaseManager {
-    private val client = KMongo.createClient()
-    private val database: MongoDatabase = client.getDatabase("training-plugin")
-    val mlgSettings: MongoCollection<MlgSetting> = database.getCollection<MlgSetting>()
+    private const val PREFIX = "training_"
+
+    private val mongoDB = SyncMongoDB(DatabaseConfig.databaseLoginInformation, spigot = true)
+
+    val mlgSettings = mongoDB.getCollectionOrCreate<MlgSetting>("${PREFIX}mlgsettings")
 
     fun startup() {
         MlgSetting.getValuesFromDB()
     }
 
     fun shutdown() {
-
+        MlgSetting.saveValuesToDB()
     }
 }
