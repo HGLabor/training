@@ -1,19 +1,18 @@
-package de.hglabor.plugins.training.gui.setting
+package de.hglabor.plugins.training.settings.mlg
 
 import de.hglabor.plugins.training.database.DatabaseManager
 import kotlinx.serialization.SerialName
 import org.bukkit.Bukkit
 import org.bukkit.Material
 import org.bukkit.entity.Player
-import org.litote.kmongo.find
-import org.litote.kmongo.findOne
+import org.litote.kmongo.findOneById
 import java.util.*
 import kotlin.collections.HashMap
 
 enum class MlgSetting (@SerialName("_id") val settingName: String, val icon: Material, var enabled: HashMap<UUID, Boolean> = HashMap()) : java.io.Serializable {
 
     JUMP_SNEAK_ELEVATOR("Jump/Sneak Elevator", Material.MAGENTA_GLAZED_TERRACOTTA),
-    LEVITATOR_SHEEP("Levitator Sheep", Material.SHEARS),
+    LEVITATOR_SHEEP("Levitator Sheep", Material.WHITE_WOOL),
     TOP_BOTTOM_PHANTOMS("Top/Bottom Phantoms", Material.PHANTOM_MEMBRANE)
 
     ;
@@ -36,18 +35,18 @@ enum class MlgSetting (@SerialName("_id") val settingName: String, val icon: Mat
     companion object {
         fun getValuesFromDB() {
             values().forEach { mySetting ->
-                val mlgSetting: MlgSetting? = DatabaseManager.mlgSettings.findOne(mySetting.settingName)
+                val mlgSetting: MlgSetting? = DatabaseManager.mlgSettings.findOneById(mySetting.settingName)
                 mlgSetting?.let { dbSetting ->
                     mySetting.getValuesFrom(dbSetting)
+                    Bukkit.getLogger().info("retrieved a setting from database")
                 }
+                Bukkit.getLogger().info("MAYBE retrieved a setting from database")
             }
         }
 
         fun saveValuesToDB() {
             values().forEach {
-                Bukkit.getLogger().info("Size (settingName) before: " + DatabaseManager.mlgSettings.find(it.settingName).spliterator().estimateSize())
                 DatabaseManager.mlgSettings.insertOne(it)
-                Bukkit.getLogger().info("Size (settingName) after: " + DatabaseManager.mlgSettings.find(it.settingName).spliterator().estimateSize())
             }
         }
     }

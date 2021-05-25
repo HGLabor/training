@@ -70,6 +70,8 @@ class Training : KSpigot() {
 
         StreakDataManager.enable()
 
+        System.setProperty("org.litote.mongo.test.mapping.service", "org.litote.kmongo.service.ClassMappingTypeService")
+
         DatabaseManager.startup()
     }
 

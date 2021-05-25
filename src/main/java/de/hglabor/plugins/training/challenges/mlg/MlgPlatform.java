@@ -1,7 +1,7 @@
 package de.hglabor.plugins.training.challenges.mlg;
 
 import com.destroystokyo.paper.event.player.PlayerJumpEvent;
-import de.hglabor.plugins.training.gui.setting.MlgSetting;
+import de.hglabor.plugins.training.settings.mlg.MlgSetting;
 import de.hglabor.plugins.training.user.User;
 import de.hglabor.plugins.training.user.UserList;
 import de.hglabor.utils.noriskutils.HologramUtils;

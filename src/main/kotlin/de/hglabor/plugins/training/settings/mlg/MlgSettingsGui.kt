@@ -1,6 +1,5 @@
-package de.hglabor.plugins.training.gui.guis
+package de.hglabor.plugins.training.settings.mlg
 
-import de.hglabor.plugins.training.gui.setting.MlgSetting
 import net.axay.kspigot.chat.KColors
 import net.axay.kspigot.gui.GUIType
 import net.axay.kspigot.gui.Slots
