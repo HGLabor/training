@@ -7,7 +7,6 @@ import de.hglabor.plugins.training.challenges.damager.damagers.ImpossibleDamager
 import de.hglabor.plugins.training.challenges.damager.damagers.InconsistencyDamager
 import de.hglabor.plugins.training.challenges.listener.ChallengeCuboidListener
 import de.hglabor.plugins.training.challenges.mlg.mlgs.*
-import de.hglabor.plugins.training.challenges.mlg.streaks.data.StreakDataManager
 import de.hglabor.plugins.training.command.ChallengeCommand
 import de.hglabor.plugins.training.command.DamagerCommand
 import de.hglabor.plugins.training.command.MlgCommand
@@ -68,8 +67,6 @@ class Training : KSpigot() {
         MlgCommand()
         MlgSettingsCommand()
 
-        StreakDataManager.enable()
-
         DataManager.load()
     }
 
@@ -79,8 +76,6 @@ class Training : KSpigot() {
 
     override fun shutdown() {
         ChallengeManager.INSTANCE.challenges.forEach { it.stop() }
-
-        StreakDataManager.disable()
 
         DataManager.save()
     }

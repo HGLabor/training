@@ -1,10 +1,8 @@
 package de.hglabor.plugins.training.settings.mlg
 
-import org.bukkit.Bukkit
 import org.bukkit.Material
 import org.bukkit.entity.Player
 import java.util.*
-import kotlin.collections.ArrayList
 import java.io.Serializable as javaSer
 
 enum class MlgSetting (val settingName: String, val icon: Material, var enabled: HashMap<UUID, Boolean> = HashMap()) : javaSer {
