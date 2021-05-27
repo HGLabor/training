@@ -8,8 +8,8 @@ import java.io.Serializable as javaSer
 enum class MlgSetting (val settingName: String, val icon: Material, var enabled: HashMap<UUID, Boolean> = HashMap()) : javaSer {
 
     JUMP_SNEAK_ELEVATOR("Jump/Sneak Elevator", Material.MAGENTA_GLAZED_TERRACOTTA),
-    LEVITATOR_SHEEP("Levitator Sheep", Material.WHITE_WOOL),
-    TOP_BOTTOM_PHANTOMS("Top/Bottom Phantoms", Material.PHANTOM_MEMBRANE)
+//    LEVITATOR_SHEEP("Levitator Sheep", Material.WHITE_WOOL),
+//    TOP_BOTTOM_PHANTOMS("Top/Bottom Phantoms", Material.PHANTOM_MEMBRANE)
 
     ;
 
