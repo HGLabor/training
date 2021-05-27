@@ -37,11 +37,6 @@ dependencies {
     implementation("de.hglabor:hglabor-utils:0.0.6")
     // KSpigot
     implementation("net.axay:kspigot:1.16.26")
-    // BlueUtils
-    compileOnly("net.axay", "BlueUtils", "1.0.2")
-    // KMongo
-    compileOnly("org.litote.kmongo", "kmongo-core", "4.2.3")
-    compileOnly("org.litote.kmongo", "kmongo-serialization-mapping", "4.2.3")
 }
 
 java.sourceCompatibility = jvmVersion
@@ -53,9 +48,6 @@ tasks.withType<KotlinCompile> {
 
 tasks {
     shadowJar {
-        dependencies {
-            //exclude(dependency("org.jetbrains.kotlin:kotlin-stdlib.*"))
-        }
         minimize()
         simpleRelocate("net.axay.kspigot")
     }

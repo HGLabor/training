@@ -1,15 +1,13 @@
 package de.hglabor.plugins.training.settings.mlg
 
-import de.hglabor.plugins.training.database.DatabaseManager
-import kotlinx.serialization.SerialName
 import org.bukkit.Bukkit
 import org.bukkit.Material
 import org.bukkit.entity.Player
-import org.litote.kmongo.findOneById
 import java.util.*
-import kotlin.collections.HashMap
+import kotlin.collections.ArrayList
+import java.io.Serializable as javaSer
 
-enum class MlgSetting (@SerialName("_id") val settingName: String, val icon: Material, var enabled: HashMap<UUID, Boolean> = HashMap()) : java.io.Serializable {
+enum class MlgSetting (val settingName: String, val icon: Material, var enabled: HashMap<UUID, Boolean> = HashMap()) : javaSer {
 
     JUMP_SNEAK_ELEVATOR("Jump/Sneak Elevator", Material.MAGENTA_GLAZED_TERRACOTTA),
     LEVITATOR_SHEEP("Levitator Sheep", Material.WHITE_WOOL),
@@ -28,26 +26,37 @@ enum class MlgSetting (@SerialName("_id") val settingName: String, val icon: Mat
     fun getEnabled(uuid: UUID) = enabled[uuid]!!
     fun getEnabled(player: Player) = enabled[player.uniqueId]!!
 
-    fun getValuesFrom(mlgSetting: MlgSetting) {
-        this.enabled = mlgSetting.enabled
+    fun getEnabledPlayers(): ArrayList<UUID> {
+        val players = ArrayList<UUID>()
+        enabled.forEach {
+            if (it.value) players.add(it.key)
+        }
+        return players
+    }
+
+    fun getEnabledValuesFrom(enabledValues: ArrayList<UUID>) {
+        enabledValues.forEach {
+            this.enabled[it] = true
+        }
     }
 
     companion object {
-        fun getValuesFromDB() {
+        // Get values from the valuesMap
+        fun setEnabledValues(enabledMap: HashMap<String, ArrayList<UUID>>) {
             values().forEach { mySetting ->
-                val mlgSetting: MlgSetting? = DatabaseManager.mlgSettings.findOneById(mySetting.settingName)
-                mlgSetting?.let { dbSetting ->
-                    mySetting.getValuesFrom(dbSetting)
-                    Bukkit.getLogger().info("retrieved a setting from database")
+                val setting = enabledMap[mySetting.settingName]
+                setting?.let { otherSetting ->
+                    mySetting.getEnabledValuesFrom(otherSetting)
                 }
-                Bukkit.getLogger().info("MAYBE retrieved a setting from database")
             }
         }
 
-        fun saveValuesToDB() {
+        fun valuesMap(): HashMap<String, MlgSetting> {
+            val map = HashMap<String, MlgSetting>()
             values().forEach {
-                DatabaseManager.mlgSettings.insertOne(it)
+                map[it.settingName] = it
             }
+            return map
         }
     }
 }

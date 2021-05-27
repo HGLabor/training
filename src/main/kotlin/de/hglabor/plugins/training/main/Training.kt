@@ -12,7 +12,7 @@ import de.hglabor.plugins.training.command.ChallengeCommand
 import de.hglabor.plugins.training.command.DamagerCommand
 import de.hglabor.plugins.training.command.MlgCommand
 import de.hglabor.plugins.training.command.MlgSettingsCommand
-import de.hglabor.plugins.training.database.DatabaseManager
+import de.hglabor.plugins.training.data.DataManager
 import de.hglabor.plugins.training.user.UserList
 import de.hglabor.plugins.training.warp.WarpSelector
 import de.hglabor.plugins.training.warp.worlds.DamagerWorld
@@ -70,9 +70,7 @@ class Training : KSpigot() {
 
         StreakDataManager.enable()
 
-        System.setProperty("org.litote.mongo.test.mapping.service", "org.litote.kmongo.service.ClassMappingTypeService")
-
-        DatabaseManager.startup()
+        DataManager.load()
     }
 
     fun registerAllEventListeners(vararg eventListeners: Listener) {
@@ -84,7 +82,7 @@ class Training : KSpigot() {
 
         StreakDataManager.disable()
 
-        DatabaseManager.shutdown()
+        DataManager.save()
     }
 }
 
