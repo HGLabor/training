@@ -1,6 +1,8 @@
 package de.hglabor.plugins.training.challenges;
 
 import de.hglabor.plugins.training.region.Area;
+import de.hglabor.plugins.training.user.User;
+import de.hglabor.plugins.training.user.UserList;
 import org.bukkit.ChatColor;
 import org.bukkit.entity.Player;
 import org.bukkit.event.Listener;
@@ -37,4 +39,8 @@ public interface Challenge extends Listener {
     void safeToConfig();
 
     void loadFromConfig();
+
+    default User getUser(Player player) {
+        return UserList.INSTANCE.getUser(player);
+    }
 }

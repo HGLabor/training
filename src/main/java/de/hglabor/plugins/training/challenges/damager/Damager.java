@@ -1,8 +1,7 @@
 package de.hglabor.plugins.training.challenges.damager;
 
-import com.destroystokyo.paper.event.entity.EntityAddToWorldEvent;
-import de.hglabor.plugins.training.Training;
 import de.hglabor.plugins.training.challenges.Challenge;
+import de.hglabor.plugins.training.main.TrainingKt;
 import de.hglabor.plugins.training.mechanics.SoupHealing;
 import de.hglabor.plugins.training.region.Area;
 import de.hglabor.plugins.training.region.Cuboid;
@@ -11,6 +10,7 @@ import de.hglabor.plugins.training.user.UserList;
 import de.hglabor.plugins.training.util.LocationUtils;
 import de.hglabor.utils.noriskutils.HologramUtils;
 import org.bukkit.*;
+import org.bukkit.attribute.Attribute;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.entity.ArmorStand;
 import org.bukkit.entity.Item;
@@ -18,7 +18,6 @@ import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.entity.EntityDamageEvent;
 import org.bukkit.event.entity.PlayerDeathEvent;
-import org.bukkit.event.inventory.InventoryCloseEvent;
 import org.bukkit.event.player.PlayerAttemptPickupItemEvent;
 import org.bukkit.event.player.PlayerDropItemEvent;
 import org.bukkit.event.player.PlayerInteractEvent;
@@ -102,7 +101,7 @@ public class Damager implements Challenge {
     @Override
     public void start() {
         setHolograms();
-        task = Bukkit.getScheduler().runTaskTimer(Training.getInstance(), getDamageRunnable(), 0, tickSpeed);
+        task = Bukkit.getScheduler().runTaskTimer(TrainingKt.getPLUGIN(), getDamageRunnable(), 0, tickSpeed);
     }
 
     public void setHolograms() {
@@ -128,7 +127,7 @@ public class Damager implements Challenge {
         player.sendMessage("You entered " + this.getName());
         players.put(player.getUniqueId(), false);
         PlayerInventory inventory = player.getInventory();
-        player.setHealth(player.getMaxHealth());
+        player.setHealth(Objects.requireNonNull(player.getAttribute(Attribute.GENERIC_MAX_HEALTH)).getValue());
         inventory.clear();
         inventory.addItem(new ItemStack(Material.STONE_SWORD));
         int size = 32;
@@ -191,7 +190,7 @@ public class Damager implements Challenge {
 
     @Override
     public void initConfig() {
-        FileConfiguration config = Training.getInstance().getConfig();
+        FileConfiguration config = TrainingKt.getPLUGIN().getConfig();
         config.addDefault(String.format("%s.damage", configKey), damage);
         config.addDefault(String.format("%s.soupsToEat", configKey), soupsToEat);
         config.addDefault(String.format("%s.tickSpeed", configKey), tickSpeed);
@@ -199,31 +198,33 @@ public class Damager implements Challenge {
         config.addDefault(String.format("%s.location.second", configKey), cuboid.getSecond());
         config.addDefault(String.format("%s.hologram.location", configKey), hologramOrigin);
         config.options().copyDefaults(true);
-        Training.getInstance().saveConfig();
+        TrainingKt.getPLUGIN().saveConfig();
     }
 
     @Override
     public void safeToConfig() {
-        FileConfiguration config = Training.getInstance().getConfig();
+        FileConfiguration config = TrainingKt.getPLUGIN().getConfig();
         config.set(String.format("%s.damage", configKey), damage);
         config.set(String.format("%s.soupsToEat", configKey), soupsToEat);
         config.set(String.format("%s.tickSpeed", configKey), tickSpeed);
         config.set(String.format("%s.location.first", configKey), cuboid.getFirst());
         config.set(String.format("%s.location.second", configKey), cuboid.getSecond());
         config.set(String.format("%s.hologram.location", configKey), hologramOrigin);
-        Training.getInstance().saveConfig();
+        TrainingKt.getPLUGIN().saveConfig();
     }
 
     @Override
     public void loadFromConfig() {
-        Training.getInstance().reloadConfig();
-        FileConfiguration config = Training.getInstance().getConfig();
+        TrainingKt.getPLUGIN().reloadConfig();
+        FileConfiguration config = TrainingKt.getPLUGIN().getConfig();
         damage = config.getDouble(String.format("%s.damage", configKey), damage);
         soupsToEat = config.getInt(String.format("%s.soupsToEat", configKey), soupsToEat);
         tickSpeed = config.getLong(String.format("%s.tickSpeed", configKey), tickSpeed);
         Location firstLoc = config.getLocation(String.format("%s.location.first", configKey), cuboid.getFirst());
         Location secondLoc = config.getLocation(String.format("%s.location.second", configKey), cuboid.getSecond());
-        cuboid = new Cuboid(firstLoc, secondLoc);
+        if (firstLoc != null && secondLoc != null) {
+            cuboid = new Cuboid(firstLoc, secondLoc);
+        }
         hologramOrigin = config.getLocation(String.format("%s.hologram.location", configKey), hologramOrigin);
     }
 

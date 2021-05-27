@@ -4,6 +4,9 @@ import de.hglabor.plugins.training.warp.WarpItems;
 import de.hglabor.utils.noriskutils.ItemBuilder;
 import org.bukkit.ChatColor;
 import org.bukkit.Material;
+import org.bukkit.World;
+import org.bukkit.entity.Boat;
+import org.bukkit.entity.Minecart;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.block.BlockFromToEvent;
@@ -11,6 +14,7 @@ import org.bukkit.event.entity.FoodLevelChangeEvent;
 import org.bukkit.event.inventory.InventoryClickEvent;
 import org.bukkit.event.player.PlayerDropItemEvent;
 import org.bukkit.event.player.PlayerInteractAtEntityEvent;
+import org.bukkit.event.vehicle.VehicleEntityCollisionEvent;
 import org.bukkit.inventory.ItemStack;
 
 public class MlgWorld extends TrainingWorld {
@@ -18,6 +22,12 @@ public class MlgWorld extends TrainingWorld {
 
     private MlgWorld() {
         super(new ItemBuilder(Material.WATER_BUCKET).setName(ChatColor.AQUA + "MLG").build());
+    }
+
+    @Override
+    public void init(World world) {
+        super.init(world);
+        world.getWorldBorder().setSize(2500 * 2);
     }
 
     @EventHandler
@@ -34,6 +44,16 @@ public class MlgWorld extends TrainingWorld {
     public void onPlayerInteractAtEntity(PlayerInteractAtEntityEvent event) {
         if (event.getPlayer().getWorld().equals(world)) {
             event.setCancelled(true);
+        }
+    }
+
+    @EventHandler
+    public void onVehicleColission(VehicleEntityCollisionEvent event) {
+        if ((event.getVehicle() instanceof Minecart || event.getVehicle() instanceof Boat)) {
+            if (event.getEntity().getWorld().equals(world)) {
+                event.setCancelled(true);
+                event.setCollisionCancelled(true);
+            }
         }
     }
 

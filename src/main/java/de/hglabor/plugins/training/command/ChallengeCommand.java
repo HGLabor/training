@@ -1,6 +1,6 @@
 package de.hglabor.plugins.training.command;
 
-import de.hglabor.plugins.training.Training;
+import de.hglabor.plugins.training.main.TrainingKt;
 import de.hglabor.plugins.training.challenges.Challenge;
 import de.hglabor.plugins.training.challenges.ChallengeManager;
 import dev.jorel.commandapi.CommandAPICommand;
@@ -56,7 +56,7 @@ public class ChallengeCommand implements Listener {
                     }
                     player.sendMessage(challenge.getName() + ": " + action);
                 }).register();
-        Bukkit.getPluginManager().registerEvents(this, Training.getInstance());
+        Bukkit.getPluginManager().registerEvents(this, TrainingKt.getPLUGIN());
     }
 
     @EventHandler

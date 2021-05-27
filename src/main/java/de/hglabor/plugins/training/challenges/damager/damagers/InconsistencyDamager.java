@@ -1,7 +1,7 @@
 package de.hglabor.plugins.training.challenges.damager.damagers;
 
-import de.hglabor.plugins.training.Training;
 import de.hglabor.plugins.training.challenges.damager.Damager;
+import de.hglabor.plugins.training.main.TrainingKt;
 import de.hglabor.utils.noriskutils.ChanceUtils;
 import de.hglabor.utils.noriskutils.HologramUtils;
 import org.bukkit.ChatColor;
@@ -25,7 +25,7 @@ public class InconsistencyDamager extends Damager {
 
     @Override
     public void initConfig() {
-        Training.getInstance().getConfig().addDefault(String.format("%s.minDamage", configKey), minDamage);
+        TrainingKt.getPLUGIN().getConfig().addDefault(String.format("%s.minDamage", configKey), minDamage);
         super.initConfig();
     }
 
@@ -37,12 +37,12 @@ public class InconsistencyDamager extends Damager {
     @Override
     public void loadFromConfig() {
         super.loadFromConfig();
-        minDamage = Training.getInstance().getConfig().getDouble(String.format("%s.minDamage", configKey), minDamage);
+        minDamage = TrainingKt.getPLUGIN().getConfig().getDouble(String.format("%s.minDamage", configKey), minDamage);
     }
 
     @Override
     public void safeToConfig() {
-        Training.getInstance().getConfig().set(String.format("%s.minDamage", configKey), minDamage);
+        TrainingKt.getPLUGIN().getConfig().set(String.format("%s.minDamage", configKey), minDamage);
         super.safeToConfig();
     }
 }
