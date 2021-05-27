@@ -35,7 +35,6 @@ enum class MlgSetting (val settingName: String, val icon: Material, var enabled:
     }
 
     fun getEnabledValuesFrom(enabledValues: ArrayList<UUID>) {
-        Bukkit.getLogger().info("Size of enabled arraylist: ${enabledValues.size}")
         enabledValues.forEach {
             this.enabled[it] = true
         }

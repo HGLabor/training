@@ -18,27 +18,20 @@ class MlgSettingData() : Serializable {
         private const val PATH = "mlg_settings"
         fun load() {
             loadObj(PATH)?.let {
-                val casted = MlgSettingData(it as MlgSettingData)
-                casted.enabledMap.forEach { entry ->
-                    Bukkit.getLogger().info("Entry with name ${entry.key} and enabled arraylist size ${entry.value.size} in load()")
-                }
-                MlgSetting.setEnabledValues(casted.enabledMap)
+                MlgSetting.setEnabledValues(MlgSettingData(it as MlgSettingData).enabledMap)
             }
         }
 
         fun save() {
             saveObj(PATH, getFromEnum())
-            MlgSetting.valuesMap().forEach {
-                Bukkit.getLogger().info("Entry with name ${it.key} and enabled arraylist size ${it.value.enabled.size}")
-            }
         }
 
         private fun getFromEnum(): MlgSettingData {
-            val d = MlgSettingData()
+            val data = MlgSettingData()
             MlgSetting.valuesMap().forEach {
-                d.enabledMap[it.key] = it.value.getEnabledPlayers()
+                data.enabledMap[it.key] = it.value.getEnabledPlayers()
             }
-            return d
+            return data
         }
     }
 
