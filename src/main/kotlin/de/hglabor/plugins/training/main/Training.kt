@@ -45,6 +45,7 @@ class Training : KSpigot() {
 
         Bukkit.getMessenger().registerOutgoingPluginChannel(this, "BungeeCord")
 
+        ChallengeManager.INSTANCE.register(Damager("Noob", ChatColor.AQUA))
         ChallengeManager.INSTANCE.register(Damager("Easy", ChatColor.GREEN))
         ChallengeManager.INSTANCE.register(Damager("Medium", ChatColor.YELLOW))
         ChallengeManager.INSTANCE.register(Damager("Hard", ChatColor.RED))
