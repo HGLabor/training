@@ -1,6 +1,6 @@
 package de.hglabor.plugins.training.challenges.mlg.mlgs;
 
-import de.hglabor.plugins.training.Training;
+import de.hglabor.plugins.training.main.TrainingKt;
 import de.hglabor.plugins.training.challenges.mlg.Mlg;
 import de.hglabor.utils.noriskutils.ItemBuilder;
 import org.bukkit.Bukkit;
@@ -50,7 +50,7 @@ public class StriderMlg extends Mlg {
             Strider strider = (Strider) spawn.getWorld().spawnEntity(spawn.clone().add(random.nextBoolean() ? x : x * -1, 1, random.nextBoolean() ? z : z * -1), EntityType.STRIDER);
             strider.setPersistent(false);
             strider.setAdult();
-            strider.setMetadata(this.getName(), new FixedMetadataValue(Training.getInstance(), ""));
+            strider.setMetadata(this.getName(), new FixedMetadataValue(TrainingKt.getPLUGIN(), ""));
             strider.setInvulnerable(true);
             AttributeInstance health = strider.getAttribute(Attribute.GENERIC_MAX_HEALTH);
             if (health != null) {
@@ -104,7 +104,7 @@ public class StriderMlg extends Mlg {
         }
         if (!(event.getRightClicked() instanceof Strider)) return;
         // Remove saddle after 1 second (20 ticks)
-        Bukkit.getScheduler().runTaskLater(Training.getInstance(), () -> ((Strider) event.getRightClicked()).setSaddle(false), 20L);
+        Bukkit.getScheduler().runTaskLater(TrainingKt.getPLUGIN(), () -> ((Strider) event.getRightClicked()).setSaddle(false), 20L);
     }
 
     @EventHandler
