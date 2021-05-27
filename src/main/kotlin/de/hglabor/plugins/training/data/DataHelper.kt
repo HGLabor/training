@@ -2,6 +2,7 @@ package de.hglabor.plugins.training.data
 
 import de.hglabor.plugins.training.main.PLUGIN
 import org.apache.logging.log4j.core.util.FileUtils
+import org.bukkit.Bukkit
 import org.bukkit.util.io.BukkitObjectInputStream
 import org.bukkit.util.io.BukkitObjectOutputStream
 import java.io.*
@@ -19,6 +20,10 @@ fun loadObj(fileName: String): Serializable? =
         val gzipIn = GZIPInputStream(fileIn)
         val bukkitIn = BukkitObjectInputStream(gzipIn)
         bukkitIn.readObject() as Serializable
+    }
+    catch (e: FileNotFoundException) {
+        Bukkit.getLogger().warning("Data file for $fileName.data not yet created.")
+        null
     }
     catch (e: IOException) {
         e.printStackTrace()
