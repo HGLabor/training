@@ -3,7 +3,6 @@ package de.hglabor.plugins.training.gui.setting
 import org.bukkit.Material
 import org.bukkit.entity.Player
 import java.util.*
-import kotlin.collections.HashMap
 
 enum class MlgSetting (val settingName: String, val icon: Material, var enabled: HashMap<UUID, Boolean> = HashMap()) {
 
@@ -21,6 +20,6 @@ enum class MlgSetting (val settingName: String, val icon: Material, var enabled:
         enabled[uuid] = default
     }
 
-    fun getEnabled(uuid: UUID) = enabled[uuid]!!
-    fun getEnabled(player: Player) = enabled[player.uniqueId]!!
+    fun getEnabled(uuid: UUID) = enabled[uuid] ?: false
+    fun getEnabled(player: Player) = enabled[player.uniqueId] ?: false
 }
