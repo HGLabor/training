@@ -1,7 +1,7 @@
 package de.hglabor.plugins.training.challenges.mlg;
 
 import com.destroystokyo.paper.event.player.PlayerJumpEvent;
-import de.hglabor.plugins.training.settings.mlg.MlgSetting;
+import de.hglabor.plugins.training.settings.mlg.Setting;
 import de.hglabor.plugins.training.user.User;
 import de.hglabor.plugins.training.user.UserList;
 import de.hglabor.utils.noriskutils.HologramUtils;
@@ -244,7 +244,7 @@ public class MlgPlatform implements Listener {
     }
 
     private boolean jsElevator(Player player) {
-        return MlgSetting.JUMP_SNEAK_ELEVATOR.getEnabled(player);
+        return Setting.JUMP_SNEAK_ELEVATOR.getEnabled(player);
     }
 
     private void teleportPlayerY(Player player, double yCoordinate) {

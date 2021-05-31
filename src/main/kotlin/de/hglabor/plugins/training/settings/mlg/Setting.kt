@@ -5,7 +5,7 @@ import org.bukkit.entity.Player
 import java.util.*
 import java.io.Serializable as javaSer
 
-enum class MlgSetting (val settingName: String, val icon: Material, var enabled: HashMap<UUID, Boolean> = HashMap()) : javaSer {
+enum class Setting (val settingName: String, val icon: Material, var enabled: HashMap<UUID, Boolean> = HashMap()) : javaSer {
 
     JUMP_SNEAK_ELEVATOR("Jump/Sneak Elevator", Material.MAGENTA_GLAZED_TERRACOTTA),
 //    LEVITATOR_SHEEP("Levitator Sheep", Material.WHITE_WOOL),
@@ -49,8 +49,8 @@ enum class MlgSetting (val settingName: String, val icon: Material, var enabled:
             }
         }
 
-        fun valuesMap(): HashMap<String, MlgSetting> {
-            val map = HashMap<String, MlgSetting>()
+        fun valuesMap(): HashMap<String, Setting> {
+            val map = HashMap<String, Setting>()
             values().forEach {
                 map[it.settingName] = it
             }

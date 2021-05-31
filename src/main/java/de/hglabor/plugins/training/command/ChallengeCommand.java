@@ -1,8 +1,8 @@
 package de.hglabor.plugins.training.command;
 
-import de.hglabor.plugins.training.main.TrainingKt;
 import de.hglabor.plugins.training.challenges.Challenge;
 import de.hglabor.plugins.training.challenges.ChallengeManager;
+import de.hglabor.plugins.training.main.TrainingKt;
 import dev.jorel.commandapi.CommandAPICommand;
 import dev.jorel.commandapi.arguments.Argument;
 import dev.jorel.commandapi.arguments.CustomArgument;

@@ -12,7 +12,7 @@ import de.hglabor.plugins.training.challenges.mlg.mlgs.*
 import de.hglabor.plugins.training.command.ChallengeCommand
 import de.hglabor.plugins.training.command.DamagerCommand
 import de.hglabor.plugins.training.command.MlgCommand
-import de.hglabor.plugins.training.command.MlgSettingsCommand
+import de.hglabor.plugins.training.command.SettingsCommand
 import de.hglabor.plugins.training.data.DataManager
 import de.hglabor.plugins.training.packets.PacketManager
 import de.hglabor.plugins.training.user.UserList
@@ -71,7 +71,7 @@ class Training : KSpigot() {
         DamagerCommand()
         ChallengeCommand()
         MlgCommand()
-        MlgSettingsCommand()
+        SettingsCommand()
 
         DataManager.load()
 

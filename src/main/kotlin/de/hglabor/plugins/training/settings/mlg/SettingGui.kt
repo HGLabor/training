@@ -16,7 +16,7 @@ import org.bukkit.inventory.InventoryView
 import org.bukkit.inventory.ItemStack
 import java.util.*
 
-object MlgSettingsGui {
+object SettingGui {
     fun open(player: Player): InventoryView? = player.openGUI(mlgSettingsGui(player.uniqueId))
 
     private fun mlgSettingsGui(uuid: UUID) = kSpigotGUI(GUIType.THREE_BY_NINE) {
@@ -25,7 +25,7 @@ object MlgSettingsGui {
         page(1) {
             placeholder(Slots.Border, ItemStack(Material.LIGHT_BLUE_STAINED_GLASS_PANE))
 
-            lateinit var warpsCompound: GUIRectSpaceCompound<*, MlgSetting>
+            lateinit var warpsCompound: GUIRectSpaceCompound<*, Setting>
             warpsCompound = createRectCompound(
                 // Position the "buttons" from slot 2|2 to slot 2|8
                 Slots.RowTwoSlotTwo,
@@ -48,10 +48,10 @@ object MlgSettingsGui {
                 onClick = { clickEvent, element ->
                     clickEvent.bukkitEvent.isCancelled = true
                     element.toggle(uuid)
-                    warpsCompound.setContent(MlgSetting.values().asIterable())
+                    warpsCompound.setContent(Setting.values().asIterable())
                 }
             )
-            warpsCompound.addContent(MlgSetting.values().asIterable())
+            warpsCompound.addContent(Setting.values().asIterable())
         }
     }
 }
