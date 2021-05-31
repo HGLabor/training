@@ -5,10 +5,10 @@ import org.bukkit.entity.Player
 import java.util.*
 import java.io.Serializable as javaSer
 
-enum class Setting (val settingName: String, val icon: Material, var enabled: HashMap<UUID, Boolean> = HashMap()) : javaSer {
+enum class Setting (val settingName: String, val icon: Material? = null, val headOwner: String? = null, var enabled: HashMap<UUID, Boolean> = HashMap()) : javaSer {
 
     JUMP_SNEAK_ELEVATOR("Jump/Sneak Elevator", Material.MAGENTA_GLAZED_TERRACOTTA),
-//    LEVITATOR_SHEEP("Levitator Sheep", Material.WHITE_WOOL),
+    LEVITATOR_SHEEP("Levitator Sheep", headOwner = "Kolish"),
 //    TOP_BOTTOM_PHANTOMS("Top/Bottom Phantoms", Material.PHANTOM_MEMBRANE)
 
     ;

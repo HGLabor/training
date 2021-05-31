@@ -36,7 +36,7 @@ dependencies {
     // ProtocolLib
     compileOnly("com.comphenix.protocol:ProtocolLib:4.6.0")
     // CommandAPI
-    implementation("dev.jorel:commandapi-shade:5.8")
+    compileOnly("dev.jorel:commandapi-shade:5.8")
     // HGLaborUtils
     implementation("de.hglabor:hglabor-utils:0.0.6")
     // KSpigot

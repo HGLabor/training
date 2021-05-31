@@ -10,10 +10,12 @@ import net.axay.kspigot.items.itemStack
 import net.axay.kspigot.items.meta
 import net.axay.kspigot.items.name
 import net.axay.kspigot.items.toLoreList
+import org.bukkit.Bukkit
 import org.bukkit.Material
 import org.bukkit.entity.Player
 import org.bukkit.inventory.InventoryView
 import org.bukkit.inventory.ItemStack
+import org.bukkit.inventory.meta.SkullMeta
 import java.util.*
 
 object SettingGui {
@@ -34,7 +36,14 @@ object SettingGui {
                     it.setDefaultEnabledIfMissing(uuid)
                     val enabled = it.enabled[uuid]!!
                     val enabledString = (if (enabled) "${KColors.GREEN}Enabled" else "${KColors.RED}Disabled") + KColors.WHITE.toString()
-                    itemStack(it.icon) {
+                    if (it.icon == null) {
+                        itemStack(Material.PLAYER_HEAD) {
+                            meta<SkullMeta> {
+                                owningPlayer = Bukkit.getPlayer(it.headOwner!!)
+                            }
+                        }
+                    }
+                    else itemStack(it.icon) {
                         meta {
                             name = "${KColors.AQUA}${it.settingName}"
                             lore = enabledString.toLoreList(KColors.BOLD).toMutableList().apply {
