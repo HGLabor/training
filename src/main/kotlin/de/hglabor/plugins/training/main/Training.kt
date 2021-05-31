@@ -1,5 +1,7 @@
 package de.hglabor.plugins.training.main
 
+import com.comphenix.protocol.ProtocolLibrary
+import com.comphenix.protocol.ProtocolManager
 import de.hglabor.plugins.training.challenges.ChallengeManager
 import de.hglabor.plugins.training.challenges.damager.Damager
 import de.hglabor.plugins.training.challenges.damager.damagers.CrapDamager
@@ -12,6 +14,7 @@ import de.hglabor.plugins.training.command.DamagerCommand
 import de.hglabor.plugins.training.command.MlgCommand
 import de.hglabor.plugins.training.command.MlgSettingsCommand
 import de.hglabor.plugins.training.data.DataManager
+import de.hglabor.plugins.training.packets.PacketManager
 import de.hglabor.plugins.training.user.UserList
 import de.hglabor.plugins.training.warp.WarpSelector
 import de.hglabor.plugins.training.warp.worlds.DamagerWorld
@@ -29,6 +32,8 @@ class Training : KSpigot() {
     companion object {
         lateinit var INSTANCE: Training; private set
     }
+
+    lateinit var protocolManager: ProtocolManager
 
     override fun load() {
         INSTANCE = this
@@ -69,6 +74,9 @@ class Training : KSpigot() {
         MlgSettingsCommand()
 
         DataManager.load()
+
+        protocolManager = ProtocolLibrary.getProtocolManager()
+        PacketManager.init(this, protocolManager)
     }
 
     fun registerAllEventListeners(vararg eventListeners: Listener) {

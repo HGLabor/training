@@ -2,3 +2,10 @@ name: Training
 version: 0.0.1 # TODO help
 main: de.hglabor.plugins.training.main.Training
 api-version: 1.16
+
+depend:
+  - CommandAPI
+
+loadbefore:
+  - ProtocolLib
+  - CommandAPI
