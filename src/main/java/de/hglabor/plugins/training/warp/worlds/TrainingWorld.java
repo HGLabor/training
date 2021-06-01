@@ -70,7 +70,7 @@ public abstract class TrainingWorld implements Listener {
                 player.playSound(player.getLocation(), Sound.BLOCK_METAL_PRESSURE_PLATE_CLICK_OFF, 1, 1);
             }
         } else if (item.isSimilar(WarpItems.HUB)) {
-            BungeeUtils.send(player, "lobby", TrainingKt.getPLUGIN());
+            BungeeUtils.send(player, "Lobby-1", TrainingKt.getPLUGIN());
         }
     }
 
