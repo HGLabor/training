@@ -3,5 +3,5 @@
 [![Open Issues](https://img.shields.io/github/issues/HGLabor/training)](/../../issues)
 [![Top Language](https://img.shields.io/github/languages/top/HGLabor/training)](/../..)
 #### A plugin for the minecraft server `hglabor.de` that adds different challenges:
-- **Damagers** (Easy, Medium, Hard, Impossible, ...)
+- **Damagers** (Noob, Easy, Medium, Hard, Impossible, Inconsistency, Crap)
 - **Mlgs** (Water, Block (Cobweb, Slime, ...), Horse, Strider, Boat, Minecart, Potion)
