@@ -22,7 +22,7 @@ object SettingGui {
     fun open(player: Player): InventoryView? = player.openGUI(mlgSettingsGui(player.uniqueId))
 
     private fun mlgSettingsGui(uuid: UUID) = kSpigotGUI(GUIType.THREE_BY_NINE) {
-        title = "${KColors.BLACK}MLG SETTINGS"
+        title = "${KColors.BLACK}SETTINGS"
 
         page(1) {
             placeholder(Slots.Border, ItemStack(Material.LIGHT_BLUE_STAINED_GLASS_PANE))

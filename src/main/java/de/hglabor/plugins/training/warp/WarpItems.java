@@ -1,6 +1,7 @@
 package de.hglabor.plugins.training.warp;
 
 import de.hglabor.utils.noriskutils.ItemBuilder;
+import net.axay.kspigot.chat.KColors;
 import org.bukkit.ChatColor;
 import org.bukkit.Material;
 import org.bukkit.inventory.ItemStack;
@@ -19,7 +20,10 @@ public interface WarpItems {
     ItemStack WARP_SELECTOR = new ItemBuilder(Material.NETHER_STAR)
             .setName(ChatColor.GOLD.toString() + ChatColor.BOLD + "Warp selector")
             .build();
-    List<ItemStack> WARP_ITEMS = List.of(RESPAWN_ANCHOR, HUB, WARP_SELECTOR);
+    ItemStack SETTINGS = new ItemBuilder(Material.COMPARATOR)
+            .setName(KColors.GRAY.toString() + ChatColor.BOLD + "Settings")
+            .build();
+    List<ItemStack> WARP_ITEMS = List.of(RESPAWN_ANCHOR, HUB, WARP_SELECTOR, SETTINGS);
 
     static boolean isWarpItem(ItemStack itemStack) {
         return WARP_ITEMS.stream().anyMatch(warpItem -> warpItem.isSimilar(itemStack));
