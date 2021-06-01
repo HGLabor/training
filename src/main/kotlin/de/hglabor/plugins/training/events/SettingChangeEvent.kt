@@ -6,6 +6,10 @@ import org.bukkit.event.Event
 import org.bukkit.event.HandlerList
 import java.util.*
 
+/**
+ * Called WHEN a setting is changed
+ * @see SettingChangedEvent
+ */
 class SettingChangeEvent(val setting: Setting, val playerUUID: UUID, val targetValue: Boolean) : Event(), Cancellable {
     companion object {
         private val handlers = HandlerList()

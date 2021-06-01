@@ -10,7 +10,7 @@ import de.hglabor.plugins.training.challenges.mlg.scoreboard.MlgPlayerList;
 import de.hglabor.plugins.training.challenges.mlg.scoreboard.MlgScoreboard;
 import de.hglabor.plugins.training.challenges.mlg.streaks.StreakPlayer;
 import de.hglabor.plugins.training.challenges.mlg.streaks.StreakPlayers;
-import de.hglabor.plugins.training.events.SettingChangeEvent;
+import de.hglabor.plugins.training.events.SettingChangedEvent;
 import de.hglabor.plugins.training.main.TrainingKt;
 import de.hglabor.plugins.training.packets.PacketSender;
 import de.hglabor.plugins.training.region.Area;
@@ -352,29 +352,44 @@ public abstract class Mlg implements Challenge {
     }
 
     @EventHandler
-    public void onSettingChange(SettingChangeEvent event) {
+    public void onSettingChanged(SettingChangedEvent event) {
         Player player = Bukkit.getPlayer(event.getPlayerUUID());
         if (player == null) return;
         if (!isInChallenge(player)) return;
 
-        if (!event.getTargetValue()) {
-            switch (event.getSetting()) {
-                case LEVITATOR_SHEEP:
-                    // Remove all levitator sheep for the player
-                    platforms.forEach(platform -> {
-                        for (Sheep sheep : platform.getLevitatorSheep()) {
-                            PacketSender.INSTANCE.removeEntities(player, sheep);
-                        }
-                    });
-                    break;
-                case TOP_BOTTOM_PHANTOMS:
-                    // Remove all top/bottom phantoms for the player
-                    platforms.forEach(platform -> {
-                        for (Phantom phantom : platform.getPhantoms()) {
-                            PacketSender.INSTANCE.removeEntities(player, phantom);
-                        }
-                    });
-            }
+        if (!event.getTargetValue()) switch (event.getSetting()) {
+            case LEVITATOR_SHEEP:
+                // Remove all levitator sheep for the player
+                platforms.forEach(platform -> {
+                    for (Sheep sheep : platform.getLevitatorSheep()) {
+                        PacketSender.INSTANCE.hideEntities(player, sheep);
+                    }
+                });
+                break;
+            case TOP_BOTTOM_PHANTOMS:
+                // Remove all top/bottom phantoms for the player
+                platforms.forEach(platform -> {
+                    for (Phantom phantom : platform.getPhantoms()) {
+                        PacketSender.INSTANCE.hideEntities(player, phantom);
+                    }
+                });
+        }
+        else switch (event.getSetting()) {
+            case LEVITATOR_SHEEP:
+                // Remove all levitator sheep for the player
+                platforms.forEach(platform -> {
+                    for (Sheep sheep : platform.getLevitatorSheep()) {
+                        PacketSender.INSTANCE.showEntities(player, sheep);
+                    }
+                });
+                break;
+            case TOP_BOTTOM_PHANTOMS:
+                // Remove all top/bottom phantoms for the player
+                platforms.forEach(platform -> {
+                    for (Phantom phantom : platform.getPhantoms()) {
+                        PacketSender.INSTANCE.showEntities(player, phantom);
+                    }
+                });
         }
     }
 
