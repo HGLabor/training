@@ -1,11 +1,13 @@
 package de.hglabor.plugins.training.settings.mlg
 
+import de.hglabor.plugins.training.events.SettingChangeEvent
+import org.bukkit.Bukkit
 import org.bukkit.Material
 import org.bukkit.entity.Player
 import java.util.*
 import java.io.Serializable as javaSer
 
-enum class Setting (val settingName: String, val icon: Material? = null, val headOwner: String? = null, var enabled: HashMap<UUID, Boolean> = HashMap(), private val default: Boolean = true) : javaSer {
+enum class Setting (val settingName: String, val icon: Material? = null, val headOwner: String? = null, private var enabled: HashMap<UUID, Boolean> = HashMap(), private val default: Boolean = true) : javaSer {
 
     JUMP_SNEAK_ELEVATOR("Jump/Sneak Elevator", Material.MAGENTA_GLAZED_TERRACOTTA),
     LEVITATOR_SHEEP("Levitator Sheep", headOwner = "Kolish"),
@@ -13,7 +15,17 @@ enum class Setting (val settingName: String, val icon: Material? = null, val hea
 
     ;
 
-    fun toggle(uuid: UUID) { enabled[uuid] = enabled[uuid]?.not() ?: false }
+    fun toggle(uuid: UUID) {
+        // This is the only time the setting is actually changed from the gui
+        // so this is the only time we need to call the SettingChangeEvent
+        val target = enabled[uuid]?.not() ?: default
+        val event = SettingChangeEvent(this, uuid, target)
+
+        Bukkit.getPluginManager().callEvent(event)
+        if (event.isCancelled) return
+
+        enabled[uuid] = target
+    }
 
     // best fun name ever CHANGE MY MIND
     fun setDefaultEnabledIfMissing(uuid: UUID, default: Boolean = this.default) {

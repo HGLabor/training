@@ -5,34 +5,31 @@ import com.comphenix.protocol.ProtocolManager;
 import com.comphenix.protocol.events.ListenerPriority;
 import com.comphenix.protocol.events.PacketAdapter;
 import com.comphenix.protocol.events.PacketEvent;
-import de.hglabor.plugins.training.gui.setting.MlgSetting;
 import de.hglabor.plugins.training.main.Training;
+import de.hglabor.plugins.training.main.TrainingKt;
+import de.hglabor.plugins.training.settings.mlg.Setting;
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Entity;
+import org.bukkit.entity.Player;
 
 import java.util.UUID;
 
 
-public class PacketManager {
-    public static void init(Training plugin, ProtocolManager manager) {
-        manager.addPacketListener(new PacketAdapter(plugin, ListenerPriority.NORMAL, PacketType.Play.Server.SPAWN_ENTITY_LIVING) {
+public class PacketReceiver {
+    public static void init() {
+        // Entity Spawns
+        TrainingKt.getPLUGIN().protocolManager.addPacketListener(new PacketAdapter(TrainingKt.getPLUGIN(), ListenerPriority.NORMAL, PacketType.Play.Server.SPAWN_ENTITY_LIVING) {
             @Override
             public void onPacketSending(PacketEvent event) {
                 UUID uuid = event.getPlayer().getUniqueId();
-                Bukkit.broadcastMessage("event");
                 Entity entity = event.getPacket().getEntityModifier(event).read(0);
                 switch (entity.getType()) {
                     case PHANTOM:
-                        if (!MlgSetting.TOP_BOTTOM_PHANTOMS.getEnabled(uuid)) event.setCancelled(true);
-                        Bukkit.broadcastMessage("Phantom!");
+                        if (!Setting.TOP_BOTTOM_PHANTOMS.getEnabled(uuid)) event.setCancelled(true);
                         break;
                     case SHEEP:
-                        if (!MlgSetting.LEVITATOR_SHEEP.getEnabled(uuid)) event.setCancelled(true);
-                        Bukkit.broadcastMessage("Sheep");
+                        if (!Setting.LEVITATOR_SHEEP.getEnabled(uuid)) event.setCancelled(true);
                         break;
-                }
-                if (!MlgSetting.LEVITATOR_SHEEP.getEnabled(event.getPlayer().getUniqueId())) {
-                    event.setCancelled(true);
                 }
             }
         });

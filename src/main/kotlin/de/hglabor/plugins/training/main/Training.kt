@@ -14,7 +14,8 @@ import de.hglabor.plugins.training.command.DamagerCommand
 import de.hglabor.plugins.training.command.MlgCommand
 import de.hglabor.plugins.training.command.SettingsCommand
 import de.hglabor.plugins.training.data.DataManager
-import de.hglabor.plugins.training.packets.PacketManager
+import de.hglabor.plugins.training.packets.PacketReceiver
+import de.hglabor.plugins.training.packets.PacketSender
 import de.hglabor.plugins.training.user.UserList
 import de.hglabor.plugins.training.warp.WarpSelector
 import de.hglabor.plugins.training.warp.worlds.DamagerWorld
@@ -76,7 +77,7 @@ class Training : KSpigot() {
         DataManager.load()
 
         protocolManager = ProtocolLibrary.getProtocolManager()
-        PacketManager.init(this, protocolManager)
+        PacketReceiver.init()
     }
 
     fun registerAllEventListeners(vararg eventListeners: Listener) {

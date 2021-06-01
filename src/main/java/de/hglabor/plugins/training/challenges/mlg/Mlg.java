@@ -10,7 +10,9 @@ import de.hglabor.plugins.training.challenges.mlg.scoreboard.MlgPlayerList;
 import de.hglabor.plugins.training.challenges.mlg.scoreboard.MlgScoreboard;
 import de.hglabor.plugins.training.challenges.mlg.streaks.StreakPlayer;
 import de.hglabor.plugins.training.challenges.mlg.streaks.StreakPlayers;
+import de.hglabor.plugins.training.events.SettingChangeEvent;
 import de.hglabor.plugins.training.main.TrainingKt;
+import de.hglabor.plugins.training.packets.PacketSender;
 import de.hglabor.plugins.training.region.Area;
 import de.hglabor.plugins.training.region.Cuboid;
 import de.hglabor.plugins.training.user.User;
@@ -27,10 +29,7 @@ import org.bukkit.block.BlockFace;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.craftbukkit.v1_16_R3.CraftWorld;
 import org.bukkit.craftbukkit.v1_16_R3.entity.CraftEntity;
-import org.bukkit.entity.Entity;
-import org.bukkit.entity.LivingEntity;
-import org.bukkit.entity.Player;
-import org.bukkit.entity.Slime;
+import org.bukkit.entity.*;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.entity.CreatureSpawnEvent;
 import org.bukkit.event.entity.EntityDamageEvent;
@@ -62,6 +61,7 @@ class MlgInfo {
         this.hasDoneAction = hasDoneAction;
     }
 }
+
 public abstract class Mlg implements Challenge {
     protected final String name;
     protected final ChatColor color;
@@ -347,6 +347,33 @@ public abstract class Mlg implements Challenge {
                 }
                 // Cancel the event so the player doesn't get killed twice
                 event.setCancelled(true);
+            }
+        }
+    }
+
+    @EventHandler
+    public void onSettingChange(SettingChangeEvent event) {
+        Player player = Bukkit.getPlayer(event.getPlayerUUID());
+        if (player == null) return;
+        if (!isInChallenge(player)) return;
+
+        if (!event.getTargetValue()) {
+            switch (event.getSetting()) {
+                case LEVITATOR_SHEEP:
+                    // Remove all levitator sheep for the player
+                    platforms.forEach(platform -> {
+                        for (Sheep sheep : platform.getLevitatorSheep()) {
+                            PacketSender.INSTANCE.removeEntities(player, sheep);
+                        }
+                    });
+                    break;
+                case TOP_BOTTOM_PHANTOMS:
+                    // Remove all top/bottom phantoms for the player
+                    platforms.forEach(platform -> {
+                        for (Phantom phantom : platform.getPhantoms()) {
+                            PacketSender.INSTANCE.removeEntities(player, phantom);
+                        }
+                    });
             }
         }
     }

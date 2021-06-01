@@ -31,25 +31,26 @@ object SettingGui {
             warpsCompound = createRectCompound(
                 // Position the "buttons" from slot 2|2 to slot 2|8
                 Slots.RowTwoSlotTwo,
-                Slots.RowTwoSlotEight,
+                Slots.RowTwoSlotSeven,
                 iconGenerator = {
                     it.setDefaultEnabledIfMissing(uuid)
-                    val enabled = it.enabled[uuid]!!
+                    val enabled = it.getEnabled(uuid)
                     val enabledString = (if (enabled) "${KColors.GREEN}Enabled" else "${KColors.RED}Disabled") + KColors.WHITE.toString()
-                    if (it.icon == null) {
-                        itemStack(Material.PLAYER_HEAD) {
-                            meta<SkullMeta> {
-                                owningPlayer = Bukkit.getPlayer(it.headOwner!!)
-                            }
+                    val lore = enabledString.toLoreList(KColors.BOLD).toMutableList().apply {
+                        this += " "
+                        this += "Click on this item to toggle.".toLoreList(KColors.LIGHTSLATEGRAY, KColors.ITALIC)
+                    }
+                    if (it.icon == null) itemStack(Material.PLAYER_HEAD) {
+                        meta<SkullMeta> {
+                            name = "${KColors.AQUA}${it.settingName}"
+                            this.lore = lore
+                            owner = it.headOwner
                         }
                     }
                     else itemStack(it.icon) {
                         meta {
                             name = "${KColors.AQUA}${it.settingName}"
-                            lore = enabledString.toLoreList(KColors.BOLD).toMutableList().apply {
-                                this += " "
-                                this += "Click on this item to toggle.".toLoreList(KColors.LIGHTSLATEGRAY, KColors.ITALIC)
-                            }
+                            this.lore = lore
                         }
                     }
                 },
