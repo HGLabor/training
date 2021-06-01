@@ -25,6 +25,10 @@ fun loadObj(fileName: String): Serializable? =
         Bukkit.getLogger().warning("Data file for $fileName.data not yet created.")
         null
     }
+    catch (e: ClassNotFoundException) {
+        e.printStackTrace()
+        null
+    }
     catch (e: IOException) {
         e.printStackTrace()
         null
