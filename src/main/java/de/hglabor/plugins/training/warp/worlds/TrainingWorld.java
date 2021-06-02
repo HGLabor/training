@@ -1,7 +1,6 @@
 package de.hglabor.plugins.training.warp.worlds;
 
 import de.hglabor.plugins.training.main.TrainingKt;
-import de.hglabor.plugins.training.settings.mlg.SettingGui;
 import de.hglabor.plugins.training.user.User;
 import de.hglabor.plugins.training.user.UserList;
 import de.hglabor.plugins.training.util.LocationUtils;
@@ -17,7 +16,6 @@ import org.bukkit.event.block.BlockBreakEvent;
 import org.bukkit.event.block.BlockPlaceEvent;
 import org.bukkit.event.entity.EntityDamageByEntityEvent;
 import org.bukkit.event.entity.FoodLevelChangeEvent;
-import org.bukkit.event.inventory.InventoryClickEvent;
 import org.bukkit.event.player.PlayerInteractEvent;
 import org.bukkit.event.player.PlayerRespawnEvent;
 import org.bukkit.inventory.ItemStack;
@@ -82,7 +80,7 @@ public abstract class TrainingWorld implements Listener {
             event.setCancelled(true);
         }
 
-        if (!isAllowedToBuild(event.getPlayer())) {
+        if (notAllowedToBuild(event.getPlayer())) {
             event.setCancelled(true);
         }
     }
@@ -112,7 +110,7 @@ public abstract class TrainingWorld implements Listener {
         if (!event.getPlayer().getWorld().equals(world)) {
             return;
         }
-        if (!isAllowedToBuild(event.getPlayer())) {
+        if (notAllowedToBuild(event.getPlayer())) {
             event.setCancelled(true);
         }
     }
@@ -140,8 +138,8 @@ public abstract class TrainingWorld implements Listener {
         return warpItem;
     }
 
-    protected boolean isAllowedToBuild(Player player) {
-        return player.getGameMode().equals(GameMode.CREATIVE) && player.getWorld().equals(world);
+    protected boolean notAllowedToBuild(Player player) {
+        return !player.getGameMode().equals(GameMode.CREATIVE) || !player.getWorld().equals(world);
     }
 
     protected boolean isSpawn(Player player) {
