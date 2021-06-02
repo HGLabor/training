@@ -22,6 +22,8 @@ repositories {
     maven("https://oss.sonatype.org/content/groups/public/")
     maven("https://papermc.io/repo/repository/maven-public/")
     maven("https://maven.enginehub.org/repo/")
+    // ProtocolLib
+    maven("https://repo.dmulloy2.net/repository/public/")
 }
 
 dependencies {
@@ -31,8 +33,10 @@ dependencies {
     compileOnly("org.bukkit:craftbukkit:1.16.5-R0.1-SNAPSHOT")
     // World Edit
     compileOnly("com.sk89q.worldedit:worldedit-bukkit:7.2.0")
+    // ProtocolLib
+    compileOnly("com.comphenix.protocol:ProtocolLib:4.6.0")
     // CommandAPI
-    implementation("dev.jorel:commandapi-shade:5.8")
+    compileOnly("dev.jorel:commandapi-shade:5.8")
     // HGLaborUtils
     implementation("de.hglabor:hglabor-utils:0.0.6")
     // KSpigot

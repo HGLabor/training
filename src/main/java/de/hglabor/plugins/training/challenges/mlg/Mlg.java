@@ -4,13 +4,15 @@ import com.sk89q.worldedit.EditSession;
 import com.sk89q.worldedit.WorldEdit;
 import com.sk89q.worldedit.bukkit.BukkitAdapter;
 import com.sk89q.worldedit.function.pattern.RandomPattern;
-import de.hglabor.plugins.training.main.TrainingKt;
 import de.hglabor.plugins.training.challenges.Challenge;
 import de.hglabor.plugins.training.challenges.mlg.scoreboard.MlgPlayer;
 import de.hglabor.plugins.training.challenges.mlg.scoreboard.MlgPlayerList;
 import de.hglabor.plugins.training.challenges.mlg.scoreboard.MlgScoreboard;
 import de.hglabor.plugins.training.challenges.mlg.streaks.StreakPlayer;
 import de.hglabor.plugins.training.challenges.mlg.streaks.StreakPlayers;
+import de.hglabor.plugins.training.events.SettingChangedEvent;
+import de.hglabor.plugins.training.main.TrainingKt;
+import de.hglabor.plugins.training.packets.PacketSender;
 import de.hglabor.plugins.training.region.Area;
 import de.hglabor.plugins.training.region.Cuboid;
 import de.hglabor.plugins.training.user.User;
@@ -27,10 +29,7 @@ import org.bukkit.block.BlockFace;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.craftbukkit.v1_16_R3.CraftWorld;
 import org.bukkit.craftbukkit.v1_16_R3.entity.CraftEntity;
-import org.bukkit.entity.Entity;
-import org.bukkit.entity.LivingEntity;
-import org.bukkit.entity.Player;
-import org.bukkit.entity.Slime;
+import org.bukkit.entity.*;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.entity.CreatureSpawnEvent;
 import org.bukkit.event.entity.EntityDamageEvent;
@@ -62,6 +61,7 @@ class MlgInfo {
         this.hasDoneAction = hasDoneAction;
     }
 }
+
 public abstract class Mlg implements Challenge {
     protected final String name;
     protected final ChatColor color;
@@ -351,6 +351,62 @@ public abstract class Mlg implements Challenge {
         }
     }
 
+    @EventHandler
+    public void onSettingChanged(SettingChangedEvent event) {
+        Player player = Bukkit.getPlayer(event.getPlayerUUID());
+        if (player == null) return;
+        if (!isInChallenge(player)) return;
+
+        if (!event.getTargetValue()) switch (event.getSetting()) {
+            case LEVITATOR_SHEEP:
+                // Hide all levitator sheep for the player
+                platforms.forEach(platform -> {
+                    for (Sheep sheep : platform.getLevitatorSheep()) {
+                        PacketSender.INSTANCE.hideEntities(player, sheep);
+                    }
+                });
+                break;
+            case TOP_BOTTOM_PHANTOMS:
+                // Hide all top/bottom phantoms for the player
+                platforms.forEach(platform -> {
+                    for (Phantom phantom : platform.getPhantoms()) {
+                        PacketSender.INSTANCE.hideEntities(player, phantom);
+                    }
+                });
+            case SUPPLY_PANDAS:
+                // Hide all supply pandas for the player
+                platforms.forEach(platform -> {
+                    for (Panda panda : platform.getSupplyPandas()) {
+                        PacketSender.INSTANCE.hideEntities(player, panda);
+                    }
+                });
+        }
+        else switch (event.getSetting()) {
+            case LEVITATOR_SHEEP:
+                // Show all levitator sheep for the player
+                platforms.forEach(platform -> {
+                    for (Sheep sheep : platform.getLevitatorSheep()) {
+                        PacketSender.INSTANCE.showEntities(player, sheep);
+                    }
+                });
+                break;
+            case TOP_BOTTOM_PHANTOMS:
+                // Show all top/bottom phantoms for the player
+                platforms.forEach(platform -> {
+                    for (Phantom phantom : platform.getPhantoms()) {
+                        PacketSender.INSTANCE.showEntities(player, phantom);
+                    }
+                });
+            case SUPPLY_PANDAS:
+                // Show all supply pandas for the player
+                platforms.forEach(platform -> {
+                    for (Panda panda : platform.getSupplyPandas()) {
+                        PacketSender.INSTANCE.showEntities(player, panda);
+                    }
+                });
+        }
+    }
+
     /** Must be called when the player has placed the mlg item e.g. water bucket or block such as cobweb */
     protected void handleMlg(Player player, long checkDelay) {
         User user = getUser(player);
@@ -422,6 +478,7 @@ public abstract class Mlg implements Challenge {
         player.getInventory().setItem(0, WarpItems.WARP_SELECTOR);
         player.getInventory().setItem(7, WarpItems.HUB);
         player.getInventory().setItem(8, WarpItems.RESPAWN_ANCHOR);
+        player.getInventory().setItem(17, WarpItems.SETTINGS);
     }
 
     protected void inventorySetup(Player player) {

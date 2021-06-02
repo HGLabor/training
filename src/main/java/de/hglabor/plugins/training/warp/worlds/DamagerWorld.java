@@ -21,6 +21,7 @@ public class DamagerWorld extends TrainingWorld {
         player.getInventory().setItem(0, WarpItems.WARP_SELECTOR);
         player.getInventory().setItem(7, WarpItems.HUB);
         player.getInventory().setItem(8, WarpItems.RESPAWN_ANCHOR);
+        player.getInventory().setItem(17, WarpItems.SETTINGS);
     }
 
     @EventHandler

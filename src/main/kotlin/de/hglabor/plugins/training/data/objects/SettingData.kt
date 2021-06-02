@@ -2,14 +2,11 @@ package de.hglabor.plugins.training.data.objects
 
 import de.hglabor.plugins.training.data.loadObj
 import de.hglabor.plugins.training.data.saveObj
-import de.hglabor.plugins.training.settings.mlg.MlgSetting
-import org.bukkit.Bukkit
+import de.hglabor.plugins.training.settings.mlg.Setting
 import java.io.Serializable
 import java.util.*
-import kotlin.collections.ArrayList
-import kotlin.collections.HashMap
 
-class MlgSettingData() : Serializable {
+class SettingData() : Serializable {
     private var enabledMap: HashMap<String, ArrayList<UUID>> = HashMap()
 
     companion object {
@@ -18,7 +15,7 @@ class MlgSettingData() : Serializable {
         private const val PATH = "mlg_settings"
         fun load() {
             loadObj(PATH)?.let {
-                MlgSetting.setEnabledValues(MlgSettingData(it as MlgSettingData).enabledMap)
+                Setting.setEnabledValues(SettingData(it as SettingData).enabledMap)
             }
         }
 
@@ -26,9 +23,9 @@ class MlgSettingData() : Serializable {
             saveObj(PATH, getFromEnum())
         }
 
-        private fun getFromEnum(): MlgSettingData {
-            val data = MlgSettingData()
-            MlgSetting.valuesMap().forEach {
+        private fun getFromEnum(): SettingData {
+            val data = SettingData()
+            Setting.valuesMap().forEach {
                 data.enabledMap[it.key] = it.value.getEnabledPlayers()
             }
             return data
@@ -36,7 +33,7 @@ class MlgSettingData() : Serializable {
     }
 
     // For loading
-    constructor(data: MlgSettingData): this() {
+    constructor(data: SettingData): this() {
         this.enabledMap = data.enabledMap
     }
 }

@@ -1,5 +1,7 @@
 package de.hglabor.plugins.training.main
 
+import com.comphenix.protocol.ProtocolLibrary
+import com.comphenix.protocol.ProtocolManager
 import de.hglabor.plugins.training.challenges.ChallengeManager
 import de.hglabor.plugins.training.challenges.damager.Damager
 import de.hglabor.plugins.training.challenges.damager.damagers.CrapDamager
@@ -10,13 +12,17 @@ import de.hglabor.plugins.training.challenges.mlg.mlgs.*
 import de.hglabor.plugins.training.command.ChallengeCommand
 import de.hglabor.plugins.training.command.DamagerCommand
 import de.hglabor.plugins.training.command.MlgCommand
-import de.hglabor.plugins.training.command.MlgSettingsCommand
+import de.hglabor.plugins.training.command.SettingsCommand
 import de.hglabor.plugins.training.data.DataManager
+import de.hglabor.plugins.training.packets.PacketReceiver
+import de.hglabor.plugins.training.settings.mlg.SettingGui.open
 import de.hglabor.plugins.training.user.UserList
+import de.hglabor.plugins.training.warp.WarpItems
 import de.hglabor.plugins.training.warp.WarpSelector
 import de.hglabor.plugins.training.warp.worlds.DamagerWorld
 import de.hglabor.plugins.training.warp.worlds.MlgWorld
 import dev.jorel.commandapi.CommandAPI
+import net.axay.kspigot.event.listen
 import net.axay.kspigot.main.KSpigot
 import org.bukkit.Bukkit
 import org.bukkit.ChatColor
@@ -24,11 +30,15 @@ import org.bukkit.Material
 import org.bukkit.WorldCreator
 import org.bukkit.entity.*
 import org.bukkit.event.Listener
+import org.bukkit.event.inventory.InventoryClickEvent
+import org.bukkit.inventory.ItemStack
 
 class Training : KSpigot() {
     companion object {
         lateinit var INSTANCE: Training; private set
     }
+
+    lateinit var protocolManager: ProtocolManager
 
     override fun load() {
         INSTANCE = this
@@ -66,9 +76,24 @@ class Training : KSpigot() {
         DamagerCommand()
         ChallengeCommand()
         MlgCommand()
-        MlgSettingsCommand()
+        SettingsCommand()
 
         DataManager.load()
+
+        protocolManager = ProtocolLibrary.getProtocolManager()
+        PacketReceiver.init()
+
+        listen<InventoryClickEvent> { event ->
+            if (event.currentItem == null) return@listen
+
+            val item: ItemStack = event.currentItem!!
+            if (!WarpItems.isWarpItem(item)) return@listen
+
+            event.isCancelled = true
+            val player = event.whoClicked as Player
+
+            if (item.isSimilar(WarpItems.SETTINGS)) open(player)
+        }
     }
 
     fun registerAllEventListeners(vararg eventListeners: Listener) {

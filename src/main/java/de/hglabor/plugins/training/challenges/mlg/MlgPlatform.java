@@ -1,7 +1,7 @@
 package de.hglabor.plugins.training.challenges.mlg;
 
 import com.destroystokyo.paper.event.player.PlayerJumpEvent;
-import de.hglabor.plugins.training.settings.mlg.MlgSetting;
+import de.hglabor.plugins.training.settings.mlg.Setting;
 import de.hglabor.plugins.training.user.User;
 import de.hglabor.plugins.training.user.UserList;
 import de.hglabor.utils.noriskutils.HologramUtils;
@@ -22,9 +22,7 @@ import org.bukkit.event.player.PlayerInteractAtEntityEvent;
 import org.bukkit.event.player.PlayerToggleSneakEvent;
 import org.bukkit.inventory.EquipmentSlot;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Random;
+import java.util.*;
 
 public class MlgPlatform implements Listener {
     private final Mlg mlg;
@@ -35,8 +33,8 @@ public class MlgPlatform implements Listener {
     private ArmorStand heightHologram;
     private MlgPlatform upPlatform, downPlatform;
     private MlgPlatform topPlatform, bottomPlatform;
-    private Sheep upEntity, downEntity;
-    private LivingEntity topEntity, bottomEntity;
+    private Sheep upSheep, downSheep;
+    private Phantom topPhantom, bottomPhantom;
     private Panda leftSupplyPanda, rightSupplyPanda;
 
     public MlgPlatform(Mlg mlg, Location spawn, int radius, int yPos, Material material) {
@@ -73,16 +71,16 @@ public class MlgPlatform implements Listener {
         if (upPlatform != null) {
             Location loc = spawn.clone().add(1, 1, zCoordinate);
             loc.setYaw(180);
-            upEntity = createLevitatorSheep(loc, ChatColor.BOLD + ChatColor.GREEN.toString() + "\u25B2", DyeColor.GREEN);
+            upSheep = createLevitatorSheep(loc, ChatColor.BOLD + ChatColor.GREEN.toString() + "\u25B2", DyeColor.GREEN);
             Location loc2 = spawn.clone().add(1, 3, zCoordinate);
-            topEntity = createTopBottomPhantom(loc2, ChatColor.BOLD + ChatColor.GREEN.toString() + "\u25B2");
+            topPhantom = createTopBottomPhantom(loc2, ChatColor.BOLD + ChatColor.GREEN.toString() + "\u25B2");
         }
         if (downPlatform != null) {
             Location loc = spawn.clone().add(-1, 1, zCoordinate);
             loc.setYaw(180);
-            downEntity = createLevitatorSheep(loc, ChatColor.BOLD + ChatColor.RED.toString() + "\u25BC", DyeColor.RED);
+            downSheep = createLevitatorSheep(loc, ChatColor.BOLD + ChatColor.RED.toString() + "\u25BC", DyeColor.RED);
             Location loc2 = spawn.clone().add(-1, 3, zCoordinate);
-            bottomEntity = createTopBottomPhantom(loc2, ChatColor.BOLD + ChatColor.RED.toString() + "\u25BC");
+            bottomPhantom = createTopBottomPhantom(loc2, ChatColor.BOLD + ChatColor.RED.toString() + "\u25BC");
 
         }
         Location left = spawn.clone().add(radius - (radius / 3D), 1, 0);
@@ -103,9 +101,9 @@ public class MlgPlatform implements Listener {
         return sheep;
     }
 
-    private LivingEntity createTopBottomPhantom(Location location, String name) {
+    private Phantom createTopBottomPhantom(Location location, String name) {
         CraftWorld world = (CraftWorld) location.getWorld();
-        LivingEntity phantom = (LivingEntity) world.createEntity(location, Phantom.class).getBukkitEntity();
+        Phantom phantom = (Phantom) world.createEntity(location, Phantom.class).getBukkitEntity();
         phantom.setCustomName(name);
         setStatueAttributes(phantom);
         world.addEntity(((CraftLivingEntity) phantom).getHandle(), CreatureSpawnEvent.SpawnReason.CUSTOM);
@@ -136,9 +134,28 @@ public class MlgPlatform implements Listener {
         return panda;
     }
 
+    public List<Sheep> getLevitatorSheep() {
+        return allNonnull(upSheep, downSheep);
+    }
+
+    public List<Phantom> getPhantoms() {
+        return allNonnull(topPhantom, bottomPhantom);
+    }
+
+    public List<Panda> getSupplyPandas() {
+        return allNonnull(leftSupplyPanda, rightSupplyPanda);
+    }
+
+    @SafeVarargs
+    public final <T extends Entity> List<T> allNonnull(T... entities) {
+        List<T> list = new LinkedList<T>(Arrays.asList(entities));
+        list.remove(null);
+        return list;
+    }
+
     public void clear() {
-        if (upEntity != null) upEntity.remove();
-        if (downEntity != null) downEntity.remove();
+        if (upSheep != null) upSheep.remove();
+        if (downSheep != null) downSheep.remove();
         heightHologram.remove();
         leftSupplyPanda.remove();
         rightSupplyPanda.remove();
@@ -176,19 +193,19 @@ public class MlgPlatform implements Listener {
         if (event.getHand().equals(EquipmentSlot.OFF_HAND)) {
             return;
         }
-        if (upEntity != null && rightClicked.getUniqueId().equals(upEntity.getUniqueId())) {
+        if (upSheep != null && rightClicked.getUniqueId().equals(upSheep.getUniqueId())) {
             // Up
             player.teleport(upPlatform.getSpawn().clone().add(0, 1, 0));
             playPlingSound(player, 0);
-        } else if (topPlatform != null && topEntity != null && rightClicked.getUniqueId().equals(topEntity.getUniqueId())) {
+        } else if (topPlatform != null && topPhantom != null && rightClicked.getUniqueId().equals(topPhantom.getUniqueId())) {
             // Top
             player.teleport(topPlatform.getSpawn().clone().add(0, 1, 0));
             playPlingSound(player, 0);
-        } else if (downEntity != null && rightClicked.getUniqueId().equals(downEntity.getUniqueId())) {
+        } else if (downSheep != null && rightClicked.getUniqueId().equals(downSheep.getUniqueId())) {
             // Down
             player.teleport(downPlatform.getSpawn().clone().add(0, 1, 0));
             playPlingSound(player, 1);
-        } else if (bottomPlatform != null && bottomEntity != null && rightClicked.getUniqueId().equals(bottomEntity.getUniqueId())) {
+        } else if (bottomPlatform != null && bottomPhantom != null && rightClicked.getUniqueId().equals(bottomPhantom.getUniqueId())) {
             // Bottom
             player.teleport(bottomPlatform.getSpawn().clone().add(0, 1, 0));
             playPlingSound(player, 1);
@@ -244,7 +261,7 @@ public class MlgPlatform implements Listener {
     }
 
     private boolean jsElevator(Player player) {
-        return MlgSetting.JUMP_SNEAK_ELEVATOR.getEnabled(player);
+        return Setting.JUMP_SNEAK_ELEVATOR.getEnabled(player);
     }
 
     private void teleportPlayerY(Player player, double yCoordinate) {
