@@ -373,6 +373,7 @@ public abstract class Mlg implements Challenge {
                         PacketSender.INSTANCE.hideEntities(player, phantom);
                     }
                 });
+                break;
             case SUPPLY_PANDAS:
                 // Hide all supply pandas for the player
                 platforms.forEach(platform -> {
@@ -397,6 +398,7 @@ public abstract class Mlg implements Challenge {
                         PacketSender.INSTANCE.showEntities(player, phantom);
                     }
                 });
+                break;
             case SUPPLY_PANDAS:
                 // Show all supply pandas for the player
                 platforms.forEach(platform -> {
