@@ -18,7 +18,7 @@ enum class Setting (val settingName: String, val icon: Material? = null, val hea
 
     // Damager Settings
     COCOA_RECRAFT("Cocoa Recraft", Material.COCOA_BEANS, default = false, type = Type.DAMAGER),
-    MOVE_COCOA_RECRAFT("Move Cocoa Recraft one to the left", Material.STRIPPED_JUNGLE_WOOD, default = false, type = Type.DAMAGER),
+    MOVE_COCOA_RECRAFT("Move Cocoa Recraft one to the right", Material.STRIPPED_JUNGLE_WOOD, default = false, type = Type.DAMAGER),
     MOVE_MUSHROOM_RECRAFT("Move Mushroom Recraft one to the right", Material.RED_MUSHROOM_BLOCK, default = false, type = Type.DAMAGER),
 
     ;

@@ -136,8 +136,8 @@ public class Damager implements Challenge {
             int soupsLeft = soupsToEat - size;
             int startSlot = 13;
             if (Setting.COCOA_RECRAFT.getEnabled(player)) {
-                // Maybe move rc one to the left
-                if (!Setting.MOVE_COCOA_RECRAFT.getEnabled(player)) startSlot++;
+                // Maybe move rc one to the right
+                if (Setting.MOVE_COCOA_RECRAFT.getEnabled(player)) startSlot++;
                 // One slot more is free -> decrement soupsLeft and increment size
                 inventory.setItem(startSlot+1, new ItemStack(Material.COCOA_BEANS, soupsLeft-1));
                 size++;
