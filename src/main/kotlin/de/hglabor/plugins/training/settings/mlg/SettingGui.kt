@@ -29,16 +29,17 @@ object SettingGui {
                 this += " "
                 this += "Click on this item to toggle.".toLoreList(KColors.LIGHTSLATEGRAY, KColors.ITALIC)
             }
+            val name = (if (it.type == Setting.Type.DAMAGER) KColors.BROWN.toString() else KColors.AQUA.toString()) + it.settingName
             if (it.icon == null) itemStack(Material.PLAYER_HEAD) {
                 meta<SkullMeta> {
-                    name = (if (it.type == Setting.Type.DAMAGER) KColors.BROWN.toString() else KColors.AQUA.toString()) + it.settingName
+                    this.name = name
                     this.lore = lore
                     owner = it.headOwner
                 }
             }
             else itemStack(it.icon) {
                 meta {
-                    name = "${KColors.AQUA}${it.settingName}"
+                    this.name = name
                     this.lore = lore
                 }
             }
