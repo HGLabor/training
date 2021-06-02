@@ -12,7 +12,8 @@ enum class Setting (val settingName: String, val icon: Material? = null, val hea
 
     JUMP_SNEAK_ELEVATOR("Jump/Sneak Elevator", Material.MAGENTA_GLAZED_TERRACOTTA),
     LEVITATOR_SHEEP("Levitator Sheep", headOwner = "Kolish"),
-    TOP_BOTTOM_PHANTOMS("Top/Bottom Phantoms", Material.PHANTOM_MEMBRANE)
+    TOP_BOTTOM_PHANTOMS("Top/Bottom Phantoms", Material.PHANTOM_MEMBRANE),
+    SUPPLY_PANDAS("Supply Pandas", headOwner = "Can"),
 
     ;
 

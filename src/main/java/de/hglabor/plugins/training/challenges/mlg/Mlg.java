@@ -359,7 +359,7 @@ public abstract class Mlg implements Challenge {
 
         if (!event.getTargetValue()) switch (event.getSetting()) {
             case LEVITATOR_SHEEP:
-                // Remove all levitator sheep for the player
+                // Hide all levitator sheep for the player
                 platforms.forEach(platform -> {
                     for (Sheep sheep : platform.getLevitatorSheep()) {
                         PacketSender.INSTANCE.hideEntities(player, sheep);
@@ -367,16 +367,23 @@ public abstract class Mlg implements Challenge {
                 });
                 break;
             case TOP_BOTTOM_PHANTOMS:
-                // Remove all top/bottom phantoms for the player
+                // Hide all top/bottom phantoms for the player
                 platforms.forEach(platform -> {
                     for (Phantom phantom : platform.getPhantoms()) {
                         PacketSender.INSTANCE.hideEntities(player, phantom);
                     }
                 });
+            case SUPPLY_PANDAS:
+                // Hide all supply pandas for the player
+                platforms.forEach(platform -> {
+                    for (Panda panda : platform.getSupplyPandas()) {
+                        PacketSender.INSTANCE.hideEntities(player, panda);
+                    }
+                });
         }
         else switch (event.getSetting()) {
             case LEVITATOR_SHEEP:
-                // Remove all levitator sheep for the player
+                // Show all levitator sheep for the player
                 platforms.forEach(platform -> {
                     for (Sheep sheep : platform.getLevitatorSheep()) {
                         PacketSender.INSTANCE.showEntities(player, sheep);
@@ -384,10 +391,17 @@ public abstract class Mlg implements Challenge {
                 });
                 break;
             case TOP_BOTTOM_PHANTOMS:
-                // Remove all top/bottom phantoms for the player
+                // Show all top/bottom phantoms for the player
                 platforms.forEach(platform -> {
                     for (Phantom phantom : platform.getPhantoms()) {
                         PacketSender.INSTANCE.showEntities(player, phantom);
+                    }
+                });
+            case SUPPLY_PANDAS:
+                // Show all supply pandas for the player
+                platforms.forEach(platform -> {
+                    for (Panda panda : platform.getSupplyPandas()) {
+                        PacketSender.INSTANCE.showEntities(player, panda);
                     }
                 });
         }

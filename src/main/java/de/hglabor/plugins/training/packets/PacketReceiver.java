@@ -33,6 +33,9 @@ public class PacketReceiver {
                     case SHEEP:
                         if (!Setting.LEVITATOR_SHEEP.getEnabled(uuid)) event.setCancelled(true);
                         break;
+                    case PANDA:
+                        if (!Setting.SUPPLY_PANDAS.getEnabled(uuid)) event.setCancelled(true);
+                        break;
                 }
             }
         });
@@ -44,6 +47,7 @@ public class PacketReceiver {
                 switch (entity.getType()) {
                     case PHANTOM:
                     case SHEEP:
+                    case PANDA:
                         if (!metaPackets.containsKey(entity.getUniqueId())) metaPackets.put(entity.getUniqueId(), event.getPacket());
                         break;
                 }
