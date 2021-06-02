@@ -8,14 +8,22 @@ import org.bukkit.entity.Player
 import java.util.*
 import java.io.Serializable as javaSer
 
-enum class Setting (val settingName: String, val icon: Material? = null, val headOwner: String? = null, private var enabled: HashMap<UUID, Boolean> = HashMap(), private val default: Boolean = true) : javaSer {
+enum class Setting (val settingName: String, val icon: Material? = null, val headOwner: String? = null, private var enabled: HashMap<UUID, Boolean> = HashMap(), private val default: Boolean = true, val type: Type = Type.MLG) : javaSer {
 
+    // Mlg Settings
     JUMP_SNEAK_ELEVATOR("Jump/Sneak Elevator", Material.MAGENTA_GLAZED_TERRACOTTA),
     LEVITATOR_SHEEP("Levitator Sheep", headOwner = "Kolish"),
     TOP_BOTTOM_PHANTOMS("Top/Bottom Phantoms", Material.PHANTOM_MEMBRANE),
     SUPPLY_PANDAS("Supply Pandas", headOwner = "Can"),
 
+    // Damager Settings
+    COCOA_RECRAFT("Cocoa Recraft", Material.COCOA_BEANS, default = false, type = Type.DAMAGER),
+    MOVE_COCOA_RECRAFT("Move Cocoa Recraft one to the left", Material.STRIPPED_JUNGLE_WOOD, default = false, type = Type.DAMAGER),
+    MOVE_MUSHROOM_RECRAFT("Move Mushroom Recraft one to the right", Material.RED_MUSHROOM_BLOCK, default = false, type = Type.DAMAGER),
+
     ;
+
+    enum class Type { MLG, DAMAGER }
 
     fun toggle(uuid: UUID) {
         // This is the only time the setting is actually changed from the gui
@@ -75,5 +83,7 @@ enum class Setting (val settingName: String, val icon: Material? = null, val hea
             }
             return map
         }
+
+        fun typeValues(type: Type): List<Setting> = values().filter { it.type == type }
     }
 }

@@ -5,6 +5,7 @@ import de.hglabor.plugins.training.main.TrainingKt;
 import de.hglabor.plugins.training.mechanics.SoupHealing;
 import de.hglabor.plugins.training.region.Area;
 import de.hglabor.plugins.training.region.Cuboid;
+import de.hglabor.plugins.training.settings.mlg.Setting;
 import de.hglabor.plugins.training.user.User;
 import de.hglabor.plugins.training.user.UserList;
 import de.hglabor.plugins.training.util.LocationUtils;
@@ -133,9 +134,21 @@ public class Damager implements Challenge {
         int size = 32;
         if (soupsToEat > size) {
             int soupsLeft = soupsToEat - size;
-            inventory.setItem(13, new ItemStack(Material.BOWL, soupsLeft));
-            inventory.setItem(14, new ItemStack(Material.RED_MUSHROOM, soupsLeft));
-            inventory.setItem(15, new ItemStack(Material.BROWN_MUSHROOM, soupsLeft));
+            int startSlot = 13;
+            if (Setting.COCOA_RECRAFT.getEnabled(player)) {
+                // Maybe move rc one to the left
+                if (!Setting.MOVE_COCOA_RECRAFT.getEnabled(player)) startSlot++;
+                // One slot more is free -> decrement soupsLeft and increment size
+                inventory.setItem(startSlot+1, new ItemStack(Material.COCOA_BEANS, soupsLeft-1));
+                size++;
+            }
+            else {
+                // Maybe move rc one to the right
+                if (Setting.MOVE_MUSHROOM_RECRAFT.getEnabled(player)) startSlot++;
+                inventory.setItem(startSlot+1, new ItemStack(Material.RED_MUSHROOM, soupsLeft));
+                inventory.setItem(startSlot+2, new ItemStack(Material.BROWN_MUSHROOM, soupsLeft));
+            }
+            inventory.setItem(startSlot, new ItemStack(Material.BOWL, soupsLeft));
         }
         for (int i = 0; i < size; i++) {
             inventory.addItem(new ItemStack(Material.MUSHROOM_STEW));

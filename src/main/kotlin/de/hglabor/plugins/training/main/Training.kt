@@ -15,7 +15,8 @@ import de.hglabor.plugins.training.command.MlgCommand
 import de.hglabor.plugins.training.command.SettingsCommand
 import de.hglabor.plugins.training.data.DataManager
 import de.hglabor.plugins.training.packets.PacketReceiver
-import de.hglabor.plugins.training.settings.mlg.SettingGui.open
+import de.hglabor.plugins.training.recipes.registerCustomRecipes
+import de.hglabor.plugins.training.settings.mlg.SettingGui
 import de.hglabor.plugins.training.user.UserList
 import de.hglabor.plugins.training.warp.WarpItems
 import de.hglabor.plugins.training.warp.WarpSelector
@@ -92,8 +93,10 @@ class Training : KSpigot() {
             event.isCancelled = true
             val player = event.whoClicked as Player
 
-            if (item.isSimilar(WarpItems.SETTINGS)) open(player)
+            if (item.isSimilar(WarpItems.SETTINGS)) SettingGui.open(player)
         }
+
+        registerCustomRecipes()
     }
 
     fun registerAllEventListeners(vararg eventListeners: Listener) {
