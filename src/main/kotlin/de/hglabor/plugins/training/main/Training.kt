@@ -69,7 +69,7 @@ class Training : KSpigot() {
         val boatMlg = BoatMlg("Boat", ChatColor.YELLOW, Boat::class.java).withPlatforms(Material.OAK_PLANKS, 10, 25, 50, 100, 150, 200, 250)
         val minecartMlg = MinecartMlg("Minecart", ChatColor.GRAY, Minecart::class.java).withPlatforms(Material.GRAY_GLAZED_TERRACOTTA, 10,10, 15, 20, 25, 50, 100, 150, 200, 250)
         val striderMlg = StriderMlg("Strider", ChatColor.LIGHT_PURPLE, Strider::class.java).withPlatforms(Material.CRIMSON_NYLIUM, 10, 5, 10, 15, 20, 25, 30, 35, 40, 45, 50, 55, 60, 65, 70, 75, 80, 90, 100, 200, 250)
-        val ladderMlg = LadderMlg("Ladder", ChatColor.GOLD, WanderingTrader::class.java).withPlatforms(Material.STRIPPED_OAK_WOOD, 10,10, 20, 50, 100, 150, 200, 250)
+        val ladderMlg = LadderMlg("Ladder", ChatColor.GOLD, WanderingTrader::class.java).withPlatforms(Material.STRIPPED_OAK_WOOD, 10, 21, 50, 100, 150, 200, 250)
         val potionMlg = PotionMlg("Potion", ChatColor.GREEN, Witch::class.java).withPlatforms(Material.SMOOTH_SANDSTONE, 10, 20, 50, 100, 150, 200, 250)
         ChallengeManager.INSTANCE.registerAll(blockMlg, horseMlg, boatMlg, striderMlg, minecartMlg, ladderMlg, potionMlg)
 
@@ -82,7 +82,7 @@ class Training : KSpigot() {
         DataManager.load()
 
         protocolManager = ProtocolLibrary.getProtocolManager()
-        PacketReceiver.init()
+        PacketReceiver.listen()
 
         listen<InventoryClickEvent> { event ->
             if (event.currentItem == null) return@listen

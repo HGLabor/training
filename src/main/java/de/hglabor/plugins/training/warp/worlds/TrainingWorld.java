@@ -31,7 +31,7 @@ public abstract class TrainingWorld implements Listener {
     public void init(World world) {
         this.world = world;
         this.world.setTime(6000);
-        this.world.setGameRule(GameRule.ANNOUNCE_ADVANCEMENTS, false);
+        this.world.setGameRule(GameRule.ANNOUNCE_ADVANCEMENTS, true);
         this.world.setGameRule(GameRule.DO_DAYLIGHT_CYCLE, false);
         this.world.setGameRule(GameRule.DO_WEATHER_CYCLE, false);
         this.world.setGameRule(GameRule.DO_MOB_SPAWNING, false);

@@ -6,6 +6,8 @@ import com.comphenix.protocol.events.ListenerPriority;
 import com.comphenix.protocol.events.PacketAdapter;
 import com.comphenix.protocol.events.PacketContainer;
 import com.comphenix.protocol.events.PacketEvent;
+import com.comphenix.protocol.wrappers.EnumWrappers;
+import de.hglabor.plugins.training.events.PlayerInventoryOpenEvent;
 import de.hglabor.plugins.training.main.Training;
 import de.hglabor.plugins.training.main.TrainingKt;
 import de.hglabor.plugins.training.settings.mlg.Setting;
@@ -19,7 +21,7 @@ import java.util.UUID;
 
 public class PacketReceiver {
     public static HashMap<UUID, PacketContainer> metaPackets = new HashMap<>();
-    public static void init() {
+    public static void listen() {
         // Entity Spawns
         TrainingKt.getPLUGIN().protocolManager.addPacketListener(new PacketAdapter(TrainingKt.getPLUGIN(), ListenerPriority.NORMAL, PacketType.Play.Server.SPAWN_ENTITY_LIVING) {
             @Override
@@ -53,5 +55,19 @@ public class PacketReceiver {
                 }
             }
         });
+
+        // Player open inventory
+        TrainingKt.getPLUGIN().protocolManager.addPacketListener(new PacketAdapter(TrainingKt.getPLUGIN(), ListenerPriority.NORMAL, PacketType.Play.Client.CLIENT_COMMAND) {
+            @Override
+            public void onPacketReceiving(PacketEvent event) {
+                Bukkit.getLogger().info("got packet");
+                if (event.getPacket().getClientCommands().read(0) == EnumWrappers.ClientCommand.OPEN_INVENTORY_ACHIEVEMENT) {
+                    // Call PlayerInventoryOpenEvent
+                    Bukkit.getPluginManager().callEvent(new PlayerInventoryOpenEvent(event.getPlayer()));
+                    Bukkit.getLogger().info("Called event XD");
+                }
+            }
+        });
+        Bukkit.getLogger().info("Added all packet listeners");
     }
 }
