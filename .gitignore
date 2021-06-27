@@ -2,3 +2,4 @@
 /build/
 /.gradle/
 /server/
+/src/main/kotlin.iml
