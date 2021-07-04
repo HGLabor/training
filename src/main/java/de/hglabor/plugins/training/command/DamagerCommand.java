@@ -25,7 +25,7 @@ public class DamagerCommand  {
                             Location location = player.getLocation();
                             player.sendMessage("New Hologram Location for " + damager.getName() + ": " + location.toString());
                             damager.setHologramOrigin(location);
-                            damager.safeToConfig();
+                            damager.saveToConfig();
                             break;
                     }
                 }).register();

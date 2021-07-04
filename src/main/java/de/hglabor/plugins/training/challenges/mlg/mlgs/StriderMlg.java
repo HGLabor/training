@@ -4,7 +4,7 @@ import de.hglabor.plugins.training.challenges.mlg.Mlg;
 import de.hglabor.plugins.training.main.TrainingKt;
 import de.hglabor.utils.noriskutils.ItemBuilder;
 import org.bukkit.Bukkit;
-import org.bukkit.ChatColor;
+import net.md_5.bungee.api.ChatColor;
 import org.bukkit.Material;
 import org.bukkit.attribute.Attribute;
 import org.bukkit.attribute.AttributeInstance;

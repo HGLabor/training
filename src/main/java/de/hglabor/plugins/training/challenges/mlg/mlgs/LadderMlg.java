@@ -1,6 +1,6 @@
 package de.hglabor.plugins.training.challenges.mlg.mlgs;
 
-import org.bukkit.ChatColor;
+import net.md_5.bungee.api.ChatColor;
 import org.bukkit.Material;
 import org.bukkit.block.Block;
 import org.bukkit.entity.Entity;

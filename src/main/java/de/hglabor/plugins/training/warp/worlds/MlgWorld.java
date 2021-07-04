@@ -2,7 +2,7 @@ package de.hglabor.plugins.training.warp.worlds;
 
 import de.hglabor.plugins.training.warp.WarpItems;
 import de.hglabor.utils.noriskutils.ItemBuilder;
-import org.bukkit.ChatColor;
+import net.md_5.bungee.api.ChatColor;
 import org.bukkit.Material;
 import org.bukkit.World;
 import org.bukkit.entity.Boat;

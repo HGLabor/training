@@ -117,13 +117,12 @@ public abstract class TrainingWorld implements Listener {
 
     @EventHandler
     public void onFoodLevelChange(FoodLevelChangeEvent event) {
-        if (!event.getEntity().getWorld().equals(world)) {
-            return;
-        }
-        if (isSpawn((Player) event.getEntity())) {
-            event.setFoodLevel(40);
-            event.setCancelled(true);
-        }
+        if (!(event.getEntity() instanceof Player)) return;
+        Player player = ((Player) event.getEntity());
+        if (!player.getWorld().equals(world)) return;
+        if (!isSpawn(player)) return;
+        player.setFoodLevel(20);
+        event.setCancelled(true);
     }
 
     public World getWorld() {

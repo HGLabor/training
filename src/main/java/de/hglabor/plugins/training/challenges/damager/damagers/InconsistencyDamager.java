@@ -4,7 +4,7 @@ import de.hglabor.plugins.training.challenges.damager.Damager;
 import de.hglabor.plugins.training.main.TrainingKt;
 import de.hglabor.utils.noriskutils.ChanceUtils;
 import de.hglabor.utils.noriskutils.HologramUtils;
-import org.bukkit.ChatColor;
+import net.md_5.bungee.api.ChatColor;
 
 import java.util.Arrays;
 
@@ -41,8 +41,8 @@ public class InconsistencyDamager extends Damager {
     }
 
     @Override
-    public void safeToConfig() {
+    public void saveToConfig() {
         TrainingKt.getPLUGIN().getConfig().set(String.format("%s.minDamage", configKey), minDamage);
-        super.safeToConfig();
+        super.saveToConfig();
     }
 }

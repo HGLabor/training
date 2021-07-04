@@ -2,7 +2,7 @@ package de.hglabor.plugins.training.warp;
 
 import de.hglabor.utils.noriskutils.ItemBuilder;
 import net.axay.kspigot.chat.KColors;
-import org.bukkit.ChatColor;
+import net.md_5.bungee.api.ChatColor;
 import org.bukkit.Material;
 import org.bukkit.inventory.ItemStack;
 

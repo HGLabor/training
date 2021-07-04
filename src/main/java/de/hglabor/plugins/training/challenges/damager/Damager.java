@@ -10,7 +10,12 @@ import de.hglabor.plugins.training.user.User;
 import de.hglabor.plugins.training.user.UserList;
 import de.hglabor.plugins.training.util.LocationUtils;
 import de.hglabor.utils.noriskutils.HologramUtils;
-import org.bukkit.*;
+
+import net.md_5.bungee.api.ChatColor;
+import org.bukkit.Bukkit;
+import org.bukkit.Location;
+import org.bukkit.Material;
+import org.bukkit.Sound;
 import org.bukkit.attribute.Attribute;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.entity.ArmorStand;
@@ -19,6 +24,7 @@ import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.entity.EntityDamageEvent;
 import org.bukkit.event.entity.PlayerDeathEvent;
+import org.bukkit.event.inventory.InventoryCloseEvent;
 import org.bukkit.event.player.PlayerAttemptPickupItemEvent;
 import org.bukkit.event.player.PlayerDropItemEvent;
 import org.bukkit.event.player.PlayerInteractEvent;
@@ -128,7 +134,7 @@ public class Damager implements Challenge {
         player.sendMessage("You entered " + this.getName());
         players.put(player.getUniqueId(), false);
         PlayerInventory inventory = player.getInventory();
-        player.setHealth(Objects.requireNonNull(player.getAttribute(Attribute.GENERIC_MAX_HEALTH)).getValue());
+        player.setHealth(player.getHealthScale());
         inventory.clear();
         inventory.addItem(new ItemStack(Material.STONE_SWORD));
         int size = 32;
@@ -215,7 +221,7 @@ public class Damager implements Challenge {
     }
 
     @Override
-    public void safeToConfig() {
+    public void saveToConfig() {
         FileConfiguration config = TrainingKt.getPLUGIN().getConfig();
         config.set(String.format("%s.damage", configKey), damage);
         config.set(String.format("%s.soupsToEat", configKey), soupsToEat);
@@ -294,7 +300,7 @@ public class Damager implements Challenge {
     public void onPlayerDeath(PlayerDeathEvent event) {
         Player player = event.getEntity();
         //closing inventory so recraft wont be dropped
-        player.closeInventory();
+        player.closeInventory(InventoryCloseEvent.Reason.DEATH);
         if (isInChallenge(player)) {
             onFailure(player);
             for (ItemStack drop : event.getDrops()) {

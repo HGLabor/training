@@ -41,7 +41,7 @@ public class ChallengeCuboidListener implements Listener {
             leavePreviousChallenge(player, user);
             if (!user.isSpawn()) {
                 user.setSpawn(true);
-                player.setHealth(Objects.requireNonNull(player.getAttribute(Attribute.GENERIC_MAX_HEALTH)).getValue());
+                player.setHealth(player.getHealthScale());
                 player.setWalkSpeed(0.5F);
                 DamagerWorld.INSTANCE.setItems(player);
                 MlgWorld.INSTANCE.setItems(player);

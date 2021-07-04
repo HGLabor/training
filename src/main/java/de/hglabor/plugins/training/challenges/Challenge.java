@@ -3,7 +3,7 @@ package de.hglabor.plugins.training.challenges;
 import de.hglabor.plugins.training.region.Area;
 import de.hglabor.plugins.training.user.User;
 import de.hglabor.plugins.training.user.UserList;
-import org.bukkit.ChatColor;
+import net.md_5.bungee.api.ChatColor;
 import org.bukkit.entity.Player;
 import org.bukkit.event.Listener;
 
@@ -36,7 +36,7 @@ public interface Challenge extends Listener {
 
     void initConfig();
 
-    void safeToConfig();
+    void saveToConfig();
 
     void loadFromConfig();
 

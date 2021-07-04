@@ -27,7 +27,7 @@ public class MlgCommand {
                             Location location = player.getLocation();
                             player.sendMessage("New WarpEntity Location for " + mlg.getName() + ": " + location.toString());
                             mlg.getWarpEntity().teleport(location);
-                            mlg.safeToConfig();
+                            mlg.saveToConfig();
                             break;
                     }
                 }).register();

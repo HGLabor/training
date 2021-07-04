@@ -22,7 +22,13 @@ import de.hglabor.plugins.training.warp.WarpItems;
 import de.hglabor.plugins.training.warp.worlds.MlgWorld;
 import de.hglabor.utils.noriskutils.SoundUtils;
 import de.hglabor.utils.noriskutils.WorldEditUtils;
-import org.bukkit.*;
+import org.bukkit.Bukkit;
+import net.md_5.bungee.api.ChatColor;
+import org.bukkit.GameMode;
+import org.bukkit.Location;
+import org.bukkit.Material;
+import org.bukkit.Sound;
+import org.bukkit.World;
 import org.bukkit.attribute.Attribute;
 import org.bukkit.block.Block;
 import org.bukkit.block.BlockFace;
@@ -285,7 +291,7 @@ public abstract class Mlg implements Challenge {
     }
 
     @Override
-    public void safeToConfig() {
+    public void saveToConfig() {
         FileConfiguration config = TrainingKt.getPLUGIN().getConfig();
         config.set(String.format("%s.warpEntity.location", this.getName()), warpEntity.getLocation());
         config.set(String.format("%s.mlgPlatform.spawn", this.getName()), spawn);
@@ -335,9 +341,7 @@ public abstract class Mlg implements Challenge {
     public void onEntityDamage(EntityDamageEvent event) {
         if (event.getEntity() instanceof Player) {
             Player player = (Player) event.getEntity();
-            if (!isInChallenge(player)) {
-                return;
-            }
+            if (isInChallenge(player))
             if (player.getWorld().equals(spawn.getWorld()))
             if (event.getCause().equals(EntityDamageEvent.DamageCause.FALL)) {
                 Block landedBlock = player.getLocation().getBlock().getRelative(BlockFace.DOWN);
@@ -461,7 +465,7 @@ public abstract class Mlg implements Challenge {
     }
 
     protected void setMaxHealth(Player player) {
-        player.setHealth(Objects.requireNonNull(player.getAttribute(Attribute.GENERIC_MAX_HEALTH)).getValue());
+        player.setHealth(player.getHealthScale());
     }
 
     /** check if a block is bordered by a material */

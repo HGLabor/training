@@ -1,7 +1,7 @@
 package de.hglabor.plugins.training.challenges.damager.damagers;
 
 import de.hglabor.plugins.training.challenges.damager.Damager;
-import org.bukkit.ChatColor;
+import net.md_5.bungee.api.ChatColor;
 import org.bukkit.entity.Player;
 
 public class ImpossibleDamager extends Damager {

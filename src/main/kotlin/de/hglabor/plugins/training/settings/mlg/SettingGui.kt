@@ -51,7 +51,7 @@ object SettingGui {
             transitionFrom = PageChangeEffect.SWIPE_HORIZONTALLY
             transitionTo = PageChangeEffect.SWIPE_HORIZONTALLY
 
-            placeholder(Slots.All, ItemStack(Material.BROWN_STAINED_GLASS_PANE))
+            placeholder(Slots.All, ItemStack(Material.LIGHT_BLUE_STAINED_GLASS_PANE).apply { itemMeta.name = "" })
 
             lateinit var mlgSettingsCompound: GUIRectSpaceCompound<*, Setting>
             mlgSettingsCompound = createRectCompound(
@@ -78,7 +78,7 @@ object SettingGui {
             transitionFrom = PageChangeEffect.SWIPE_HORIZONTALLY
             transitionTo = PageChangeEffect.SWIPE_HORIZONTALLY
 
-            placeholder(Slots.All, ItemStack(Material.LIGHT_BLUE_STAINED_GLASS_PANE))
+            placeholder(Slots.All, ItemStack(Material.BROWN_STAINED_GLASS_PANE).apply { itemMeta.name = "" })
 
             previousPage(Slots.RowTwoSlotOne, itemStack(Material.WATER_BUCKET) {
                 meta { name = "${KColors.AQUA}Mlg Settings"}

@@ -2,7 +2,7 @@ package de.hglabor.plugins.training.challenges.damager.damagers;
 
 import de.hglabor.plugins.training.challenges.damager.Damager;
 import org.bukkit.Bukkit;
-import org.bukkit.ChatColor;
+import net.md_5.bungee.api.ChatColor;
 import org.bukkit.Material;
 import org.bukkit.entity.Item;
 import org.bukkit.entity.Player;

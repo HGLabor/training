@@ -51,7 +51,7 @@ public class ChallengeCommand implements Listener {
                         case "confirm":
                             challengeMap.remove(player.getUniqueId());
                             player.sendMessage("You successfully relocated " + challenge.getName());
-                            challenge.safeToConfig();
+                            challenge.saveToConfig();
                             break;
                     }
                     player.sendMessage(challenge.getName() + ": " + action);

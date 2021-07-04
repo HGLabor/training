@@ -31,8 +31,8 @@ public class SoupHealing {
 
                     int amountToHeal = 7;
 
-                    if (player.getHealth() < Objects.requireNonNull(player.getAttribute(Attribute.GENERIC_MAX_HEALTH)).getValue()) {
-                        player.setHealth(Math.min(player.getHealth() + (double) amountToHeal, Objects.requireNonNull(player.getAttribute(Attribute.GENERIC_MAX_HEALTH)).getValue()));
+                    if (player.getHealth() < player.getHealthScale()) {
+                        player.setHealth(Math.min(player.getHealth() + (double) amountToHeal, player.getHealthScale()));
                         player.getInventory().setItemInMainHand(new ItemStack(Material.BOWL));
                         return true;
                     } else if (player.getFoodLevel() < 20) {
