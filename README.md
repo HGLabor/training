@@ -1,4 +1,5 @@
-## A new 1.17 version of this plugin is currently in development [here](https://github.com/HGLabor/training-v2)
+### A new 1.17 version of this plugin is currently in development [here](https://github.com/HGLabor/training-v2). Please don't report any new issues here
+
 # Training
 [![Build](https://github.com/HGLabor/training/actions/workflows/gradlew_build.yml/badge.svg)](/.github/workflows/gradlew_build.yml)
 [![Open Issues](https://img.shields.io/github/issues/HGLabor/training)](/../../issues)
